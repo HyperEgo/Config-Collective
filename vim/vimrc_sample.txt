@@ -50,7 +50,18 @@ endif
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
+  "Revert with :syntax off
   syntax on
+  "background color schemes
+  "colorscheme elflord
+  "colorscheme peachpuff
+  "colorscheme evening
+  "colorscheme shine
+  "colorscheme torte
+
+  "I like highlighting strings inside C comments.
+  "Revert with :unlet c comment strings
+  let c_comment_strings=1
   set hlsearch
 endif
 

@@ -1,0 +1,47 @@
+**************************************************
+************* Create RAID Partition **************
+**************************************************
+RAID 0 = striping (performance)
+RAID 1 = mirroring (backup)
+RAID 5 = striping with parity (potentially recover failed device)
+RAID 6 = striping with double parity (ensure failed device recovery)
+RAID 10 (1+0) = mirroring + striping
+
+fdisk /dev/sdb
+p - print partitions
+n - new partition (usu select default parameters)
+t - type
+fd - Linux RAID auto-detect partition
+w - write to disk
+
+fdisk /dev/sdc
+...
+
+// possibly install mdadm - manage MD devices for RAID configurations
+mdadm --create /dev/md1 --level=0 --raid-devices=2 /dev/sdb /dev/sdc  // create RAID partition at /dev/md1, lvl 0, two drives
+Continue creating array? y
+
+mdadm --detail /dev/md1  // show RAID partition details: size, devices, persistence, state
+cat /proc/mdstat  // RAID personality overview
+
+**************************************************
+************** Create File System ****************
+**************************************************
+mkfs -t ext4 /dev/md1
+mkdir /raid_root
+mount /dev/md1 /raid_root
+touch /raid_root/test.txt
+ls /raid_root
+
+// edit fstab to persist mount on boot, sudo
+vim /etc/fstab  // edit fstab to make array available at boot
+> /dev/md1	/raid_root	ext4	defaults 	0	0
+
+// test fstab changes, sudo
+umount /raid_root 
+mount -a  // auto-mount fstab entries not curr mounted
+ls /raid_root
+
+// change RAID partition owner, group to non-sudo
+chown -R <user-name>  /raid_root
+chgrp -R <group-name> /raid_root

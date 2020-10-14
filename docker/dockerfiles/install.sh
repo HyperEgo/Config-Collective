@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# starter installs, ubuntu builds: 16.04, 14.04, 12.04
+# starter installs for docker containers, ubuntu builds: 16.04, 14.04, 12.04
 
 #set -x
 printf "\n***********************************************************************************************\n"
 printf "************************************  Create Install App Log - BEFORE  ************************\n"
 printf "***********************************************************************************************\n"
-install_before="/tmp/install_apps_BEFORE.$(date +%F_%R).log"
-touch ${install_before}
-chmod 666 ${install_before}
-apt list --installed > ${install_before}
-printf "\n$(date +%F_%R)\n\n" >> ${install_before}
-printf "\nApp Log - BEFORE: "${install_before}"\n\n"
+INSTALL_LOG_PREV="/tmp/install_apps_BEFORE.$(date +%F_%R).log"
+touch $INSTALL_LOG_PREV
+chmod 666 $INSTALL_LOG_PREV
+apt list --installed > $INSTALL_LOG_PREV
+printf "\n$(date +%F_%R)\n\n" >> $INSTALL_LOG_PREV
+printf "\nApp Log - BEFORE: "$INSTALL_LOG_PREV"\n\n"
 printf "\n***********************************************************************************************\n"
 printf "************************************  Upgrade OS  *********************************************\n"
 printf "***********************************************************************************************\n"
@@ -62,20 +62,20 @@ rm -rvf ./google-chrome*.deb  # remove archive file
 printf "\n************************************************************************************************\n"
 printf "************************************  Create Repo Log  *****************************************\n"
 printf "************************************************************************************************\n"
-repos="/tmp/repo_list.$(date +%F_%R).log"
-touch ${repos}
-chmod 666 ${repos}
-grep . /etc/apt/sources.list | grep 'http://' | sed 's/^.*\(http.*\).*$/\1/' > ${repos}
-printf "\n$(date +%F_%R)\n\n" >> ${repos}
-printf "\nRepo Log: "${repos}"\n\n"
+REPO_LIST="/tmp/repo_list.$(date +%F_%R).log"
+touch $REPO_LIST
+chmod 666 $REPO_LIST
+grep . /etc/apt/sources.list | grep 'http://' | sed 's/^.*\(http.*\).*$/\1/' > $REPO_LIST
+printf "\n$(date +%F_%R)\n\n" >> $REPO_LIST
+printf "\nRepo Log: "$REPO_LIST"\n\n"
 
 printf "\n************************************************************************************************\n"
 printf "***********************************  Create Install App Log - AFTER  ***************************\n"
 printf "************************************************************************************************\n"
-install_after="/tmp/install_apps_AFTER.$(date +%F_%R).log"
-touch ${install_after}
-chmod 666 ${install_after}
-apt list --installed > ${install_after}
-printf "\n$(date +%F_%R)\n\n" >> ${install_after}
-printf "\nApp Log - AFTER: "${install_after}"\n\n"
+INSTALL_LOG_AFTER="/tmp/install_apps_AFTER.$(date +%F_%R).log"
+touch $INSTALL_LOG_AFTER
+chmod 666 $INSTALL_LOG_AFTER
+apt list --installed > $INSTALL_LOG_AFTER
+printf "\n$(date +%F_%R)\n\n" >> $INSTALL_LOG_AFTER
+printf "\nApp Log - AFTER: "$INSTALL_LOG_AFTER"\n\n"
 

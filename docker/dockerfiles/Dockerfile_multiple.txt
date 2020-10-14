@@ -1,0 +1,50 @@
+
+# https://docs.docker.com/engine/reference/builder/#usage  // Docker file reference
+# docker build [OPTIONS] PATH | URL..  // dockerfile exist in same dir (default)
+# docker build --no-cache=true -f ./dd-docker .  // wipe out build cache, specify [f]ile
+
+# Example 01
+FROM debian:sid  // start img debian version sid
+RUN apt-get update && apt-get install -y update  // install updates
+RUN apt-get install nano  // install nano
+CMD ["/bin/nano", "/tmp/notes"]  // run nano with arg /tmp/notes
+docker build -t example/nanoer .
+docker run --rm -ti exampler/nanoer
+
+
+# Example 02
+RUN unzip install.zip /opt/install  // unzip zip file in to listed dir
+ADD run.sh /run.sh  // add local file to container file location
+ADD project.tar.gz /install/  // add local and extract to container file location
+ADD https://project.example.com/download/1.0/project.rpm /project/
+ENV DB_HOST=db.production.example.com  // set env variables during build and in resulting img
+ENV DB_PORT=5432
+ENTRYPOINT  // specify start of command to run, append additional commands
+CMD  // specify whole command to run
+ nano notes.txt  // shell
+ ["/bin/nano", "notes.txt"]  // exec form; run cmds directly without surrounding shell
+EXPOSE 8080  // maps port in to a container
+VOLUME ["/host/path/" "/container/path"]  // maps host path in to container path, 2 args
+VOLUME ["/shared-data"]  // create volume to be inherited by later containers, 1 arg
+WORKDIR /install/  // set working dir in container
+
+
+# Example 03
+FROM ubuntu:16.04 as builder
+RUN apt-get update
+RUN apt-get -y install curl
+RUN curl https://google.com | wc -c > google-size
+FROM alpine
+COPY --from=builder /google-size /google-size
+ENTRYPOINT echo google is this big; cat google-size
+
+
+# Example 04
+FROM ubuntu
+LABEL Description="This image is used to start foobar executable" Vendor="ACME Products" Version=$VERSION
+RUN apt-get update && apt-get install -y inotify-tools \
+nginx \
+apache2 \
+openssh-server
+
+

@@ -1,47 +1,99 @@
 #!/bin/bash
 
-# diagnostic script - print hardware, software metrics
+# print system diagnostics, environment variables, path pointers, bashrc, hd stats
+# output: sys diag, bashrc, yum installed packages
 
-#set -ex
-LOG_FILE="/tmp/system-diag.$(date +%F_%R).log"
-touch $LOG_FILE
-chmod 775 $LOG_FILE
-printf "\n***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "************************************  General Info  *******************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-whoami 2>&1 | tee -a $LOG_FILE  # current username
-uname -a 2>&1 | tee -a $LOG_FILE  # os, system, kernel, machine id, etc.
-date 2>&1 | tee -a $LOG_FILE  # current date
-uptime 2>&1 | tee -a $LOG_FILE  # system uptime
-printf "\n***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "************************************  Groups  *************************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-groups 2>&1 | tee -a $LOG_FILE  # user affiliate group(s)
-printf "\n***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "************************************  Hardware  ***********************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-lscpu 2>&1 | tee -a $LOG_FILE  # cpu specs
-printf "\n" 2>&1 | tee -a $LOG_FILE
-lsusb 2>&1 | tee -a $LOG_FILE  # connected usb devices
-printf "\n" 2>&1 | tee -a $LOG_FILE
-#lspci -m 2>&1 | tee -a $LOG_FILE  # connected pci devices
-xinput list 2>&1 | tee -a $LOG_FILE  # connected pci | bus | non-usb devices
-printf "\n***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "************************************  Disk Space  *********************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-lsblk 2>&1 | tee -a $LOG_FILE  # hd capacity usage, tree diagram
-printf "\n" 2>&1 | tee -a $LOG_FILE
-df -h 2>&1 | tee -a $LOG_FILE  # file system capacity usage, listing
-printf "\n" 2>&1 | tee -a $LOG_FILE
-pwd 2>&1 | tee -a $LOG_FILE  # print working directory
-du -cks -h * | sort -rn | head 2>&1 | tee -a $LOG_FILE  # current working directory file usage
-printf "\n***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "************************************  RAM  ****************************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-free -h 2>&1 | tee -a $LOG_FILE  # RAM capacity usage
-printf "\n***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "************************************  Kernel Log  ***********************************************\n" 2>&1 | tee -a $LOG_FILE
-printf "***********************************************************************************************\n" 2>&1 | tee -a $LOG_FILE
-dmesg | tail -n10 2>&1 | tee -a $LOG_FILE  # RAM, kernel, buffer log
-printf "\n$(date +%F_%R)\n\n" >> $LOG_FILE
-printf "\nLog file: "$LOG_FILE"\n\n"
+# write input to stdout and file
+function sendData() {
+	echo -e "$1" 2>&1 | tee -a $2
+}
+
+# print table graphic
+function printGraphic() {
+	local gfx=""
+	for i in $( seq $1 $2 )
+	do
+		gfx+="*"
+	done
+	sendData "$gfx" $3
+}
+
+# print table banner
+function printBanner() {
+	local header=$1
+	local tab='         '
+	sendData "\n" $2
+	printGraphic 0 70 $2
+	sendData "$tab$tab$tab$header" $2
+	printGraphic 0 70 $2	
+}
+
+# main - process digital profile
+function mainProcess() {
+	TSTAMP="$(date +%F_%R).log"
+	SYSDIAG="$1/$(whoami)_$(hostname)_system-diag_$TSTAMP"
+	BASHRC="$1/$(whoami)_$(hostname)_bashrc_$TSTAMP"
+	INSTALL="$1/$(whoami)_$(hostname)_installed-packages-yum_$TSTAMP"
+
+	touch $SYSDIAG
+	touch $BASHRC
+	touch $INSTALL
+
+	chmod 755 $SYSDIAG
+	chmod 755 $BASHRC
+	chmod 755 $INSTALL
+
+	printBanner "General Info" $SYSDIAG
+	sendData "User: $(whoami)\n" $SYSDAIG
+	sendData "OS: $(uname -a)\n" $SYSDAIG
+	sendData "Logged-in: $(users)\n" $SYSDAIG
+	sendData "Groups: $(whoami)\n" $SYSDAIG
+	sendData "Date: $(date)\n" $SYSDAIG
+	sendData "Uptime: $(uptime)" $SYSDAIG
+
+	printBanner "Environment Vars" $SYSDIAG
+	sendData "Unsorted PATH:\n$PATH\n" $SYSDAIG
+	sortPath="$(sed 's/:/\n/g' <<< $PATH | sort)"
+	sendData "Sorted PATH:\n$sortPath\n" $SYSDAIG
+	sendData "SET Variables:\n$(/bin/bash -c 'set | sort')" $SYSDAIG
+
+	printBanner "Software Metrics" $SYSDIAG
+	sendData "File System Devices:\n$(lsblk -f | sort)\n" $SYSDAIG
+	sendData "File System Usage:\n$(df -T -h | sort)\n" $SYSDAIG
+	sendData "RAM:\n$(free -h)\n" $SYSDAIG
+	sendData "Mount Points:\n$(mount | sort)" $SYSDAIG
+
+	printBanner "Hardware Stats" $SYSDIAG
+	sendData "CPU Profile:\n$(lscpu)\n" $SYSDAIG
+	#sendData "Block Device Attributes:\n$(blkid)\n" $SYSDAIG	# output empty on Ubuntu 16.x
+	sendData "Block Device UUID:\n$(tree -F /dev/disk/by-uuid)\n" $SYSDAIG
+	sendData "Block Device ID:\n$(tree -F /dev/disk/by-id)\n" $SYSDAIG
+	sendData "X-Input Devices:\n$(xinput)\n" $SYSDAIG
+	sendData "USB Devices:\n$(lsusb)" $SYSDAIG
+
+	# write supplement files: bashrc, yum installed packages
+	cat /home/$USER/.bashrc >> $BASHRC
+	#rpm -ql <<< rpm -qa | sort >> $INSTALL  	# RHEL 6.x yum installed packages
+	dpkg --get-selections | sort >> $INSTALL
+
+	# notify user of output files and location
+	echo -e "\nOutput Files:\n$SYSDIAG\n$BASHRC\n$INSTALL\n"
+}
+
+DEFAULT="/tmp"
+
+# no arg - write to DEFAULT
+if [[ $# -eq 0 ]] && test -d $DEFAULT ; then
+	mainProcess $DEFAULT
+
+# two args - write to current or custom directory
+elif [[ $# -eq 1 ]] && test -d $1 ; then
+	if [[ $1 == '.' ]] ; then
+		mainProcess $(pwd)
+	else
+		mainProcess $1
+	fi
+else
+	echo -e "\nBad file, directory or improper args."
+fi
+

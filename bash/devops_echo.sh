@@ -1,12 +1,19 @@
 #!/bin/bash
 
-# devOps echo script
+# devOps echo test script
 
-filename="/tmp/devops.test.$(date +%F_%R).log"
-touch ${filename}
-cat > ${filename} << eopts
+# create file and time-stamp
+TSTAMP="$(date +%F_%R)"
+FILE="devops_echo_$TSTAMP.log"
+DEST=$(pwd)\/$FILE
 
-Why hello there, welcome to devOps!!
+touch $DEST
+chmod 755 $DEST
+
+# process graphic
+cat > $DEST << eopts
+
+Welcome to Development Operations !!
 
              _/                   _/_/_/
             _/                  _/     _/
@@ -20,5 +27,7 @@ Why hello there, welcome to devOps!!
                                     _/
 
 eopts
-printf "$(date +%F_%R)\n\n" >> ${filename}
-printf "\nLog file: "${filename}"\n\n"
+
+echo "$TSTAMP" >> $DEST
+cat $DEST
+echo -e "\nEcho log: $DEST\n"

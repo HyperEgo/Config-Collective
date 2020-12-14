@@ -52,8 +52,9 @@ endif
 if &t_Co > 2 || has("gui_running")
   "Revert with :syntax off
   syntax on
+
   "background color schemes
-  "colorscheme elflord
+  colorscheme elflord
   "colorscheme peachpuff
   "colorscheme evening
   "colorscheme shine
@@ -118,4 +119,7 @@ endif
 " The matchit plugin makes the % command work better, but it is not backwards
 " compatible.
 packadd matchit
+
+"line numbers
+set number 
 

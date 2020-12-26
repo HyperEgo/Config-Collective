@@ -30,10 +30,24 @@ function printBanner() {
 
 # main - process digital profile
 function mainProcess() {
-	TSTAMP="$(date +%F_%R).log"
-	SYSDIAG="$1/$(whoami)_$(hostname)_system-diag_$TSTAMP"
-	BASHRC="$1/$(whoami)_$(hostname)_bashrc_$TSTAMP"
-	INSTALL="$1/$(whoami)_$(hostname)_installed-packages-yum_$TSTAMP"
+	TSTAMP="$(date +%F_%R)"
+	DEFAULT="/tmp"
+	HEADER=""
+
+	# check string const, create file header
+	if [[ $1 == 'NOARG' ]] ; then
+		HEADER=$DEFAULT
+	elif [[ $1 == 'WORKING' ]] ; then
+		HEADER="$(pwd)"
+	elif [[ $1 == 'REMOTE' ]] ; then
+		HEADER=$2
+	else
+		echo -e "\nFile location set error."
+	fi
+
+	SYSDIAG="$HEADER/$(whoami)_$(hostname)_system-diag_$TSTAMP.log"
+	BASHRC="$HEADER/$(whoami)_$(hostname)_bashrc_$TSTAMP.log"
+	INSTALL="$HEADER/$(whoami)_$(hostname)_installed-packages-yum_$TSTAMP.log"
 
 	touch $SYSDIAG
 	touch $BASHRC
@@ -44,54 +58,52 @@ function mainProcess() {
 	chmod 755 $INSTALL
 
 	printBanner "General Info" $SYSDIAG
-	sendData "User: $(whoami)\n" $SYSDAIG
-	sendData "OS: $(uname -a)\n" $SYSDAIG
-	sendData "Logged-in: $(users)\n" $SYSDAIG
-	sendData "Groups: $(whoami)\n" $SYSDAIG
-	sendData "Date: $(date)\n" $SYSDAIG
-	sendData "Uptime: $(uptime)" $SYSDAIG
+	sendData "User: $(whoami)\n" $SYSDIAG
+	sendData "OS: $(uname -a)\n" $SYSDIAG
+	sendData "Logged-in: $(users)\n" $SYSDIAG
+	sendData "Groups: $(whoami)\n" $SYSDIAG
+	sendData "Date: $(date)\n" $SYSDIAG
+	sendData "Uptime:$(uptime)" $SYSDIAG
 
 	printBanner "Environment Vars" $SYSDIAG
-	sendData "Unsorted PATH:\n$PATH\n" $SYSDAIG
+	sendData "Unsorted PATH:\n$PATH\n" $SYSDIAG
 	sortPath="$(sed 's/:/\n/g' <<< $PATH | sort)"
-	sendData "Sorted PATH:\n$sortPath\n" $SYSDAIG
-	sendData "SET Variables:\n$(/bin/bash -c 'set | sort')" $SYSDAIG
+	sendData "Sorted PATH:\n$sortPath\n" $SYSDIAG
+	sendData "SET Variables:\n$(/bin/bash -c 'set | sort')" $SYSDIAG
 
 	printBanner "Software Metrics" $SYSDIAG
-	sendData "File System Devices:\n$(lsblk -f | sort)\n" $SYSDAIG
-	sendData "File System Usage:\n$(df -T -h | sort)\n" $SYSDAIG
-	sendData "RAM:\n$(free -h)\n" $SYSDAIG
-	sendData "Mount Points:\n$(mount | sort)" $SYSDAIG
+	sendData "Devices:\n$(lsblk -f | (sed -u 1q; sort) )\n" $SYSDIAG
+	sendData "Usage:\n$(df -T -h | (sed -u 1q; sort) )\n" $SYSDIAG
+	sendData "RAM:\n$(free -h)\n" $SYSDIAG
+	sendData "Mount Points:\n$(mount | sort)" $SYSDIAG
 
 	printBanner "Hardware Stats" $SYSDIAG
-	sendData "CPU Profile:\n$(lscpu)\n" $SYSDAIG
-	#sendData "Block Device Attributes:\n$(blkid)\n" $SYSDAIG	# output empty on Ubuntu 16.x
-	sendData "Block Device UUID:\n$(tree -F /dev/disk/by-uuid)\n" $SYSDAIG
-	sendData "Block Device ID:\n$(tree -F /dev/disk/by-id)\n" $SYSDAIG
-	sendData "X-Input Devices:\n$(xinput)\n" $SYSDAIG
-	sendData "USB Devices:\n$(lsusb)" $SYSDAIG
+	sendData "CPU:\n$(lscpu)\n" $SYSDIAG
+	#sendData "Block Device Attributes:\n$(blkid)\n" $SYSDIAG	# output empty on Ubuntu 16.x
+	sendData "Block Device UUID:\n$(tree -F /dev/disk/by-uuid)\n" $SYSDIAG
+	sendData "Block Device ID:\n$(tree -F /dev/disk/by-id)\n" $SYSDIAG
+	sendData "X-Input Devices:\n$(xinput)\n" $SYSDIAG
+	sendData "USB Devices:\n$(lsusb)\n" $SYSDIAG
 
 	# write supplement files: bashrc, yum installed packages
-	cat /home/$USER/.bashrc >> $BASHRC
+	cat /home/$USER/.bashrc > $BASHRC
 	#rpm -ql <<< rpm -qa | sort >> $INSTALL  	# RHEL 6.x yum installed packages
-	dpkg --get-selections | sort >> $INSTALL
+	dpkg --get-selections | sort > $INSTALL
 
 	# notify user of output files and location
-	echo -e "\nOutput Files:\n$SYSDIAG\n$BASHRC\n$INSTALL\n"
+	echo -e "Output Files:\n$SYSDIAG\n$BASHRC\n$INSTALL\n"
 }
 
-DEFAULT="/tmp"
-
 # no arg - write to DEFAULT
-if [[ $# -eq 0 ]] && test -d $DEFAULT ; then
-	mainProcess $DEFAULT
+if [[ $# -eq 0 ]] ; then
+	mainProcess "NOARG"
 
 # two args - write to current or custom directory
 elif [[ $# -eq 1 ]] && test -d $1 ; then
 	if [[ $1 == '.' ]] ; then
-		mainProcess $(pwd)
+		mainProcess "WORKING"
 	else
-		mainProcess $1
+		mainProcess "REMOTE" $1
 	fi
 else
 	echo -e "\nBad file, directory or improper args."

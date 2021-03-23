@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# test script, output to stdout
+# banner script
 
 function printGraphic() {
 	local gfx=""
@@ -18,9 +18,15 @@ function printBanner() {
 	echo -e "$tab$tab$tab$header"
 	printGraphic 0 70
 }
-echo -e "\n"
-printBanner "TEST TEST TEST"
-echo -e "\n"
-printBanner "Another TEST TEST TESTees"
-echo -e "\n"
+
+DEFAULT="TESTING 1 2 3 !!!"
+if [[ $# -eq -0 ]] ; then
+	echo -e "\n$DEFAULT\n"
+elif [[ $# -eq 1 ]] ; then
+	echo -e "\n$1\n"
+else
+	echo -e "\nBad input, file or improper args.\n"
+fi
+
+
 

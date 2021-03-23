@@ -31,7 +31,7 @@ function printBanner() {
 # main - process digital profile
 function mainProcess() {
 	TSTAMP="$(date +%F_%R)"
-	DEFAULT="/tmp"
+	DEFAULT="/home/$USER/bkup-safe/sys-config"
 	HEADER=""
 
 	# check string const, create file header

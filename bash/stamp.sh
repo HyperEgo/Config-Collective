@@ -13,19 +13,19 @@ function checkError() {
 	fi
 }
 
-TSTAMP=$(date +%F_%R).stmp
+TSTAMP=$(date +%F_%R)
 
 # one arg - input file only; copy file to same location as input
 if [[ $# -eq 1 ]] && test -f $1 ; then
 	FARG=$(basename $1)
-	TFILE=$FARG\_$TSTAMP
+	TFILE=$FARG\_$TSTAMP.stmp
 	cp -air $FARG $TFILE
 	checkError $? $TFILE
 
 # two args - input file, input directory; copy file to directory
 elif [[ $# -eq 2 ]] && test -d $2 ; then
 	FARG2=$1
-	FPREP=$(basename $FARG2)\_$TSTAMP
+	FPREP=$(basename $FARG2)\_$TSTAMP.stmp
 	FDEST=$2\/$FPREP
 	FDEST2=$(pwd)\/$FPREP
 

@@ -1,0 +1,7 @@
+# docker run example commands w/ images
+
+## start container, prompt working dir
+docker run -p 8080 -ti -w /home ubuntu:14.04 bash
+
+## start container use local hd shared volume directory, prompt working dir
+docker run -p 8080 -ti -v /share/docker-share:/home -w /home ubuntu:14.04 bash

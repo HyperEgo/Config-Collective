@@ -1,7 +1,3 @@
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                               Lesson 1 SUMMARY
-
   1. The cursor is moved using either the arrow keys or the hjkl keys.
          h (left)       j (down)       k (up)       l (right)
 
@@ -19,8 +15,7 @@
 NOTE: Pressing <ESC> will place you in Normal mode or will cancel
       an unwanted and partially completed command.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                               Lesson 2 SUMMARY
+~~
 
   1. To delete from the cursor up to the next word type:  dw
   2. To delete from the cursor to the end of a line type:  d$
@@ -41,8 +36,7 @@ NOTE: Pressing <ESC> will place you in Normal mode or will cancel
      To undo all the changes on a line, type:  U  (capital U)
      To undo the undo's, type:                 CTRL-R
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                               Lesson 3 SUMMARY
+~~
 
   1. To put back text that has just been deleted, type   p .  This puts the
      deleted text AFTER the cursor (if a line was deleted it will go on the
@@ -59,8 +53,7 @@ NOTE: Pressing <ESC> will place you in Normal mode or will cancel
 
          c   [number]   motion
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                               Lesson 4 SUMMARY
+~~
 
   1. CTRL-G  displays your location in the file and the file status.
              G  moves to the end of the file.
@@ -81,8 +74,7 @@ NOTE: Pressing <ESC> will place you in Normal mode or will cancel
      To substitute all occurrences in the file type        :%s/old/new/g
      To ask for confirmation each time add 'c'             :%s/old/new/gc
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                               Lesson 5 SUMMARY
+~~
 
   1.  :!command  executes an external command.
 
@@ -102,8 +94,7 @@ NOTE: Pressing <ESC> will place you in Normal mode or will cancel
   5.  :r !dir  reads the output of the dir command and puts it below the
       cursor position.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                               Lesson 6 SUMMARY
+~~
 
   1. Type  o  to open a line BELOW the cursor and start Insert mode.
      Type  O  to open a line ABOVE the cursor.
@@ -125,8 +116,7 @@ NOTE: Pressing <ESC> will place you in Normal mode or will cancel
 
   7. Prepend "no" to switch an option off:   :set noic
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                               Lesson 7 SUMMARY
+~~
 
   1. Type  :help  or press <F1> or <Help>  to open a help window.
 

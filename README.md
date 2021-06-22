@@ -1,4 +1,2 @@
-# scripts
-Bash, python scripts.
-DevOps notes, tidbits and tool commands.
-VIM config setup and tutorials.
+# Config-Collective
+Scripts, terminal commands, emulator notes, container configs, etc.

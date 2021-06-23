@@ -175,6 +175,8 @@ CTRL-f  // forward full screen
 CTRL-d  // forward 1/2 screen
 CTRL-u  // back 1/2 screen
 
+CTRL-v [visual block], w - jump next column, x - delete  // copy, delete column
+
 vim -p file1, file2  // open files in tabs
 :tab help
 :help tab-page-intro
@@ -187,8 +189,8 @@ vim -p file1, file2  // open files in tabs
 :tab 3  // go to tab '3'
 :tabm n  // move tab to 'n' pos
 :tabdo %s/foo/bar/g  // funct for all tabs
-imap, t <Esc>:tabnew<CR>  // map 't'
-ctrl+shft+6 | ctrl+6  // go back one pg
+
+imap, t <Esc>:tabnew<CR>  // map 't', include in .vimrc file
 
 
 # Python
@@ -202,8 +204,8 @@ python3
 
 
 # BASH
-alias ducks='du -hcks | sort -rn | head'  // largest file consumer, curr dir
 alias ll='ls -halF --color=auto'
+alias ducks='du -ch | sort -n'  // print list of space consumers w/ total
 
 red=$(tput setaf 1)
 green=$(tput setaf 2)
@@ -215,5 +217,19 @@ white=$(tput setaf 7)
 reset=$(tput sgr0)
 bold=$(tput bold)
 
-PS1='\[bold\]\[blue\]\u\[reset\]\[white\]@\[reset\]\[bold\]\[cyan\]\h\[reset\]> \[red\]\W\[reset\] \$ '
+PS1='\[$bold\]\[$blue\]\u\[$white\]@\[$bold\]\[$cyan\]\h\[$reset\]> \[$red\]\W\[$reset\] \$ '
+
+# C++ sample test compiler
+vim foo.c
+#include<stdio.h>
+int main(void){
+	printf("Hello World!\n");
+	return 0;
+}
+cc foo.c -o foo
+./foo
+
+# PATH var modify
+PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+export PATH
 

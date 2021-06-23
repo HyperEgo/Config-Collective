@@ -1,3 +1,5 @@
+" rename this file /home/$USER/.vimrc
+
 " An example for a vimrc file.
 "
 " Maintainer:	Bram Moolenaar <Bram@vim.org>

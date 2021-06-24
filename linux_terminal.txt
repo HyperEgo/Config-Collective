@@ -231,6 +231,9 @@ function removeDupPath() {
 	PATH=$(echo $foo | sed 's/ /:/g')
 }
 
+## edit, export PATH
+PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+export PATH
 
 # C++ sample test compiler
 vim foo.c
@@ -241,8 +244,4 @@ int main(void){
 }
 cc foo.c -o foo
 ./foo
-
-# PATH var modify
-PATH="$HOME/bin:$HOME/.local/bin:$PATH"
-export PATH
 

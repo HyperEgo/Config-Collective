@@ -75,6 +75,9 @@ sed 's/:/\n/g' <<< $PATH | sort  // print PATH content vertically
 
 cat FILE | sort | uniq -d  // print duplicates, must be sorted
 
+CTRL+SHIFT+t  // open terminal tab
+CTRL+SHIFT+w  // close curr tab
+
 # YUM - yellow dog updater modified
 yum list installed
 yum repolist  // display known repos
@@ -205,8 +208,9 @@ python3
 
 # BASH
 alias ll='ls -halF --color=auto'
-alias ducks='du -ch | sort -n'  // print list of space consumers w/ total
+alias duc='du -ch | sort -n'  // print list space consumers w/ total
 
+## prompt colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -218,6 +222,15 @@ reset=$(tput sgr0)
 bold=$(tput bold)
 
 PS1='\[$bold\]\[$blue\]\u\[$white\]@\[$bold\]\[$cyan\]\h\[$reset\]> \[$red\]\W\[$reset\] \$ '
+
+## remove duplicates from PATH variable
+function removeDupPath() {
+	local foo=$(sed 's/:/\n/g' <<< $PATH | sort | uniq -u)
+	local fum=$(sed 's/:/\n/g' <<< $PATH | sort | uniq -d)
+	local foo+=" $fum"
+	PATH=$(echo $foo | sed 's/ /:/g')
+}
+
 
 # C++ sample test compiler
 vim foo.c

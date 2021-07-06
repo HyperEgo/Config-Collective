@@ -1,0 +1,96 @@
+# Git - terminal commands
+
+WORKING-DIR => STAGED => LOCAL repo => REMOTE repo
+[create|edit] -> [add] -> [commit] -> [push]
+
+untracked files == working dir
+tracked files == repo
+
+cat /etc/gitconfig  // global creds
+cat ~/.gitconfig  // local user creds
+
+git config --global user.name "Jimbo Tanner"
+git config --global user.email jimbo-tanner@countryboy.com
+git config --global core.editor "vim"
+git config --global color.ui true
+git config --global alias.st "status"
+git config --global alias.lgg "log --graph --oneline --decorate --abbrev-commit --all"
+git config --global alias.ci "commit"
+git config --global --unset <GIT-CMD>   // remove git alias
+git config --list  // print global creds
+git config <PARM>  // print parameter details
+git config --get remote.origin.url  // display upstream url for remote named 'origin'
+
+git status  // print current repo status
+git log --oneline --graph --decorate --all  // print log output oneline, w/ curr tree graphics
+git log <BRANCH>  // print branch logs
+
+git branch  // see current branch
+git branch <BRANCH>  // create branch, stay on current
+git branch --merged  // print merged branches for current
+git branch -m <BRANCH> <NEW-BRANCH>  // rena[m]e branch
+git branch -d <BRANCH>  // [d]elete branch
+git branch -r  // print [r]emote branches
+git branch -a  // print [a]ll remote branches
+
+git checkout <BRANCH>  // switch to branch
+git checkout -b <BRANCH>  // create [b]ranch, check it out
+git checkout -b <SUB-BRANCH> <BRANCH>  // checkout subordinate branch from "main" branch
+git checkout -- <FILE>  // checkout | override file from repo in to working dir
+
+git diff  // compare working dir and repo
+git diff --staged  // compare staged area and repo
+git diff --color-words  // compare changes side-by-side, color contrast
+
+git add <FILE>  // add file
+git rm <FILE>  // remove file from staged to working dir (e.g. after commit, before push)
+git reset HEAD <FILE>  // remove file from staged area to working dir
+git clean -f  // remove [f]iles from working dir
+git show <BRANCH>|<SHA>  // print commit details
+
+git commit -m "first commit"  // commit files to current branch w/ [m]essage
+git commit -a  // commit files to current branch, open editor for extended commit msg
+git commit -am "add all modified files"  // commit all modified files, no new or deleted files
+git commit --amend -m "add to previous commit"  // amend to most recent commit
+
+git merge <BRANCH>  // merge branch to current (**dangerous, verify curr branch BEFORE executing)
+git merge --no-ff <BRANCH>  // execute merge, no fast forward
+git merge --ff-only <BRANCH>  // execute merge, only fast forward merge, abort otherwise
+git merge --abort  // abort merge
+
+git remote -v  // print remotes, current branch
+git remote add <ALIAS> <REMOTE>  // add alias for remote
+git remote add origin <URL> // add remote named 'origin' for URL
+git remote rm <ALIAS>  // remove remote
+
+git push -u <ALIAS> <BRANCH>  // push branch changes to remote [u]pstream tracking
+git push -u origin master  // push changes to remote named 'origin' on 'master' branch
+git push <ALIAS> --delete <REMOTE>  // keep local alias, delete remote
+git push --set-upstream origin master  // set upstream remote named 'origin' for 'master' branch
+
+git clone <URL>  // clone repo, assume MASTER branch
+git clone [-b <BRANCH>] <URL> <DIR>  // clone repo to directory
+git clone -b <BRANCH> --single-branch <URL>  // clone specific branch
+
+git fetch <ALIAS>  // sync with remote to "origin/master" NOT master
+git pull = git fetch + git merge
+
+## create local repo
+git init .
+git add -A .
+git commit -m "first commit"
+git push
+
+## create remote repo, local exclusive
+remote_$> git init --bare  // bare repo, no working dir
+local_$> git remote add origin remote-URL  // add remote named 'origin' for remote URL
+local_$> git remote -v  // list 'pull', 'fetch' connected remotes
+local_$> git push origin master  // push changes to remote named 'origin' on 'master' branch
+
+## create remote repo, shared
+mkdir -p /share/devrepo.git
+sudo chgrp /share/devrepo.git
+sudo chmod g+s|g+ws /share/devrepo.git  // subsequent files added set to dir perms
+cd /share/devrepo.git
+git init --bare --shared=group  // explicitly set repo to shared status - multiple user contributes
+

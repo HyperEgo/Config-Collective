@@ -1,5 +1,5 @@
+# Linux - terminal commands
 
-# Linux commands
 locate FILE  // find file using local db
 whatis CMD  // single line command info
 whereis -OPTIONS CMD  // locate binary, executable
@@ -108,30 +108,6 @@ lsblk  // display connect drives
 sudo blkid  // display UUID, fs type for connected drives
 
 
-# Git
-git init
-git add -A .
-git commit -m "first commit message"
-git commit -a  // open editor for multi-line comments
-git push
-
-## remote repo setup - local
-remote_$> git init --bare  // bare repo, no working dir
-local_$> git remote add origin remote-URL  // add remote named 'origin' for remote URL
-local_$> git remote -v  // list 'pull', 'fetch' connected remotes
-local_$> git push origin master  // push changes to remote named 'origin' on 'master' branch
-
-git config --get remote.origin.url  // display upstream url for remote named 'origin'
-git push --set-upstream origin master  // set upstream remote named 'origin' for 'master' branch
-
-## remote repo setup - shared
-mkdir -p /share/devrepo.git
-sudo chgrp /share/devrepo.git
-sudo chmod g+s|g+ws /share/devrepo.git  // subsequent files added set to dir perms
-cd /share/devrepo.git
-git init --bare --shared=group  // explicitly set repo to shared status - multiple user contributes
-
-
 # Ant | Maven
 nohup ant &  // run ant background process, log to nohup.out
 ant -p  // print ant commands, must be in build.xml dir
@@ -204,6 +180,7 @@ python3
 >>> print(vlc.__file__)  // print file location
 >>> sys.path.apend("string")
 >>> print(sys.path)
+>>> help("modules")  # list local installed python modules
 
 
 # BASH

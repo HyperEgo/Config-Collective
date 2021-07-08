@@ -78,7 +78,9 @@ cat FILE | sort | uniq -d  // print duplicates, must be sorted
 CTRL+SHIFT+t  // open terminal tab
 CTRL+SHIFT+w  // close curr tab
 
-# YUM - yellow dog updater modified
+rpm -ql <<< rpm -qa | sort >> ~/installed_pkgs_$(date +%F_%R).log
+
+# YUM (yellow dog updater modified) - repo mngmt commands
 yum list installed
 yum repolist  // display known repos
 yum -v repolist  // display known repos [v]erbose: base url, last updated, associated file name, etc.
@@ -87,25 +89,37 @@ yum search "python"  // search repo db, default inclusive - no wildcard
 yumdownloader PKG --destdir DIR --resolve
 yumdownloader python36 --destdir ~/Downloads/python36/ --resolve
 
-## create, setup local repos
-find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;
-createrepo ./rpm-dir
+## rhel7 - create local repo for yum rpm installers
+find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
+cd /dir/with/rpms/redhat.repo  # browse to rpm local dir
+createrepo .
 sed 's/enabled = 0/enabled = 1' /etc/yum.repos.d/redhat.repo
 yum repolist
 yum makecache
-yum install git python36 vlc
+yum install <PKG-NAME>
 
-rpm -ql <<< rpm -qa | sort >> ~/installed_pkgs_$(date +%F_%R).log
 
-## format disc, create fs
-sudo parted -a optimal /dev/sdb mkpart primary 0% 100%
-sudo parted /dev/sdb mklabel gpt
-sudo parted /dev/sdb print
-sudo mkfs -t ext4 /dev/sdb
-sudo mkfs.ext4 /dev/sdb
+# Format, mount, create device partitions and file system
+lsblk  # display connected devices with mounts
+sudo mkdir -p /mnt/dd1 /mnt/dd2  # create directories for device
 
-lsblk  // display connect drives
-sudo blkid  // display UUID, fs type for connected drives
+sudo parted /dev/sdb print  # print device info
+sudo parted /dev/sdX mklabel gpt  # set device label
+sudo parted -a optimal /dev/sdX mkpart primary 0% 100%  # create device partition
+sudo mkfs -t ext4 /dev/sdX  # create device file system type e.g. ext4
+sudo mkfs.ext4 /dev/sdX  # deprecated
+
+sudo blkid  # display connected devices w/ UUIDs
+cp -air /etc/fstab /etc/fstab.bak  # backup fstab
+vim /etc/fstab  # edit fstab
+UUID=<alpha-numeric-string-in-quotes>  <mount-location>  <file-system-type>  <options>  <dump> <pass>
+UUID=”b58ce781-4a45-496a-8cd3-ab28d3cef783”  /mnt/dd1  ext4  defaults  1  2
+sudo mount -a  # test mounts, error displayed if configurations incorrect
+
+sudo usermod -aG GROUP USERNAME  # add group to user-name account
+sudo chmod -R 775 /mnt  # edit directory permissions
+sudo chown -R USERNAME /mnt  # change directory ownership
+sudo chgrp -R GROUP /mnt  # change directory group affiliation
 
 
 # Ant | Maven

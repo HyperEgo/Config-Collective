@@ -1,9 +1,11 @@
 # Linux - terminal commands
 
-locate FILE  // find file using local db
+whois SERVER-NAME  // query whois db for network node
+who  // print who is logged in
+w  // print who is logged in and what they are doing
 whatis CMD  // single line command info
 whereis -OPTIONS CMD  // locate binary, executable
-whois SERVER-NAME  // query whois db for network node
+locate FILE  // find file using local db
 
 ps -elf | grep -i "java"
 pkill PID  // kill proc by id
@@ -12,7 +14,7 @@ kill -9 PID  // ugly kill proc by name | id
 CMD /bin/kill  // test kill command
 CMD > /dev/null  // send command to null
 CMD > /dev/null 2>&1  // send to stdout, stderr to /dev/null
-head -30 /dev/urandom > ~/urand_test.log  // write 30 lines random data
+
 od -vAn -N4 -tu4 < /dev/urandom  // write 4 byte unsigned decimal integer
 od -vAn -N2 -tu2 < /dev/urandom  // write 2 byte unsigned decimal integer
 od -vAn -N1 -td1 < /dev/urandom  // write 1 byte signed decimal integer
@@ -21,16 +23,15 @@ sort -k COLUMN
 
 usermod -aG GROUP USER  // add group to user account
 
-pushd .  // push curr dir to stack
+pushd DIR  // push dir to stack
 popd  // pop top dir from stack
-dirs  // display curr dirs on stack
+dirs  // display stack
 
 date
 date --date "+60 days"
 groups USER  // display user groups
-w
-users
-jobs  // print curr jobs
+users  // print users logged in
+jobs  // print jobs
 kill %JOB  // kill job
 kill %1  // kill job '1'
 
@@ -38,49 +39,51 @@ find -OPTIONS PATH EXPR FILE
 find . -iname "FILE"
 find . -iname "FILE*"  // find files beginning w/ "FILE"
 find . -iname ".svn" -exec rm -rvf "{}" \;  // remove .svn file recursively
-ls -li  // display file inode numbers
-find . -inum INODE -exec rm -i "{}" \;  // delete file by inode number
 find . -type f \( -iname \*.txt \)
 find . -type f \( -iname \*.jpg -o -iname \*.png \)
+
+ls -li  // display file inode numbers
+find . -inum INODE -exec rm -i "{}" \;  // delete file by inode number
 
 grep -OPTIONS EXPR LOCATION
 grep -w "test"  // grep exclusive input, select line, only match whole word
 grep -niR "test" ~/bin  // global regular expression; n=line number, i=ignore case, R=recursive
-grep -niR --exclude-dir=.svn "DEPRECATED_"  // exclude .svn directories
+grep -niR --exclude-dir=.svn "DEPRECATED_"  // search keyword, exclude dir
 
 head -OPTIONS FILE
 head -n10 FILE  // print FILE first 10 lines
-head -c 1G < /dev/urandom > FILE  // create 1GB file random data
+head -30 /dev/urandom > ~/urand_test.log  // write 30 lines random data
+head -c 100G < /dev/urandom > FILE  // create 100 GB file w/ random data
+
 tail -OPTIONS FILE
 tail -n10 FILE  // print FILE last 10 lines
 tail -n+500 FILE  // print FILE line '500' to EOF
+tail -f FILE  // print active file appended data
 
 cp -OPTIONS SRC DEST
-cp -air /src/dir /dest/dir  // copy source dir to dest dir
-cp -air /src/dir/* /dest/dir  // copy source dir contents to dest dir
+cp -air /src/dir /dest/dir  // copy source to dest
+cp -air /src/dir/* /dest/dir  // copy source contents to dest
 
-tar -zcvf ARCHIVE.tar.gz DIR  // [c]reate archive, g[z]ip compression, [v]erbose, [f]ile
-tar -zxvf ARCHIVE.tar.gz .  // e[x]tract archive to curr dir
-tar -zxvf ARCHIVE.tar.gz -C /remote/dir  // extract to remote dir
+tar -zcvf ARCHIVE.tar.gz DIR FILE CONTENTS ETC  // [c]reate archive, g[z]ip compression, [v]erbose, [f]ile
+tar -zxvf ARCHIVE.tar.gz DIR  // e[x]tract archive to dir
+tar -zxvf ARCHIVE.tar.gz -C /remote/dir  // extract archive to remote dir
 
-zip -r ARCHIVE.zip DIR
+zip -r ARCHIVE.zip DIR  // zip archive to dir
 zip -r ARCHIVE.zip /dir/contents/* /random/pic.png /random/spreadsheet.odt
 
-netstat -tuplen | grep "LISTEN"
+netstat -tuplen | grep "LISTEN"  // print listening ports
 
-sed 's/ss//g'  // remove ss string for all occurrences on the line
-sed 's/ */_/g'  // sub underscore for any number of spaces occurring on line\
-sed '/^$/d'  // delete empty lines
-sed 's/:/\n/g' <<< $PATH | sort  // print PATH content vertically
+sed 's/ss//g'  # remove ss string for all occurrences on the line [g]lobal
+sed 's/ */_/g'  # sub underscore for any number of spaces occurring on line
+sed '/^$/d'  # delete empty lines
+sed 's/:/\n/g' <<< $PATH | sort  # print PATH content vertically
+sed '/.*XML-element-delete-line/d' <<< cat INFILE | sed 's/.*XML-element-delete-up-to-char-sequence//' | sed 's/XML-element-delete-after-char-sequence.*//' | sort > OUTFILE  # parse XML elements from input file, print results to output file
 
 cat FILE | sort | uniq -d  // print duplicates, must be sorted
 
-CTRL+SHIFT+t  // open terminal tab
-CTRL+SHIFT+w  // close curr tab
-
 rpm -ql <<< rpm -qa | sort >> ~/installed_pkgs_$(date +%F_%R).log
 
-# YUM (yellow dog updater modified) - repo mngmt commands
+# YUM (yellow dog updater modified)
 yum list installed
 yum repolist  // display known repos
 yum -v repolist  // display known repos [v]erbose: base url, last updated, associated file name, etc.
@@ -103,7 +106,7 @@ yum install <PKG-NAME>
 lsblk  # display connected devices with mounts
 sudo mkdir -p /mnt/dd1 /mnt/dd2  # create directories for device
 
-sudo parted /dev/sdb print  # print device info
+sudo parted /dev/sdX print  # print device info
 sudo parted /dev/sdX mklabel gpt  # set device label
 sudo parted -a optimal /dev/sdX mkpart primary 0% 100%  # create device partition
 sudo mkfs -t ext4 /dev/sdX  # create device file system type e.g. ext4
@@ -120,6 +123,34 @@ sudo usermod -aG GROUP USERNAME  # add group to user-name account
 sudo chmod -R 775 /mnt  # edit directory permissions
 sudo chown -R USERNAME /mnt  # change directory ownership
 sudo chgrp -R GROUP /mnt  # change directory group affiliation
+
+
+# SVN
+A - Added
+C - Conflicted
+D - Deleted
+I - Ignored
+M - Modified
+R - Replaced
+X - Unrevisioned directory created by externals definition
+? - Not tracked by version control
+! - Missing (removed by non-SVN command)
+
+svn ls /project/directory/branches -v  // list branches
+svn log -q -l5 URL  // print logs [q]uiet, [l]ine numbers
+svn co -rREV URL  // svn check out revision
+svn cp SOURCE TARGET  // svn copy branch
+
+## merge
+pwd
+/home/user/project-trunk
+svn up
+svn merge --dry-run ^/project/directory/branches/branch_1
+svn ci -m "commit msg branch merge to trunk"
+
+svn -R resolved .  // svn resolve dependencies, [R]ecursive
+svn cleanup
+svn unlock --force URL-FILE  // unlock file for save
 
 
 # Ant | Maven
@@ -158,17 +189,16 @@ p  // paste
 x  // delete char
 dd  // delete line
 u  // undo
-CTRL-r  // redo
-CTRL-o  // jump back
-CTRL-i  // jump forward
-CTRL-g  // FILE name
-CTRL-o  // back 1 page
-CTRL-b  // back full screen
-CTRL-f  // forward full screen
-CTRL-d  // forward 1/2 screen
-CTRL-u  // back 1/2 screen
-
-CTRL-v [visual block], w - jump next column, x - delete  // copy, delete column
+CTRL+r  // redo
+CTRL+o  // jump back
+CTRL+i  // jump forward
+CTRL+g  // FILE name
+CTRL+o  // back 1 page
+CTRL+b  // back full screen
+CTRL+f  // forward full screen
+CTRL+d  // forward 1/2 screen
+CTRL+u  // back 1/2 screen
+CTRL+v [visual block], w - jump next column, x - delete, SHIFT+i <add text> + esc - apply changes
 
 vim -p file1, file2  // open files in tabs
 :tab help
@@ -183,7 +213,7 @@ vim -p file1, file2  // open files in tabs
 :tabm n  // move tab to 'n' pos
 :tabdo %s/foo/bar/g  // funct for all tabs
 
-imap, t <Esc>:tabnew<CR>  // map 't', include in .vimrc file
+imap, t <Esc>:tabnew<CR>  // vimrc; map 't' -> :tabnew
 
 
 # Python
@@ -199,7 +229,7 @@ python3
 
 # BASH
 alias ll='ls -halF --color=auto'
-alias duc='du -ch | sort -n'  // print list space consumers w/ total
+alias duc='du -ch | sort -n'  // print space consumers w/ total
 
 ## prompt colors
 red=$(tput setaf 1)
@@ -225,6 +255,9 @@ function removeDupPath() {
 ## edit, export PATH
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export PATH
+
+CTRL+SHIFT+t  // open terminal tab
+CTRL+SHIFT+w  // close curr tab
 
 # C++ sample test compiler
 vim foo.c

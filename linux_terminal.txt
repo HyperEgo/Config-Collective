@@ -19,6 +19,10 @@ od -vAn -N4 -tu4 < /dev/urandom  // write 4 byte unsigned decimal integer
 od -vAn -N2 -tu2 < /dev/urandom  // write 2 byte unsigned decimal integer
 od -vAn -N1 -td1 < /dev/urandom  // write 1 byte signed decimal integer
 
+dd if=/dev/sdX of=/mnt/bkup/os_image_$(date +%F).img  // save os image
+dd if=/dev/zero of=/dev/sdX  // write zeros to disk
+dd if=/dev/urandom of=/dev/sdX  // write random data to disk
+
 sort -k COLUMN
 
 usermod -aG GROUP USER  // add group to user account

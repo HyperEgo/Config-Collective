@@ -1,6 +1,6 @@
 # Linux - terminal commands
 
-whois SERVER-NAME  // query whois db for network node
+whois DNS-NAME  // query whois db for network node
 who  // print who is logged in
 w  // print who is logged in and what they are doing
 whatis CMD  // single line command info
@@ -15,17 +15,13 @@ CMD /bin/kill  // test kill command
 CMD > /dev/null  // send command to null
 CMD > /dev/null 2>&1  // send to stdout, stderr to /dev/null
 
-od -vAn -N4 -tu4 < /dev/urandom  // write 4 byte unsigned decimal integer
-od -vAn -N2 -tu2 < /dev/urandom  // write 2 byte unsigned decimal integer
-od -vAn -N1 -td1 < /dev/urandom  // write 1 byte signed decimal integer
-
 dd if=/dev/sdX of=/mnt/bkup/os_image_$(date +%F).img  // save os image
 dd if=/dev/zero of=/dev/sdX  // write zeros to disk
 dd if=/dev/urandom of=/dev/sdX  // write random data to disk
 
-sort -k COLUMN
-
-usermod -aG GROUP USER  // add group to user account
+od -vAn -N4 -tu4 < /dev/urandom  // write 4 byte unsigned decimal integer
+od -vAn -N2 -tu2 < /dev/urandom  // write 2 byte unsigned decimal integer
+od -vAn -N1 -td1 < /dev/urandom  // write 1 byte signed decimal integer
 
 pushd DIR  // push dir to stack
 popd  // pop top dir from stack
@@ -45,6 +41,8 @@ find . -iname "FILE*"  // find files beginning w/ "FILE"
 find . -iname ".svn" -exec rm -rvf "{}" \;  // remove .svn file recursively
 find . -type f \( -iname \*.txt \)
 find . -type f \( -iname \*.jpg -o -iname \*.png \)
+
+sort -k COLUMN
 
 ls -li  // display file inode numbers
 find . -inum INODE -exec rm -i "{}" \;  // delete file by inode number
@@ -68,12 +66,13 @@ cp -OPTIONS SRC DEST
 cp -air /src/dir /dest/dir  // copy source to dest
 cp -air /src/dir/* /dest/dir  // copy source contents to dest
 
-tar -zcvf ARCHIVE.tar.gz DIR FILE CONTENTS ETC  // [c]reate archive, g[z]ip compression, [v]erbose, [f]ile
-tar -zxvf ARCHIVE.tar.gz DIR  // e[x]tract archive to dir
-tar -zxvf ARCHIVE.tar.gz -C /remote/dir  // extract archive to remote dir
+tar -zcvf ARCH.tar.gz *  // [c]reate archive, g[z]ip compression,
+[v]erbose, all [f]iles in curr dir
+tar -zxvf ARCH.tar.gz /path/to/dir  // e[x]tract archive to dir
+tar -zxvf ARCH.tar.gz -C /remote/dir  // extract archive to remote dir
 
-zip -r ARCHIVE.zip DIR  // zip archive to dir
-zip -r ARCHIVE.zip /dir/contents/* /random/pic.png /random/spreadsheet.odt
+zip -r ARCH.zip DIR  // zip archive to dir
+zip -r ARCH.zip /dir/contents/* /random/pic.png /random/spreadsheet.odt
 
 netstat -tuplen | grep "LISTEN"  // print listening ports
 

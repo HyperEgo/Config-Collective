@@ -66,8 +66,7 @@ cp -OPTIONS SRC DEST
 cp -air /src/dir /dest/dir  // copy source to dest
 cp -air /src/dir/* /dest/dir  // copy source contents to dest
 
-tar -zcvf ARCH.tar.gz *  // [c]reate archive, g[z]ip compression,
-[v]erbose, all [f]iles in curr dir
+tar -zcvf ARCH.tar.gz *  // [c]reate archive, g[z]ip compression, [v]erbose, all [f]iles in curr dir
 tar -zxvf ARCH.tar.gz /path/to/dir  // e[x]tract archive to dir
 tar -zxvf ARCH.tar.gz -C /remote/dir  // extract archive to remote dir
 

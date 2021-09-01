@@ -87,16 +87,16 @@ cat FILE | sort | uniq -d  // print duplicates, must be sorted
 
 rpm -ql <<< rpm -qa | sort >> ~/installed_pkgs_$(date +%F_%R).log
 
-# YUM (yellow dog updater modified)
-yum list installed
-yum repolist  // display known repos
-yum -v repolist  // display known repos [v]erbose: base url, last updated, associated file name, etc.
+# YUM commands - manage repos
+yum list installed  // print yum local rpm packages installed
+yum repolist  // display curr connected repos
+yum -v repolist  // display curr connected repos [v]erbose: base url, last updated, associated file name, etc.
 yum list "python*"  // display curr packages, default exclusive - must use wildcard
 yum search "python"  // search repo db, default inclusive - no wildcard
 yumdownloader PKG --destdir DIR --resolve
 yumdownloader python36 --destdir ~/Downloads/python36/ --resolve
 
-## rhel7 - create local repo for yum rpm installers
+## RHEL7 - create local repo for rpm installs
 find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
 cd /dir/with/rpms/redhat.repo  # browse to rpm local dir
 createrepo .
@@ -147,14 +147,14 @@ svn cp SOURCE TARGET  // svn copy branch
 
 ## merge
 pwd
-/home/user/project-trunk
+/home/user/project-trunk  // curr trunk dir
 svn up
-svn merge --dry-run ^/project/directory/branches/branch_1
-svn ci -m "commit msg branch merge to trunk"
+svn merge --dry-run /project/directory/branches/branch_1
+svn ci -m "merge branch_1 in to trunk"
 
-svn -R resolved .  // svn resolve dependencies, [R]ecursive
+svn -R resolved .  // svn resolve dependencies, [R]ecursive, **after issues corrected
 svn cleanup
-svn unlock --force URL-FILE  // unlock file for save
+svn unlock --force /path/to/locked/file  // unlock file for saves
 
 
 # Ant | Maven
@@ -221,14 +221,25 @@ imap, t <Esc>:tabnew<CR>  // vimrc; map 't' -> :tabnew
 
 
 # Python
-pydoc modules
-python3
+pydoc modules  // print python local installed modules
+python3  // start python interpreter
 >>> import vlc
 >>> import sys
->>> print(vlc.__file__)  // print file location
->>> sys.path.apend("string")
->>> print(sys.path)
->>> help("modules")  # list local installed python modules
+>>> print(vlc.__file__)  // print 'vlc' library file location
+>>> print(sys.path)  // print python system path(s)
+>>> sys.path.append("path/to/some/file")  // append system path
+>>> help("modules")  // print local modules installed, get help info
+>>> help("_struct")
+
+## PIP - manage python plugins, dl online, install offline
+sudo yum -y update && sudo yum -y upgrade
+sudo yum -y install python3
+sudo pip3 install --upgrade pip
+sudo pip3 download -d . "pywinrm>=0.3.0"  // download python3 pywinrm plugin installers
+...
+docker inspect CONTAINER  // view container configurations (e.g. id, state parameters, metrics, network info, etc.)
+docker network disconnect bridge CONTAINER  // if testing inside docker container, disable network connection
+sudo pip3 install --no-index --find-links . pywinrm-0.4.2-py2.py3-none-any.whl  // install plugin w/ dependencies in offline mode, point to curr dir
 
 
 # BASH

@@ -70,8 +70,9 @@ tar -zcvf ARCH.tar.gz *  // [c]reate archive, g[z]ip compression, [v]erbose, all
 tar -zxvf ARCH.tar.gz /path/to/dir  // e[x]tract archive to dir
 tar -zxvf ARCH.tar.gz -C /remote/dir  // extract archive to remote dir
 
-zip -r ARCH.zip DIR  // zip archive to dir
-zip -r ARCH.zip /dir/contents/* /random/pic.png /random/spreadsheet.odt
+zip -r ARCH.zip *  // compress files to archive in curr dir
+zip -r ARCH.zip /path/to/contents/* /random/pic.png
+unzip ARCH.zip  // extract contents to curr dir
 
 netstat -tuplen | grep "LISTEN"  // print listening ports
 

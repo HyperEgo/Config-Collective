@@ -243,7 +243,7 @@ sudo pip3 install --no-index --find-links . pywinrm-0.4.2-py2.py3-none-any.whl  
 
 # BASH
 alias ll='ls -halF --color=auto'
-alias duc='du -ch | sort -n'  // print space consumers w/ total
+alias duc='du -ch | sort -n'  # print space consumers w/ total
 
 ## prompt colors
 red=$(tput setaf 1)

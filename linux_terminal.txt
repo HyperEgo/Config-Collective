@@ -66,8 +66,9 @@ cp -OPTIONS SRC DEST
 cp -air /src/dir /dest/dir  // copy source to dest
 cp -air /src/dir/* /dest/dir  // copy source contents to dest
 
+tar -ztvf ARCH.tar.gz  // print file archive file list
 tar -zcvf ARCH.tar.gz *  // [c]reate archive, g[z]ip compression, [v]erbose, all [f]iles in curr dir
-tar -zxvf ARCH.tar.gz /path/to/dir  // e[x]tract archive to dir
+tar -zcvf ARCH.tar.gz /path/to/contents  // e[x]tract archive to dir
 tar -zxvf ARCH.tar.gz -C /remote/dir  // extract archive to remote dir
 
 zip -r ARCH.zip *  // compress files to archive in curr dir
@@ -87,13 +88,13 @@ cat FILE | sort | uniq -d  // print duplicates, must be sorted
 rpm -ql <<< rpm -qa | sort >> ~/installed_pkgs_$(date +%F_%R).log
 
 # YUM commands - manage repos
-yum list installed  // print yum local rpm packages installed
+yum list installed | sort  // print yum local rpm packages installed
 yum repolist  // display curr connected repos
 yum -v repolist  // display curr connected repos [v]erbose: base url, last updated, associated file name, etc.
 yum list "python*"  // display curr packages, default exclusive - must use wildcard
 yum search "python"  // search repo db, default inclusive - no wildcard
 yumdownloader PKG --destdir DIR --resolve
-yumdownloader python36 --destdir ~/Downloads/python36/ --resolve
+yumdownloader python36 --destdir ~/Downloads/python36/ --resolve  // directory created if no exist
 
 ## RHEL7 - create local repo for rpm installs
 find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
@@ -102,7 +103,7 @@ createrepo .
 sed 's/enabled = 0/enabled = 1' /etc/yum.repos.d/redhat.repo
 yum repolist
 yum makecache
-yum install <PKG-NAME>
+yum install PKG --nogpgcheck  // install package no gpg pub key check
 
 
 # Format, mount, create device partitions and file system
@@ -226,7 +227,7 @@ python3  // start python interpreter
 >>> import sys
 >>> print(vlc.__file__)  // print 'vlc' library file location
 >>> print(sys.path)  // print python system path(s)
->>> sys.path.append("path/to/some/file")  // append system path
+>>> sys.path.append("path/to/custom/bin")  // append to sys path
 >>> help("modules")  // print local modules installed, get help info
 >>> help("_struct")
 

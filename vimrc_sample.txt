@@ -1,5 +1,3 @@
-" rename this file /home/$USER/.vimrc
-
 " An example for a vimrc file.
 "
 " Maintainer:	Bram Moolenaar <Bram@vim.org>
@@ -82,7 +80,7 @@ if has("autocmd")
   au!
 
   " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
+  "autocmd FileType text setlocal textwidth=78
 
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
@@ -125,3 +123,10 @@ packadd matchit
 "line numbers
 set number 
 
+"set with smart case to turn on case insensitive if capital letters input
+set ignorecase
+set smartcase
+
+"disable word wrap
+set textwidth=0
+set wrapmargin=0

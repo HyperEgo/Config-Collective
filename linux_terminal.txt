@@ -96,14 +96,17 @@ yum search "python"  // search repo db, default inclusive - no wildcard
 yumdownloader PKG --destdir DIR --resolve
 yumdownloader python36 --destdir ~/Downloads/python36/ --resolve  // directory created if no exist
 
+## CentOS 7
+rpm -ivh *  // local rpm install - verified works! [i]nstall, [v]erbose, [h]ash marks
+
 ## RHEL7 - create local repo for rpm installs
 find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
-cd /dir/with/rpms/redhat.repo  # browse to rpm local dir
+cd /local/rpms/customrepo.repo  # browse to rpm local dir
 createrepo .
 sed 's/enabled = 0/enabled = 1' /etc/yum.repos.d/redhat.repo
 yum repolist
 yum makecache
-yum install PKG --nogpgcheck  // install package no gpg pub key check
+yum install PKG | --nogpgcheck  // install package no gpg pub key check
 
 
 # Format, mount, create device partitions and file system

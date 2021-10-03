@@ -2,6 +2,9 @@
 
 # banner script
 
+#constants
+DEFAULT="TESTING 1 2 3 !!!"
+
 function printGraphic() {
 	local gfx=""
 	for i in $( seq $1 $2 )
@@ -19,7 +22,6 @@ function printBanner() {
 	printGraphic 0 70
 }
 
-DEFAULT="TESTING 1 2 3 !!!"
 if [[ $# -eq -0 ]] ; then
 	echo -e "\n$DEFAULT\n"
 elif [[ $# -eq 1 ]] ; then

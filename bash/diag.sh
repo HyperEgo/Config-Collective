@@ -30,9 +30,10 @@ function printBanner() {
 
 # main - process digital profile
 function mainProcess() {
-	TSTAMP="$(date +%F_%R)"
-	DEFAULT="/home/$USER/bkup-safe/sys-config"
-	HEADER=""
+	local TSTAMP="$(date +%F_%R)"
+	#local DEFAULT="/home/$USER/bkup-safe/sys-config"
+	local DEFAULT="/tmp"
+	local HEADER=""
 
 	# check string const, create file header
 	if [[ $1 == 'NOARG' ]] ; then
@@ -45,9 +46,9 @@ function mainProcess() {
 		echo -e "\nFile location set error."
 	fi
 
-	SYSDIAG="$HEADER/$(whoami)_$(hostname)_system-diag_$TSTAMP.log"
-	BASHRC="$HEADER/$(whoami)_$(hostname)_bashrc_$TSTAMP.log"
-	INSTALL="$HEADER/$(whoami)_$(hostname)_installed-packages-yum_$TSTAMP.log"
+	local SYSDIAG="$HEADER/$(whoami)_$(hostname)_system-diag_$TSTAMP.log"
+	local BASHRC="$HEADER/$(whoami)_$(hostname)_bashrc_$TSTAMP.log"
+	local INSTALL="$HEADER/$(whoami)_$(hostname)_installed-packages-yum_$TSTAMP.log"
 
 	touch $SYSDIAG
 	touch $BASHRC
@@ -94,11 +95,11 @@ function mainProcess() {
 	echo -e "Output Files:\n$SYSDIAG\n$BASHRC\n$INSTALL\n"
 }
 
-# no arg - write to DEFAULT
+# no arg - write default dir
 if [[ $# -eq 0 ]] ; then
 	mainProcess "NOARG"
 
-# two args - write to current or custom directory
+# one arg - write input dir
 elif [[ $# -eq 1 ]] && test -d $1 ; then
 	if [[ $1 == '.' ]] ; then
 		mainProcess "WORKING"
@@ -108,4 +109,3 @@ elif [[ $# -eq 1 ]] && test -d $1 ; then
 else
 	echo -e "\nBad file, directory or improper args."
 fi
-

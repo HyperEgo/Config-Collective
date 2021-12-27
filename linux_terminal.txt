@@ -40,12 +40,17 @@
 /sys/block/DEVICE/stat  # I/O read device info, block devices
 /sys/class  # virtual filesystem loaded in RAM, similiar devices, memory monitor
 /usr/lib/modules  # list kernel version
+/usr/share/doc  # linux tool documentation
+/usr/share/doc/grep-2.20/NEWS  # grep example command usage text file
+/var/log/boot.log  # GRUB boot log
 /var/log/kern.log  # kernel log
 /var/log/syslog  # system log
 /var/log/yum.log  # yum install log
 /var/spool/cron/crontabs  # user cron jobs
 
 apropos CMD  # search manual descriptions, e.g. 'apropos vim|^ssh|email address'
+apropos pattern  # query pattern analysis tools
+apropos search  # query search tools
 apt-cache search REGEX  # query the APT cache, search available package lists
 apt-get update  # Debian update package cache
 apt info PKG  # Debian (Advance Package Tool) package info

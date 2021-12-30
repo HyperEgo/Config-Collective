@@ -13,6 +13,7 @@
 /etc/issue  # message to console, user display prior to login
 /etc|lib|run/systemd/system  # systemd units
 /etc/libuser.conf  # libuser config file
+/etc/login.defs  # user default settings
 /etc/logrotate.d  # log rotate profiles config
 /etc/modules-load.d/modules.conf  # kernel modules load at boot
 /etc/motd  # message of the day, user display after login
@@ -61,10 +62,14 @@ brctl  # ethernet bridge admin
 bzip2  # compress, decompress block-sorting, e.g. .bz, .bz2, .tbz, .tbz2
 cat FILE | sort | uniq -d|u # print [d]uplicates, [u]nique names
 chage -l USER  # print account age info
-chattr -R +i FILE  # edit file attributes, [R]ecursive, [i]mmutable
-chgrp -R GROUP /mnt  # edit directory group affiliation
-chmod -R 775 /mnt  # edit directory permissions
-chown -R USERNAME /mnt  # edit directory ownership
+chattr +i FILE  # edit file attributes, [R]ecursive, [i]mmutable
+lsattr FILE  # print FILE attribs e.g. [i]mmutable, [a]ppend only
+chgrp -R GROUP DIR  # edit directory group affiliation
+chown -R $USER DIR  # edit directory ownership
+chmod -R 775 DIR  # edit directory permissions
+chmod -R {ugo}+{rwx} DIR  # edit dir perms, [u]ser, [g]roup, [o]ther, [r]ead, [w]rite, [e]xecute
+chmod g+s DIR  # set SGID bit to give newly created file curr directory group association
+chmod +t DIR  # set sticky bit, disable deletion by non-owners
 CMD /bin/kill  # send CMD to kill container, testing
 CMD > /dev/null 2>&1  # send CMD to /dev/null, stdout, stderr 
 cp -air /src/dir/* /dest/dir  # copy source CONTENTS to dest
@@ -103,6 +108,8 @@ fsck  # filesystem check
 fsck -R  # check filesystem, skip root fs
 getent group GROUP  # print group membership list
 getent hosts  # print hosts db
+getfacl DIR  # print ACL attribs for DIR
+setfacl -R -m g:GROUP:r DIR  # grant read-only perms to GROUP for DIR
 getsebool -a  # SELinux print boolean list
 gpg --gen-key|send-key  # generate key pair, send to server
 grep --exclude-dir=.svn 'DEPRECATED_'  # search keyword, exclude dir
@@ -137,7 +144,6 @@ ldconfig  # configure dynamic linker run-time bindings, print cache
 ldd DEV   # print shared object deps, e.g. /bin/bash
 less -C FILE  # print contents, mouse nav, [C]lear scrn
 locate FILE  # find FILE, local db
-lsattr FILE  # print FILE attributes
 lshw  # pring hardware metrics
 ls -li  # print dir inode numbers
 lsof -i  # list open files, [i]nternet
@@ -176,6 +182,8 @@ snap info PKG  # Linux cross distribution, dependency app installer
 sort -k COLUMN
 ss -p | grep EXPR  # print sockets w/ PIDs
 su -l|c  # substitute user, [l]ogin, issue [c]ommand to shell
+sudo /sbin/shutdown -r 15  # reboot after 15 mins
+sudo shutdown -c  # interrupt | stop reboot sequence
 swapon  # print swap file metrics
 systemctl daemon-reload  # reload the systemd manager configuration
 systemctl get-default  # systemd service manager, return the default target to boot into
@@ -193,6 +201,7 @@ tar -tvf ARCH.tar.gz  # print archive file list, [t]list
 tar -zxvf ARCH.tar.gz -C DIR  # e[x]tract archive to DIR
 tcpdump  #  dump traffic on a network
 telinit CMD  # edit System V Init runlevel
+touch /home/$USER/file{1,2,3}  # create file1, file2, file3 in /home/$USER
 traceroute -T DEST  # run trace w/ tcp packets, def port 80
 tune2fs -l DEVICE  # view DEVICE filesystem info
 udevadm control -R  # reload rules file
@@ -200,6 +209,7 @@ udevadm monitor -u  # print received udev events
 ulimit -a  # print cpu stats, virtual mem, stack size
 umask  # print default file perms, e.g. 666-umask=default
 unzip ARCH.zip  # extract contents to curr dir
+useradd -D  # print user default attribs
 usermod -aG GROUP {USER}  # add curr user to GROUP or specify USER, [a]ppend, [G]roup
 usermod -L|U USER  # [L]ock | [U]nlock USER account
 usermod -m|d DIR USER  # [m]ove USER home [d]irectory to DIR
@@ -478,3 +488,6 @@ cat /proc/mdstat  # show RAID personality overview
 mdadm --detail /dev/md1  # show RAID part details: sz, dev, state
 systemctl enable mdmonitor  # enable service at runtime
 systemctl start mdmonitor  # auto start service at boot
+
+# Edit sudoers file - visudo
+student01 ALL=(ALL) NOPASSWD:ALL  # student01 acc exec all sudo cmds w/o switch 'su -' & no pd

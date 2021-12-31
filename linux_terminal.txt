@@ -1,6 +1,7 @@
 #!/usr/bin/env bash|python3  # env find executable
 /boot/grub2/grub.cfg  # boot loader gen grub-mkconfig
 /dev  # device filesystem by udev manage calls direct to kernel
+/dev/mapper  # print volume information e.g. ll /dev/mapper
 /etc/apparmor.d  # AppArmor profiles
 /etc/apt/sources.list  # Debian repository source list
 /etc/cups  # open source printing system
@@ -33,13 +34,16 @@
 /home/$USER/.ssh/config|known_hosts  # host, hostname, identity file, pub key
 /lib/systemd/systemd-journald  # systemd journald service
 /lib/systemd/system  # systemd config
+/proc  # VFS - virtual file system representing sys info used by kernel
 /proc/bus/pci  # PCI directory list
 /proc/interrupts  # CPU IRQ (interrupt request) assignments
 /proc/meminfo  # system memory usage
 /proc/partitions  # major, minor part blocks
 /srv  # RHEL site specific data services, e.g. FTP, WWW, CVS
+/sys/block/DEVICE/queue/scheduler  # set device scheduler e.g. cfq, anticipatory, deadline, noop
 /sys/block/DEVICE/stat  # I/O read device info, block devices
 /sys/class  # virtual filesystem loaded in RAM, similiar devices, memory monitor
+/root  # root user home dir
 /usr/lib/modules  # list kernel version
 /usr/share/doc  # linux tool documentation
 /usr/share/doc/grep-2.20/NEWS  # grep example command usage text file
@@ -68,7 +72,7 @@ chgrp -R GROUP DIR  # edit directory group affiliation
 chown -R $USER DIR  # edit directory ownership
 chmod -R 775 DIR  # edit directory permissions
 chmod -R {ugo}+{rwx} DIR  # edit dir perms, [u]ser, [g]roup, [o]ther, [r]ead, [w]rite, [e]xecute
-chmod g+s DIR  # set SGID bit to give newly created file curr directory group association
+chmod g+s DIR  # set SGID bit to enforce group association for child entities
 chmod +t DIR  # set sticky bit, disable deletion by non-owners
 CMD /bin/kill  # send CMD to kill container, testing
 CMD > /dev/null 2>&1  # send CMD to /dev/null, stdout, stderr 
@@ -104,8 +108,7 @@ find . -iname ".svn" -exec rm -rvf "{}" \;  # delete .svn files recursively
 find . -inum INODE -exec rm -i "{}" \;  # delete file by INODE number
 find . -type f \( -iname \*.jpg -o -iname \*.png \)
 find . -type f \( -iname \*.txt \)
-fsck  # filesystem check
-fsck -R  # check filesystem, skip root fs
+fsck [-R|r] DEVICE  # filesystem check, skip [R]oot filesystem, [r]epair
 getent group GROUP  # print group membership list
 getent hosts  # print hosts db
 getfacl DIR  # print ACL attribs for DIR
@@ -125,6 +128,8 @@ head -n10 FILE  # print FILE first 10 lines
 history NUM  # print history last NUM lines 
 iconv --list # print coded character sets
 init 6  # systemd service manager, reboot
+iostat DEVICE  # print DEVICE read | write stat
+ioping -c NUM DEVICE  # ping latency request to DEVICE NUM times
 ip addresss  # print interface ip addr
 ip monitor -t  # listen for net link traffic, [t]imestamp
 ip route  # print local route table entry
@@ -150,7 +155,6 @@ lsof -i  # list open files, [i]nternet
 lspci -nn|v|vv|vvv  # list PCI devices, vendor codes, numbers, names, [v]erbose
 lsusb -tv  # list USB devices, [t]ype, [v]erbose
 ls -Z FILE  # SELinux list FILE security context
-lvcreate -L SIZE LABEL  # create logical volume
 mke2fs -t  # create filesystem, e.g. ext3, ext4
 more FILE  # print contents, forward only
 mount -a  # mount [a]ll filesystems in fstab
@@ -174,7 +178,7 @@ renice  # alter priority of running processes
 rmmod -f ARG  # [f]orce kernel mod ARG remove
 rpm -ivh *  # Fedora local rpm [i]nstall, [v]erbose, [h]ash marks
 rpm -ql <<< rpm -qa | sort >> FILE  # Fedora print install packages, output FILE
-rsync -havz SRC DEST  # remote copy, sync files [a]rchive, [v]erbose, [h]uman readable, [z]compression
+rsync -havz SRC DEST  # remote copy, sync files [h]uman readable, [a]rchive, [v]erbose, [z]compression
 runlevel  # print previous and current System V Init runlevel
 screen | tmux  # terminal session multiplexer
 setsebool -P  # SELinux write curr values to disc at reboot
@@ -228,6 +232,26 @@ xz -k CONTENTS  # compress CONTENTS [k]eep original .xz, .lzma
 yum deplist PKG  # Fedora print deps list, e.g. yum deplist python36-rpm.x86_64
 yum info PKG  # Fedora (Yellow Dog Updater) package info
 zip -r ARCH.zip CONTENTS  # compress CONTENTS [r]ecursive
+
+# LVM - physical > volume > logical
+pvscan  # print physical volume info
+pvdisplay  # print physical volume detail
+vgscan  # print volume group info
+vgdispay  # pring volume group detail
+lvscan  # print logical volume info
+lvdisplay [VGLABEL]  # print logical volume detail e.g. sudo lvdisplay backup
+
+pvcreate DEV1 DEV2 ..  # create physical volume across devices
+vgcreate VGLABEL DEV1 DEV2 ..  # create volume group from physical volume assignments
+lvcreate --name LVNAME --size LVSIZE VGLABEL  # e.g. sudo lvcreate --name sysbk --size 1GB backup
+
+lvextend -L{SIZE} LVDEVICE  # extend logical volume to SIZE e.g. sudo lvextend -L5GB /dev/backup/databk
+lvreduce -L{SIZE} LVDEVICE  # reduce logical volume to SZIE e.g. sudo lvreduce -L1GB /dev/backup/logbk
+mkfs.ext4 LVDEVICE  # create logical volume filesystem
+mount LVDEVICE MOUNTDIR  # mount logical volume e.g. sudo mount /dev/backup/sysbk /backup/sys
+umount MOUNTDIR  # unmount previous mounted device
+LVDEVCE MOUNTDIR FSTYPE defaults 0 0  # edit entries to /etc/fstab for auto mount on reboot
+# /dev/backup/sysbk /backup/sys xfs defaults 0 0  # example line edit to /etc/fstab
 
 # Ports common
 20 tcp|udp ftp  # file transfer protocol, data
@@ -283,7 +307,7 @@ parted /dev/sdX mklabel gpt  # set device label
 parted -a optimal /dev/sdX mkpart primary 0% 100%  # create device partition
 mkfs -t ext4 /dev/sdX  # create device file system type e.g. ext4
 mkfs.ext4 /dev/sdX  # deprecated
-blkid  # print connected devices w/ UUIDs
+blkid  # print connected devices w/ UUID, partUUID, label, partition type
 e2label DEV LABEL
 e2label /dev/sdX NEW_MOUNT
 

@@ -49,13 +49,12 @@
 /usr/share/doc/grep-2.20/NEWS  # grep example command usage text file
 /var/log/boot.log  # GRUB boot log
 /var/log/kern.log  # kernel log
+/var/log/secure  # secure log - passwd failures, sudo, pam, loading rules, server listening
 /var/log/syslog  # system log
 /var/log/yum.log  # yum install log
 /var/spool/cron/crontabs  # user cron jobs
 
-apropos CMD  # search manual descriptions, e.g. 'apropos vim|^ssh|email address'
-apropos pattern  # query pattern analysis tools
-apropos search  # query search tools
+apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim|^ssh|email address'
 apt-cache search REGEX  # query the APT cache, search available package lists
 apt-get update  # Debian update package cache
 apt info PKG  # Debian (Advance Package Tool) package info
@@ -103,11 +102,16 @@ echo $UID  # print user id
 echo -n "value" | openssl md5 -hmac "key"  # gen md5 hash from data input
 env  # print user environment variables
 fdisk -l DEVICE  # edit, [l]ist part table, e.g. fdisk -l /dev/random
-find . -iname "FILE|*"  # find filenames | begin w/ "FILE"
+find . -iname "FILE*"  # find filenames | begin w/ "FILE"
 find . -iname ".svn" -exec rm -rvf "{}" \;  # delete .svn files recursively
 find . -inum INODE -exec rm -i "{}" \;  # delete file by INODE number
-find . -type f \( -iname \*.jpg -o -iname \*.png \)
+find . -type f \( -iname \*.jpg -o -iname \*.png \)  # find [f]iles w/ extension .jpg, .png, curr dir
 find . -type f \( -iname \*.txt \)
+find / -type d -name 'log'  # find keyword 'log' in root '/' [d]irectory
+find / -type f -name 'messages'
+find /var/log -type f -size +100k  # find [f]iles in /var/log greater than 100 KB
+find /var/log -type f -mmin -30  # find files updated in last 30 minutes 
+find /var/log -type f -size 0 -or -size +100k -mmin -30  # find files empty or +100 KB and updated last 30 mins
 fsck [-R|r] DEVICE  # filesystem check, skip [R]oot filesystem, [r]epair
 getent group GROUP  # print group membership list
 getent hosts  # print hosts db
@@ -117,8 +121,8 @@ getsebool -a  # SELinux print boolean list
 gpg --gen-key|send-key  # generate key pair, send to server
 grep --exclude-dir=.svn 'DEPRECATED_'  # search keyword, exclude dir
 grep -niR '*.sh' DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive
-grep '^/' .  # search curr dir, begin str
-grep -v '^/' .  # search curr dir, exclude matches
+grep '^(str)' .  # search curr dir, begin str
+grep -v '^(str)' .  # search curr dir, exclude matches
 grep -w 'test' .  # search curr dir, match whole word only
 groupmod -n OLD NEW  # edit group [n]ame from OLD to NEW
 groups USER  # print USER groups
@@ -147,7 +151,7 @@ klist  # print curr kerberos certificates
 lastb  # print list of last logged users
 ldconfig  # configure dynamic linker run-time bindings, print cache
 ldd DEV   # print shared object deps, e.g. /bin/bash
-less -C FILE  # print contents, mouse nav, [C]lear scrn
+less -C FILE  # print contents, mouse nav, [C]lear previous contents
 locate FILE  # find FILE, local db
 lshw  # pring hardware metrics
 ls -li  # print dir inode numbers

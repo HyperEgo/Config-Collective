@@ -237,6 +237,10 @@ yum deplist PKG  # Fedora print deps list, e.g. yum deplist python36-rpm.x86_64
 yum info PKG  # Fedora (Yellow Dog Updater) package info
 zip -r ARCH.zip CONTENTS  # compress CONTENTS [r]ecursive
 
+dirs  # print dir stack
+popd  # pop stack
+pushd DIR  # push to stack
+
 # LVM - physical > volume > logical
 pvscan  # print physical volume info
 pvdisplay  # print physical volume detail
@@ -255,9 +259,9 @@ mkfs.ext4 LVDEVICE  # create logical volume filesystem
 mount LVDEVICE MOUNTDIR  # mount logical volume e.g. sudo mount /dev/backup/sysbk /backup/sys
 umount MOUNTDIR  # unmount previous mounted device
 LVDEVCE MOUNTDIR FSTYPE defaults 0 0  # edit entries to /etc/fstab for auto mount on reboot
-# /dev/backup/sysbk /backup/sys xfs defaults 0 0  # example line edit to /etc/fstab
+# /dev/backup/sysbk /backup/sys xfs defaults 0 0  # fstab example
 
-# Ports common
+# Ports
 20 tcp|udp ftp  # file transfer protocol, data
 21 tcp|udp ftp  # file transfer protocol, control
 22 tcp ssh  # secure shell
@@ -274,11 +278,6 @@ LVDEVCE MOUNTDIR FSTYPE defaults 0 0  # edit entries to /etc/fstab for auto moun
 3306 tcp sql  # MS proprietary relational db manager
 5900 tcp|udp vnc  # virtual network computing
 
-# Stack directory locations
-dirs  # print stack
-popd  # pop top from stack
-pushd DIR  # push to top of stack
-
 # SED parsing
 sed 's/ss//g'  	# remove ss string for all occurrences on the line [g]lobal
 sed 's/ */_/g'  # sub underscore for any number of spaces occurring on line
@@ -286,7 +285,15 @@ sed '/^$/d'  	# delete empty lines
 sed 's/:/\n/g' <<< $PATH | sort  # print PATH content vertically
 sed '/.*XML-element-delete-line/d' <<< cat INFILE | sed 's/.*XML-element-delete-up-to-char-sequence//' | sed 's/XML-element-delete-after-char-sequence.*//' | sort > OUTFILE  # parse XML elements from input file, print results to output file
 
-## YUM Create Local Repo
+# YUM 
+yum list installed | sort  # print yum local rpm packages installed
+yum -v repolist  # print connected repos [v]erbose: base url, last updated, etc.
+yum list "python*"  # print packages, default exclusive
+yum search "python"  # search repo db, default inclusive
+yumdownloader PKG --destdir DIR --resolve
+yumdownloader python36 --destdir ~/Downloads/python36/ --resolve  # directory created if no exist
+
+## Create local repo
 find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
 cd /local/rpms/customrepo.repo  # browse to rpm local dir
 createrepo .
@@ -295,15 +302,7 @@ yum repolist
 yum makecache
 yum install PKG | --nogpgcheck  # install package no gpg pub key check
 
-# YUM Manage Repo
-yum list installed | sort  # print yum local rpm packages installed
-yum -v repolist  # print connected repos [v]erbose: base url, last updated, etc.
-yum list "python*"  # print packages, default exclusive
-yum search "python"  # search repo db, default inclusive
-yumdownloader PKG --destdir DIR --resolve
-yumdownloader python36 --destdir ~/Downloads/python36/ --resolve  # directory created if no exist
-
-# Create, mount filesystem - sudo
+# Filesystem - create mount
 lsblk  # print connected devices w/ mounts
 mkdir -p /mnt/dd1 /mnt/dd2  # create directories for device
 parted /dev/sdX print  # print device info
@@ -339,7 +338,7 @@ svn log -q -l5 URL  # print logs [q]uiet, [l]ine numbers
 svn co -rREV URL  # svn check out revision
 svn cp SOURCE TARGET  # svn copy branch
 
-## merge
+## Merge
 pwd
 /home/user/project-trunk  # curr trunk dir
 svn up
@@ -395,6 +394,7 @@ CTRL+d  # forward 1/2 screen
 CTRL+u  # back 1/2 screen
 CTRL+v [visual block], w - jump next column, x - delete, SHIFT+i ADD-TEXT + esc - apply changes
 
+## tabs
 vim -p FILE1, FILE2  # open in tabs
 :tab help
 :help tab-page-intro
@@ -407,6 +407,8 @@ vim -p FILE1, FILE2  # open in tabs
 :tab 3  # go to tab 3
 :tabm N  # move tab to N pos
 :tabdo %s/foo/bar/g  # funct for all tabs
+:qa  # quit all tabs
+:wqa  # save quit all tabs
 
 imap, t <Esc>:tabnew<CR>  # map 't' -> :tabnew
 
@@ -421,13 +423,13 @@ python3  # start python interpreter
 >>> help("modules")  	 # print local modules installed, get help info
 >>> help("_struct")
 
-# PIP plugin manager - sudo
+# PIP - plugin manager
 yum update -y && yum upgrade -y
 yum install -y python3
 pip3 install --upgrade pip
 pip3 download -d . "pywinrm>=0.3.0"  # dl python3 pywinrm plugin installer
 
-## Test PIP plugin local install
+## Docker - test plugin dependences
 docker inspect CONTAINER  # view container configurations, e.g. id, state metrics, network stats
 docker network disconnect bridge CONTAINER  # disable network connection
 pip3 install --no-index --find-links *  # install plugin w/ deps local, offline mode
@@ -451,7 +453,7 @@ bold=$(tput bold)
 
 PS1='\[$bold\]\[$blue\]\u\[$white\]@\[$bold\]\[$cyan\]\h\[$reset\]> \[$red\]\W\[$reset\] \$ '
 
-## remove duplicates from PATH variable
+## PATH - remove duplicates
 function removeDupPath() {
 	local foo=$(sed 's/:/\n/g' <<< $PATH | sort | uniq -u)
 	local fum=$(sed 's/:/\n/g' <<< $PATH | sort | uniq -d)
@@ -459,7 +461,7 @@ function removeDupPath() {
 	PATH=$(echo $foo | sed 's/ /:/g')
 }
 
-## edit, export PATH
+## PATH - export
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export PATH
 
@@ -477,7 +479,7 @@ int main(void){
 cc foo.c -o foo
 ./foo
 
-# RAID configure
+# RAID config
 RAID 0 = stripe, no parity, no disk failures (max performance)
 RAID 1 = mirror (1-to-1 disk backup)
 RAID 4 = stripe, parity on single disk
@@ -485,8 +487,8 @@ RAID 5 = stripe, parity across all disks, max one disk failure
 RAID 6 = stripe, double parity across all disks, max two disk failures
 RAID 10 = (1 + 0) mirroring + striping
 
-## Create RAID part - g|fdisk
-gdisk /dev/sdX
+## Create partition
+gdisk /dev/sdX  # g|fdisk
 > n # new partition
 > Partition number = (default)
 > First Sector = (default)
@@ -510,12 +512,12 @@ mount /dev/md1 /raid_root
 vim /etc/fstab
 /dev/md1  /raid_root  ext4  defaults  0  0
 
-## Mount test, start mdmonitor service
+## Mount, test, start mdmonitor service
 mount -a  # auto-mount fstab entries, sudo
 cat /proc/mdstat  # show RAID personality overview
 mdadm --detail /dev/md1  # show RAID part details: sz, dev, state
 systemctl enable mdmonitor  # enable service at runtime
 systemctl start mdmonitor  # auto start service at boot
 
-# Edit sudoers file - visudo
+# Sudoers file - visudo
 student01 ALL=(ALL) NOPASSWD:ALL  # student01 acc exec all sudo cmds w/o switch 'su -' & no pd

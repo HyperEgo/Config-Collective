@@ -32,19 +32,23 @@
 /etc/ufw  # Ubuntu firewall profiles config
 /etc/X11  # video libs
 /home/$USER/.ssh/config|known_hosts  # host, hostname, identity file, pub key
+/lib/modules/KERNEL-VER/kernel/drivers  # currently loaded kernel modules e.g. uname -r = kernel version
 /lib/systemd/systemd-journald  # systemd journald service
 /lib/systemd/system  # systemd config
 /proc  # VFS - virtual file system representing sys info used by kernel
 /proc/bus/pci  # PCI directory list
+/proc/cpuinfo  # cpu, hardware stats
 /proc/interrupts  # CPU IRQ (interrupt request) assignments
 /proc/meminfo  # system memory usage
 /proc/partitions  # major, minor part blocks
+/proc/version  # cat for linux kernel version, OS flavor, gcc compiler
 /srv  # RHEL site specific data services, e.g. FTP, WWW, CVS
 /sys/block/DEVICE/queue/scheduler  # set device scheduler e.g. cfq, anticipatory, deadline, noop
 /sys/block/DEVICE/stat  # I/O read device info, block devices
 /sys/class  # virtual filesystem loaded in RAM, similiar devices, memory monitor
 /root  # root user home dir
 /usr/lib/modules  # list kernel version
+/usr/lib/systemd/system/  # service and target directory e.g. graphical, multi-user.target
 /usr/share/doc  # linux tool documentation
 /usr/share/doc/grep-2.20/NEWS  # grep example command usage text file
 /var/log/boot.log  # GRUB boot log
@@ -54,6 +58,8 @@
 /var/log/yum.log  # yum install log
 /var/spool/cron/crontabs  # user cron jobs
 
+CMD +SPACE +TABx2  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
+for i in {1..100}; do sudo cp -R /etc /backup/sys; done &  # example 'for loop', copy, exec in background
 apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim|^ssh|email address'
 apt-cache search REGEX  # query the APT cache, search available package lists
 apt-get update  # Debian update package cache
@@ -89,6 +95,7 @@ depmod -A  # gen modules.dep file, map files, exits if older then curr
 df  # print disc filesystem space usage
 dig SERVER  # query mail server
 dmesg |-D  # print kernel ring buffer, [D]isable console logging
+dmesg -H -l err  # print kernel [l]evel log errors, [H]uman readable output
 dnf install PKG  # Fedora package manager, install
 dnf search PKG   # Fedora package manager, search
 dpkg -i PGK  # Debian [i]nstall package
@@ -153,13 +160,19 @@ ldconfig  # configure dynamic linker run-time bindings, print cache
 ldd DEV   # print shared object deps, e.g. /bin/bash
 less -C FILE  # print contents, mouse nav, [C]lear previous contents
 locate FILE  # find FILE, local db
+localectl  # print keyboard and layout settings e.g. localectl status
+localectl list-locales  # print locales
+localectl list-keymaps  # print keyboard mappings
 lshw  # pring hardware metrics
 ls -li  # print dir inode numbers
-lsof -i  # list open files, [i]nternet
+ls -Z FILE  # SELinux list FILE security context
+lsmod | sort |  less  # print currently loaded kernel modules
+lsof -i  # list open files w/ process, [i]nternet
+lsof -u USER  # list open files by USER
 lspci -nn|v|vv|vvv  # list PCI devices, vendor codes, numbers, names, [v]erbose
 lsusb -tv  # list USB devices, [t]ype, [v]erbose
-ls -Z FILE  # SELinux list FILE security context
 mke2fs -t  # create filesystem, e.g. ext3, ext4
+modinfo DEVICE.ko.xz  # print kernel module info e.g. modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
 more FILE  # print contents, forward only
 mount -a  # mount [a]ll filesystems in fstab
 mount -t  # specify filesystem [t]ype
@@ -171,6 +184,7 @@ od -vAn -N1 -td1 < /dev/urandom  # write 1 byte signed decimal integer
 od -vAn -N2 -tu2 < /dev/urandom  # write 2 byte unsigned decimal integer
 parted  # partition editor
 passwd -aS  # print [a]ll user(s) password [S]tatus info
+pgrep SERVICE-NAME  # return service process id
 pidof PROG  # print process id of running program, e.g. firefox
 ping -c NUM  # execute ping NUM times
 ping -I INT  # ping from specific outbound interface
@@ -184,6 +198,7 @@ rpm -ivh *  # Fedora local rpm [i]nstall, [v]erbose, [h]ash marks
 rpm -ql <<< rpm -qa | sort >> FILE  # Fedora print install packages, output FILE
 rsync -havz SRC DEST  # remote copy, sync files [h]uman readable, [a]rchive, [v]erbose, [z]compression
 runlevel  # print previous and current System V Init runlevel
+sar -u  # print performance info e.g. 'sar 2 6' - 2 sec interval, 6 queries total
 screen | tmux  # terminal session multiplexer
 setsebool -P  # SELinux write curr values to disc at reboot
 snap info PKG  # Linux cross distribution, dependency app installer
@@ -194,12 +209,16 @@ sudo /sbin/shutdown -r 15  # reboot after 15 mins
 sudo shutdown -c  # interrupt | stop reboot sequence
 swapon  # print swap file metrics
 systemctl daemon-reload  # reload the systemd manager configuration
-systemctl get-default  # systemd service manager, return the default target to boot into
 systemctl isolate UNIT  # systemd service manager, start unit w/ deps, stop all others
-systemctl list-units | grep "service"  # print curr running service(s)
-systemctl list-units  # print available units and services
-systemctl status --all  # print units runtime status
-systemd-analyze dump  # dump systemd manager logs
+systemctl isolate graphical.target  # launch UI
+systemctl isolate multi-user.target  # launch CLI
+systemctl get-default  # return default target at boot
+systemctl set-default TARGET  # set default target at boot
+systemctl status --all |SERVICE  # print units runtime status
+systemctl --type=service | target  # print system services | targets
+systemctl list-units |grep -i "service|target|mount"  # print curr loaded modules
+systemctl start|stop|enable|disable SERVICE  # enable | disable only affect service startup status
+systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
 tail -f FILE  # print file appends
 tail -n10 FILE  # print FILE last 10 lines
 tail -n+500 FILE  # print FILE line 500->EOF
@@ -209,6 +228,7 @@ tar -tvf ARCH.tar.gz  # print archive file list, [t]list
 tar -zxvf ARCH.tar.gz -C DIR  # e[x]tract archive to DIR
 tcpdump  #  dump traffic on a network
 telinit CMD  # edit System V Init runlevel
+top  # M - organize by memory, P - cpu usage, r - renice, reprioritizer PID
 touch /home/$USER/file{1,2,3}  # create file1, file2, file3 in /home/$USER
 traceroute -T DEST  # run trace w/ tcp packets, def port 80
 tune2fs -l DEVICE  # view DEVICE filesystem info
@@ -224,12 +244,14 @@ usermod -m|d DIR USER  # [m]ove USER home [d]irectory to DIR
 users  # print users logged in
 virt-install  # install vm
 visudo  # edit sudoers file - run cmds as root without root password
+vmstat -d 5 3  # print virtual mem usage, [d]evices, 5 sec interval, 3 queries total
 wget URL -o FILE  # non-interactive network downloader, e.g. HTTP{S}, FTP, [o]utput to FILE
 whatis CMD  # print one-line manual page description
 whereis -OPTIONS CMD  # locate binary, executable
 whois FQDN  # query whois db for network node
 who  # print users logged in
 w  # print users logged in, session info
+wc -l  # print word count, [l]ines e.g. ls DIR | wc -l = file count
 xkill {PROC}  # kill windowed service by name | mouse
 xrdp PARMS  # MS remote desktop tool, start xrdp daemon, edit firewall exceptions
 xz -k CONTENTS  # compress CONTENTS [k]eep original .xz, .lzma
@@ -368,7 +390,9 @@ mvn -p  # print maven commands, must be in build.xml dir
 :wq!  # save, overwrite, clobber timestamp no matter
 :He  # open horizontal view - file browser
 :Ve  # open vertical view - file browser
-:noh  # turn off highlights
+:set hls  # enable highlight search
+:set nohls  # disable highlight search
+:noh  # disable highlights
 :set number
 :set nonumber
 
@@ -398,8 +422,8 @@ CTRL+v [visual block], w - jump next column, x - delete, SHIFT+i ADD-TEXT + esc 
 vim -p FILE1, FILE2  # open in tabs
 :tab help
 :help tab-page-intro
-:tabf  # search file in path, open in tab
-:tabf file*
+:tabf FILE  # open existing file in tab
+:tabnew FILE  # open new file in tab
 :tabn | 'gt' | CTRL+PgDn  # tab next
 :tabp | 'gT' | CTRL+PgUp  # tab prev
 :tabfirst  # go to first tab

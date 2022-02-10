@@ -42,6 +42,7 @@
 /proc/meminfo  # system memory usage
 /proc/partitions  # major, minor part blocks
 /proc/version  # cat for linux kernel version, OS flavor, gcc compiler
+/sbin/shutdown -r 15  # cmd [sudo], reboot after 15 mins
 /srv  # RHEL site specific data services, e.g. FTP, WWW, CVS
 /sys/block/DEVICE/queue/scheduler  # set device scheduler e.g. cfq, anticipatory, deadline, noop
 /sys/block/DEVICE/stat  # I/O read device info, block devices
@@ -60,11 +61,12 @@
 
 CMD +SPACE +TABx2  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
 for i in {1..100}; do sudo cp -R /etc /backup/sys; done &  # example 'for loop', copy, exec in background
-apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim|^ssh|email address'
+apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 apt-cache search REGEX  # query the APT cache, search available package lists
 apt-get update  # Debian update package cache
-apt info PKG  # Debian (Advance Package Tool) package info
+apt info PKG  # Debian query PKG info
 atq # manage jobs
+base64 /dev/random | head -c 10M > FILE.txt  # create FILE w/ base64 10MB random data
 atrm JOB  # remove job
 blkid -g  # purge cache, [g]arbage collect remove old devices
 brctl  # ethernet bridge admin
@@ -96,26 +98,25 @@ df  # print disc filesystem space usage
 dig SERVER  # query mail server
 dmesg |-D  # print kernel ring buffer, [D]isable console logging
 dmesg -H -l err  # print kernel [l]evel log errors, [H]uman readable output
-dnf install PKG  # Fedora package manager, install
-dnf search PKG   # Fedora package manager, search
-dpkg -i PGK  # Debian [i]nstall package
-dpkg-reconfigure  # Debian reconfigure installed package
-dpkg -s PKG  # Debian [s]tatus package
+dnf install PKG  # Fedora install PKG
+dnf search PKG   # Fedora search PKG
+dpkg -i PGK  # Debian [i]nstall PKG
+dpkg-reconfigure  # Debian reconfigure installed packages
+dpkg -s PKG  # Debian [s]tatus PKG
 du  # print file space usage
 dumpe2fs -b DEVICE  # print device bad blocks
 e2label DEVICE LABEL  # label device, e.g. e2label /dev/sdX WEB_SERVER
 echo $HOME  # print home variable
 echo $UID  # print user id
 echo -n "value" | openssl md5 -hmac "key"  # gen md5 hash from data input
+ethtool DEVICE  # print net driver and hd setting for DEVICE
 env  # print user environment variables
 fdisk -l DEVICE  # edit, [l]ist part table, e.g. fdisk -l /dev/random
 find . -iname "FILE*"  # find filenames | begin w/ "FILE"
 find . -iname ".svn" -exec rm -rvf "{}" \;  # delete .svn files recursively
 find . -inum INODE -exec rm -i "{}" \;  # delete file by INODE number
-find . -type f \( -iname \*.jpg -o -iname \*.png \)  # find [f]iles w/ extension .jpg, .png, curr dir
-find . -type f \( -iname \*.txt \)
-find / -type d -name 'log'  # find keyword 'log' in root '/' [d]irectory
-find / -type f -name 'messages'
+find . -type f -iname “*.txt “ | ”*mode*.xml” | ”*.log”  # find [f]iles by ext, separate args exclusive
+find . -type d -iname “log”  # find [d]irectory by keyword
 find /var/log -type f -size +100k  # find [f]iles in /var/log greater than 100 KB
 find /var/log -type f -mmin -30  # find files updated in last 30 minutes 
 find /var/log -type f -size 0 -or -size +100k -mmin -30  # find files empty or +100 KB and updated last 30 mins
@@ -137,11 +138,12 @@ head -30 /dev/urandom > FILE  # write begin 30 lines from input to FILE
 head -c 100G < /dev/urandom > FILE  # read 100 GB data write to FILE
 head -n10 FILE  # print FILE first 10 lines
 history NUM  # print history last NUM lines 
+host  # DNS lookup utility
 iconv --list # print coded character sets
 init 6  # systemd service manager, reboot
 iostat DEVICE  # print DEVICE read | write stat
 ioping -c NUM DEVICE  # ping latency request to DEVICE NUM times
-ip addresss  # print interface ip addr
+ip addr show |DEVICE  # print net device ip info
 ip monitor -t  # listen for net link traffic, [t]imestamp
 ip route  # print local route table entry
 iptable -nL  # print ip table rules [L]ist, [n]umeric output addr port
@@ -149,13 +151,16 @@ iptables-save  # save config file, IPv4/6 packet filtering, NAT admin tool
 iwconfig  # print wireless devices
 jobs  # print curr jobs
 journalctl --disk-usage  # print journal filesystem usage
+journalctl -u SERVICE  # print journal entries for SERVICE
 kernel-install  # edit kernel, initramfs images from /boot
 kill %1  # kill job 1
 kill -9 PID  # kill proc by PID, ugly, ungraceful
 kill %JOB  # kill by job number
 kill -l  # [l]ist kill signal functions
 klist  # print curr kerberos certificates
-lastb  # print list of last logged users
+last  # print curr user login events
+lastb  # print user accounts w/ auth attempts
+lastlog  # print user last login session info
 ldconfig  # configure dynamic linker run-time bindings, print cache
 ldd DEV   # print shared object deps, e.g. /bin/bash
 less -C FILE  # print contents, mouse nav, [C]lear previous contents
@@ -165,25 +170,31 @@ localectl list-locales  # print locales
 localectl list-keymaps  # print keyboard mappings
 lshw  # pring hardware metrics
 ls -li  # print dir inode numbers
-ls -Z FILE  # SELinux list FILE security context
-lsmod | sort |  less  # print currently loaded kernel modules
+ls -Z FILE  # print SELinux security context for FILE
+lsmod | sort | less  # print currently loaded kernel modules
 lsof -i  # list open files w/ process, [i]nternet
 lsof -u USER  # list open files by USER
 lspci -nn|v|vv|vvv  # list PCI devices, vendor codes, numbers, names, [v]erbose
 lsusb -tv  # list USB devices, [t]ype, [v]erbose
+md5sum FILE  # print MD5 message digest
+sha256sum  # print SHA256 message digest
 mke2fs -t  # create filesystem, e.g. ext3, ext4
 modinfo DEVICE.ko.xz  # print kernel module info e.g. modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
 more FILE  # print contents, forward only
 mount -a  # mount [a]ll filesystems in fstab
 mount -t  # specify filesystem [t]ype
-nc -lp PORT  # netcat [l]isten [p]ort PORT
+nc |-lp SERVER PORT  # netcat [l]isten [p]ort PORT e.g. nc server02 22
 netstat -tuplen | grep "LISTEN"  # print listening ports
-nmap -sX HOST  # run xmas scan HOST, e.g. localhost
+nmap -sV SERVER -p PORT  # print SERVER port status e.g. nmap -sV server02 -p 21
+nmcli connection show  # print network device metrics: name, UUID, type, device
+nmcli device show  # print network device status: device, type, state, connection
+nmcli con up|down DEVICE  # enable|disable net DEVICE e.g. ens32
+nmcli con edit DEVICE  # open Net Manager dev editor > set ipv4.address 10.50.1.101/24
+nmtui  # text UI for Net Manager
 nslookup SERVER  # print name SERVER ip addr
 od -vAn -N1 -td1 < /dev/urandom  # write 1 byte signed decimal integer
 od -vAn -N2 -tu2 < /dev/urandom  # write 2 byte unsigned decimal integer
 parted  # partition editor
-passwd -aS  # print [a]ll user(s) password [S]tatus info
 pgrep SERVICE-NAME  # return service process id
 pidof PROG  # print process id of running program, e.g. firefox
 ping -c NUM  # execute ping NUM times
@@ -194,30 +205,32 @@ ps -elf | grep -i "EXPR"  # print process for EXPR
 readonly  # print shell read-only variables
 renice  # alter priority of running processes
 rmmod -f ARG  # [f]orce kernel mod ARG remove
-rpm -ivh *  # Fedora local rpm [i]nstall, [v]erbose, [h]ash marks
-rpm -ql <<< rpm -qa | sort >> FILE  # Fedora print install packages, output FILE
+rpm -ivh PKG|*  # Fedora local rpm [i]nstall, [v]erbose, [h]ash marks
+rpm -qa PKG  # query PKG installer name e.g. rpm -qa python*
+rpm -qi PKG  # query PKG installer info
+rpm -ql PKG  # query PKG installer files
+rpm -ql <<< rpm -qa ksh | sort > FILE  # print to file PKG installer files from common name
+rpm -e PKG  # [e]rase or uninstall package
 rsync -havz SRC DEST  # remote copy, sync files [h]uman readable, [a]rchive, [v]erbose, [z]compression
 runlevel  # print previous and current System V Init runlevel
 sar -u  # print performance info e.g. 'sar 2 6' - 2 sec interval, 6 queries total
 screen | tmux  # terminal session multiplexer
 setsebool -P  # SELinux write curr values to disc at reboot
+shutdown -c  # cmd [sudo], interrupt stop reboot sequence
 snap info PKG  # Linux cross distribution, dependency app installer
 sort -k COLUMN
 ss -p | grep EXPR  # print sockets w/ PIDs
 su -l|c  # substitute user, [l]ogin, issue [c]ommand to shell
-sudo /sbin/shutdown -r 15  # reboot after 15 mins
-sudo shutdown -c  # interrupt | stop reboot sequence
 swapon  # print swap file metrics
 systemctl daemon-reload  # reload the systemd manager configuration
-systemctl isolate UNIT  # systemd service manager, start unit w/ deps, stop all others
-systemctl isolate graphical.target  # launch UI
-systemctl isolate multi-user.target  # launch CLI
-systemctl get-default  # return default target at boot
+systemctl isolate graphical.target | multi-user.target  # launch UI | cli
 systemctl set-default TARGET  # set default target at boot
+systemctl get-default  # return default target at boot
+systemctl reboot -i
 systemctl status --all |SERVICE  # print units runtime status
-systemctl --type=service | target  # print system services | targets
-systemctl list-units |grep -i "service|target|mount"  # print curr loaded modules
-systemctl start|stop|enable|disable SERVICE  # enable | disable only affect service startup status
+systemctl --type=service|target  # print system services | targets
+systemctl list-units |grep -i "service | target | mount"  # print curr loaded modules
+systemctl start | stop | | restart |enable | disable SERVICE  # manage SERVICE
 systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
 tail -f FILE  # print file appends
 tail -n10 FILE  # print FILE last 10 lines
@@ -226,7 +239,7 @@ tar OPTIONS --exclude=PATTERN | --remove-files  # exclude file glob pattern, rem
 tar -zcvf ARCH.tar.gz CONTENTS  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
 tar -tvf ARCH.tar.gz  # print archive file list, [t]list
 tar -zxvf ARCH.tar.gz -C DIR  # e[x]tract archive to DIR
-tcpdump  #  dump traffic on a network
+tcpdump -i DEVICE  # dump [i]nterface DEVICE traffic e.g. sudo tcpdump -i ens32
 telinit CMD  # edit System V Init runlevel
 top  # M - organize by memory, P - cpu usage, r - renice, reprioritizer PID
 touch /home/$USER/file{1,2,3}  # create file1, file2, file3 in /home/$USER
@@ -256,7 +269,12 @@ xkill {PROC}  # kill windowed service by name | mouse
 xrdp PARMS  # MS remote desktop tool, start xrdp daemon, edit firewall exceptions
 xz -k CONTENTS  # compress CONTENTS [k]eep original .xz, .lzma
 yum deplist PKG  # Fedora print deps list, e.g. yum deplist python36-rpm.x86_64
-yum info PKG  # Fedora (Yellow Dog Updater) package info
+yum info PKG  # Fedora query PKG info
+yum install -y epel-release cups-pdf
+yum provides CFG-FILE  # print config file package association e.g. yum provides /etc/vsftpd/vsftpd.conf
+yum remove -y PKG  # remove PKG
+lpr FILE.txt  # CUPS, convert text FILE to pdf, def dest /home/$USER/Desktop
+lpq  # list printer queue
 zip -r ARCH.zip CONTENTS  # compress CONTENTS [r]ecursive
 
 dirs  # print dir stack
@@ -337,12 +355,24 @@ e2label DEV LABEL
 e2label /dev/sdX NEW_MOUNT
 
 cp -air /etc/fstab /etc/fstab.bak  # backup fstab
-vim /etc/fstab  # edit fstab
-UUID="ALPHA-NUMERIC"|LABEL  MOUNT  FS-TYPE  OPTIONS  DUMP PASS
-UUID="b58ce781-4a45-496a-8cd3-ab28d3cef783"  /mnt/dd1  ext4  defaults  1  2
-LABEL=NEW_MOUNT  /mnt/dd1  ext4  nofail  1 2
+vim /etc/fstab  # edit fstab, use UUID or label
+# UUID="ALPHA-NUMERIC" | LABEL  MOUNT  FS-TYPE  OPTIONS  DUMP PASS
+# UUID="b58ce781-4a45-496a-8cd3-ab28d3cef783"  /mnt/dd1  ext4  defaults  1  2
+# LABEL=NEW_MOUNT  /mnt/dd1  ext4  nofail  1 2
 mount -L LABEL MOUNT  # mount using label
 mount -a  # test mounts, sudo
+
+# crypto
+shred FILE  # overwrite FILE contents, secure wipe
+cryptsetup OPTIONS ACTION ACTION-ARG  # manage volume encryption
+cryptsetup -v --verify-passphrase luksFormat VOLUME  # prompts for UPPER case 'YES'
+
+## ssh key setup
+ssh-keygen  # creates public, pvt key pair
+# /default/.ssh/id_rsa  # pvt key
+# /default/.ssh/id_rsa.pub  # public key
+# /default/.ssh/authorized_keys  # connecting device pub key file
+ssh-copy-id SERVER  # copy pub key to SERVER
 
 # SVN
 A - Added

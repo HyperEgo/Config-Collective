@@ -310,6 +310,7 @@ LVDEVCE MOUNTDIR FSTYPE defaults 0 0  # edit entries to /etc/fstab for auto moun
 53 tcp|udp dns  # domain name server
 69 udp tftp  # trivial file transfer protocol
 123 udp ntp  # network time protocol
+161 upd snmp  # simple network mngmt protocol
 389 tcp|udp ldap  # light weight directory access protocol
 631 tcp cups  # common Unix printing system
 636 tcp ldaps  # light weight directory access protocol secure

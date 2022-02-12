@@ -20,6 +20,8 @@ git config --global --unset GIT_CMD   // remove git alias
 git config --list  // print global creds
 git config PARM  // print parameter details
 git config --get remote.origin.url  // display upstream url for remote named 'origin'
+git config http.sslVerify "false"
+git config credential.helper cache
 
 git status  // print current repo status
 git log --oneline --graph --decorate --all  // print log output oneline, w/ curr tree graphics

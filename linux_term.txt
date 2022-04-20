@@ -59,7 +59,16 @@
 /var/log/yum.log  # yum install log
 /var/spool/cron/crontabs  # user cron jobs
 
+export HISTTIMEFORMAT="%Y-%m-%d %T "  # time-date format for cmd history
+export HISTCONTROL=ignoreboth  # ignore first space on writes to cmd history
+
 CMD +SPACE +TABx2  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
+F11  # terminal full screen toggle
+ctrl+l  # clear screen
+ctrl+a  # cursor line begin
+ctrl+e  # cursor line end
+ctrl+u  # delete cmd
+ctrl+r, INPUT  # reverse search, ctrl+r - cycle, <enter> - execute
 for i in {1..100}; do sudo cp -R /etc /backup/sys; done &  # example 'for loop', copy, exec in background
 apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 apt-cache search REGEX  # query the APT cache, search available package lists
@@ -183,6 +192,7 @@ modinfo DEVICE.ko.xz  # print kernel module info e.g. modinfo /lib/modules/.../d
 more FILE  # print contents, forward only
 mount -a  # mount [a]ll filesystems in fstab
 mount -t  # specify filesystem [t]ype
+mount | column -t  # output contents in column format e.g. package=util-linux
 nc |-lp SERVER PORT  # netcat [l]isten [p]ort PORT e.g. nc server02 22
 netstat -tuplen | grep "LISTEN"  # print listening ports
 nmap -sV SERVER -p PORT  # print SERVER port status e.g. nmap -sV server02 -p 21
@@ -244,6 +254,7 @@ telinit CMD  # edit System V Init runlevel
 top  # M - organize by memory, P - cpu usage, r - renice, reprioritizer PID
 touch /home/$USER/file{1,2,3}  # create file1, file2, file3 in /home/$USER
 traceroute -T DEST  # run trace w/ tcp packets, def port 80
+truncate -s 0 FILE  # truncate FILE to [s]ize, delete alternative
 tune2fs -l DEVICE  # view DEVICE filesystem info
 udevadm control -R  # reload rules file
 udevadm monitor -u  # print received udev events
@@ -280,6 +291,14 @@ zip -r ARCH.zip CONTENTS  # compress CONTENTS [r]ecursive
 dirs  # print dir stack
 popd  # pop stack
 pushd DIR  # push to stack
+
+cmatrix  # terminal 'matrix' animation
+tmux  # terminal multiplexer, <ctrl+b>-prefix, <?>-help, <%>-split horiz, <">-split vert, <x>-close, <d>-detach
+~/.tmux.conf
+set -g default-terminal 'screen-256color'  # improve colors
+set -g history-limit 10000
+set -g status-fg green
+set -g status-bg black
 
 # LVM - physical > volume > logical
 pvscan  # print physical volume info
@@ -438,16 +457,16 @@ p  # paste
 x  # delete char
 dd  # delete line
 u  # undo
-CTRL+r  # redo
-CTRL+o  # jump back
-CTRL+i  # jump forward
-CTRL+g  # FILE name
-CTRL+o  # back 1 page
-CTRL+b  # back full screen
-CTRL+f  # forward full screen
-CTRL+d  # forward 1/2 screen
-CTRL+u  # back 1/2 screen
-CTRL+v [visual block], w - jump next column, x - delete, SHIFT+i ADD-TEXT + esc - apply changes
+ctrl+r  # redo
+ctrl+o  # jump back
+ctrl+i  # jump forward
+ctrl+g  # FILE name
+ctrl+o  # back 1 page
+ctrl+b  # back full screen
+ctrl+f  # forward full screen
+ctrl+d  # forward 1/2 screen
+ctrl+u  # back 1/2 screen
+ctrl+v [visual block], w - jump next column, x - delete, SHIFT+i ADD-TEXT + esc - apply changes
 
 ## tabs
 vim -p FILE1, FILE2  # open in tabs
@@ -455,8 +474,8 @@ vim -p FILE1, FILE2  # open in tabs
 :help tab-page-intro
 :tabf FILE  # open existing file in tab
 :tabnew FILE  # open new file in tab
-:tabn | 'gt' | CTRL+PgDn  # tab next
-:tabp | 'gT' | CTRL+PgUp  # tab prev
+:tabn | 'gt' | ctrl+PgDn  # tab next
+:tabp | 'gT' | ctrl+PgUp  # tab prev
 :tabfirst  # go to first tab
 :tablast  # go to last tab
 :tab 3  # go to tab 3
@@ -521,8 +540,8 @@ PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export PATH
 
 # Terminal
-CTRL+SHIFT+t  # open terminal tab
-CTRL+SHIFT+w  # close curr tab
+ctrl+SHIFT+t  # open terminal tab
+ctrl+SHIFT+w  # close curr tab
 
 # C++ compiler test
 vim foo.c

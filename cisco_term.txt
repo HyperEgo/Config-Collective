@@ -23,8 +23,8 @@ Esc+f  # move foward one word
 SPACE  # move 1 page down
 
 USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE(console|vty|aux)  # CLI modes
-exit  #  move backward one user mode
 end|CTRL+z  # move to ENABLE mode
+exit  #  move backward one user mode
 logout  # log out of terminal session
 reload  # reboot device
 enable  # go to ENABLE mode
@@ -113,7 +113,7 @@ show mac address-table dynamic address MAC  # print dynamic learned mac addr
 show mac address-table dynamic interface INT  # print dynamic learned mac addr assoc interfaces
 show mac address-table count  # print mac addr entries + total remaining
 show mac address-table aging-time  # print global and per-vlan mac addr inactive timeout
-clear mac address-table dynamic  # empty all mac addr table dynamic entries
+clear mac address-table dynamic |vlan VLAN|int INT|address MAC # empty all mac addr table dynamic entries or specify
 
 switch>enable
 switch#config t

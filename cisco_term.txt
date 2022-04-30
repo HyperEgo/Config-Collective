@@ -22,75 +22,59 @@ Esc+b  # move backward one word
 Esc+f  # move foward one word
 SPACE  # move 1 page down
 
-USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE(console|vty)  # CLI modes
-exit  #  move backward one user config mode
+USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE(console|vty|aux)  # CLI modes
+exit  #  move backward one user mode
 end|CTRL+z  # move to ENABLE mode
-
-reload  # ENABLE cmd  # reboot device
+logout  # log out of terminal session
+reload  # reboot device
 enable  # go to ENABLE mode
-shut|no shut  #  enable|disable interface
-show mac address-table dynamic  # print mac-address table
-ip host NAME IP  # configure host IP to NAME map
-show hosts  # print host ip name map
+disable  # go to USER mode
+shut|no shut  # enable|disable interface
 show run  # print running-config
 show start  # print startup-config
 copy run start  # copy running-config to startup-config
-copy start run  # copy startup-config to running-config`
+copy start run  # copy startup-config to running-config
 
-## erase startup-config
+## erase start configuration
+erase startup-config
 write erase
 erase start
 erase nvram:
 
-enable|disable  # enter|exit User EXEC mode
-end  # exit to User EXEC Mode
-exit  # move back one configuration mode
-logout  # log out of terminal session
+## set DEV to default
+erase start
+delete vlan.dat
+reload
 
-DEV> enable
-DEV# config term
-DEV(config)# hostname Fred
-DEV(config)# line console 0 | line vty 0 15
-DEV(config-line)# password hope
-DEV(config-line)# inteface FastEthernet 0/1
-DEV(config-if)# speed 120
-DEV(config-if)# exit
-DEV(config)# vlan 9
-DEV(config-vlan)#
-
-DEV(config)#hostname HOSTNAME  # assign a host name
-DEV(config)#enable password PASSWORD  # set unencrypted enable password
-DEV(config)#enable secret PASSWORD  # set encrypted enable password
-DEV(config)#service password-encryption  # encode all passwords except enable secret password
-DEV(config)#banner motd_#MESSAGE#  # set motd banner MESSAGE
-DEV(config)#banner login_#MESSAGE#  # set login MESSAGE, print after motd message
-DEV(config)#banner exec_#MESSAGE#  # set executive MESSAGE, print after login process
+## Global Configuration mode
+hostname HOSTNAME  # assign a host name
+enable password PASSWORD  # set unencrypted enable password
+enable secret PASSWORD  # set encrypted enable password
+service password-encryption  # encode all passwords except enable secret password
+service timestamps  # enable device to generate time stamps on log messages (especially debug messages!)
+banner motd_#MESSAGE#  # set motd banner MESSAGE
+banner login_#MESSAGE#  # set login MESSAGE, print after motd message
+banner exec_#MESSAGE#  # set executive MESSAGE, print after login process
 
 ## Line Configuration mode
 DEV(config)#line console  # enter console line config mode
 DEV(config)#line vty 0 15  # enter virtual terminal line config mode
 DEV(config)#line aux 0  # enter auxiliary line config mode
 DEV(config-line)#password PASSWORD # set password
-DEV(config-line)#login  # enforce password login
+DEV(config-line)#login |local  # enforce password login for local account
 DEV(config-line)#logging synchronous  # halt router output interruptions when inputing in cli
 DEV(config-line)#exec-timeout VALUE  # set terminal time-out value, minutes-seconds
 DEV(config-line)#exec-timeout 3  # enable time-out - 3 minutes
 DEV(config-line)#service tcp-keepalives-in  # enable keepalives
 
 ## telnet|ssh
-DEV#show sessions  # print telnet/ssh sessions w/ conn numbers
-DEV#show users  # print user log-in list
-DEV#telnet|ssh IP
-DEV#resume CONN-NUMBER
-DEV#resume 1
-DEV#disconnect CONN-NUMBER
-DEV#disconnect 1
-
-## telnet - apply extended numbered acl to vty lines
-DEV(config)#access-list 101 permit ip 10.2.2.0 0.0.0.3 any
-DEV(config)#access-list 101 permit ip 192.168.30.0 0.0.0.255 any
-DEV(config)#line vty 0 15
-DEV(config-line)#access-class 101 in  # enable acl on inbound int
+show sessions  # print telnet/ssh sessions w/ conn numbers
+show users  # print user log-in list
+telnet|ssh IP
+resume CONN-NUMBER
+resume 1
+disconnect CONN-NUMBER
+disconnect 1
 
 ## ssh - configure
 DEV(config)#username USERNAME password PASSWORD
@@ -112,40 +96,25 @@ DEV>show cdp neighbors detail
 DEV>show cdp entry NAME
 DEV>show cdp int  # print all cdp interfaces
 DEV>show cdp int INT  # print info of specified cdp interface
+DEV>enable
 DEV#clear cdp counters  # reset local cdp traffic counters
 DEV#clear cdp table  # empty contents of local cdp table
+DEV#config t
+DEV(config)#cdp run  # enable cdp advertisements
 
 
-## SWITCH
-## interface manage 
-switch>show int status  # print list of each int for speed, duplex, and vlan association settings
-switch>show int description  # print list of each int for protocol and line status
-switch>show int INT  # print INT detailed info
-switch>show int statistics  # print statistical info for interface, packet counters and communications
+# SWITCH
+show int status  # print list of each int for speed, duplex, and vlan association settings
+show int description  # print list of each int for protocol and line status
+show int INT  # print INT detailed info
+show int statistics  # print statistical info for interface, packet counters and communications
+show mac address-table |dynamic  # print mac-address table, all types|dynamic
+show mac address-table dynamic address MAC  # print dynamic learned mac addr
+show mac address-table dynamic interface INT  # print dynamic learned mac addr assoc interfaces
+show mac address-table count  # print mac addr entries + total remaining
+show mac address-table aging-time  # print global and per-vlan mac addr inactive timeout
+clear mac address-table dynamic  # empty all mac addr table dynamic entries
 
-## vlan manage
-switch>show vlan brief  # print interface assignments for local vlans
-switch>show vlan summary  # print count of all configured vlans
-switch>show vlan id VLAN-ID  # print VLAN-ID summary
-switch>show vlan name VLAN-NAME  # print VLAN-NAME summary
-switch>show int vlan VLAN-ID  # print VLAN info for all associated intefaces
-switch>show int trunk  # print trunking interfaces
-switch>show int INT switchport  # print INT vlan info; vlan tags, allowed vlans, native vlan
-switch>show dhcp lease  # print dhcp ip address for mngmt vlan
-
-> Priviledged Exec mode - User Exec subset of Privil Exec
-switch#show mac address-table  # print mac addresses table w/ ports, vlans
-switch#show mac address-table VLAN-ID
-switch#show mac address-table static
-switch#show mac address-table dynamic
-switch#show mac address-table dynamic vlan VLAN-ID
-
-switch#show boot  # print ios image file name and other relevant info
-switch#delete flash:vlan.dat  # delete entire vlan dat file from flash memory (system restored to factory defaults)
-switch#reload  # reset/reboot switch
-switch#terminal monitor  # print console messages from various ios output (via telnet, ssh, console connect)
-
-> Global Configuration mode
 switch>enable
 switch#config t
 switch(config)#ip default-gateway IP-ROUTER, no mask  # define default gateway
@@ -154,12 +123,27 @@ switch(config)#ip domain-name NAME  # declare domain name
 switch(config)#shutdown vlan VLAN-ID  # administratively shuts down vlan (no frames forwarded from vlan!)
 switch(config)#no shut vlan VLAN-ID
 
-switch(config)#hostname HOSTNAME  # assign a host name
-switch(config)#enable password PASSWORD  # set unencrypted enable password
-switch(config)#enable secret PASSWORD  # set encrypted enable password
-switch(config)#service password-encryption  # encode all passwords except enable secret password
-switch(config)#service timestamps  # enable device to generate time stamps on log messages (especially debug messages!)
-switch(config)#cdp run  # enable cdp advertisements
+## vlan manage
+show vlan brief  # print interface assignments for local vlans
+show vlan summary  # print count of all configured vlans
+show vlan id VLAN-ID  # print VLAN-ID summary
+show vlan name VLAN-NAME  # print VLAN-NAME summary
+show int vlan VLAN-ID  # print VLAN info for all associated intefaces
+show int trunk  # print trunking interfaces
+show int INT switchport  # print INT vlan info; vlan tags, allowed vlans, native vlan
+show dhcp lease  # print dhcp ip address for mngmt vlan
+
+> Priviledged Exec mode - User Exec subset of Privil Exec
+show mac address-table  # print mac addresses table w/ ports, vlans
+show mac address-table VLAN-ID
+show mac address-table static
+show mac address-table dynamic
+show mac address-table dynamic vlan VLAN-ID
+
+show boot  # print ios image file name and other relevant info
+delete flash:vlan.dat  # delete entire vlan dat file from flash memory (system restored to factory defaults)
+reload  # reset/reboot switch
+terminal monitor  # print console messages from various ios output (via telnet, ssh, console connect)
 
 ## speed|duplex - manual config, disable IEEE auto-negoiation
 switch>show int status  # print speed and duplex settings 
@@ -383,7 +367,60 @@ ap(config-if)#ip address dhcp  # enable dhcp client
 
 
 # ROUTER
-## SDM - Security Device Manager
+show ip host  # USER, print ip info
+show hosts  # USER, print host ip name map
+ip host NAME IP  # configure host IP to NAME map
+
+> User Exec mode
+ping ip  # extended ping; ping a target ip address from a specified source address (choose 'y' in extended options!)
+ping  # use this command solo, to input specifics about ping execution
+ping IP  # send ping to specified address
+traceroute  # use extended version to specify destination and source
+traceroute IP  # trace route of input IP address
+
+show int INT  # print stats for particular interface
+show ip int brief  # short print of ip address assignments on local interfaces (no masks listed)
+show ip route  # print routing table
+show ip route IP-NETWORK  # print routing info for specified network address
+show ip protocols  # print networks advertised by local routing protocol and passive interfaces also
+show protocols  # print interface protocol status (as 'up' or 'down') and network masks
+show controllers INT  # print DCE capability and clockrate info
+show version  # print currently loaded IOS version, hardware, and device information
+show process  # print physical memory allocation
+show flash  # print flash memory allocation (used and available memory)
+dir flash:  # print flash memory file listing
+show clock  # print device time
+show clock_rate  # print clock rate use on DCE connections
+
+> Priviledged Exec mode
+show run
+show run INT
+show start
+show arp
+terminal monitor  # enable log, debug and alert message print to screen console session
+copy run start  # copy the active running configuration to NVRAM
+erase start  # erase the config in NVRAM
+
+reload  # reboot
+setup  # enter setup mode
+auto secure  # enable security features, disable inactive services
+
+cd nvram:  # change directory to nvram
+pwd  # present working directory, use to verify presence current directory
+dir  # directory listing
+show file system  # print file systems, memory allocated to each file
+debug  # not recommended (be specific about exact debugging operations), start debugging process
+undebug all
+
+> Global Configuration mode
+|no ip domain-lookup  # enable|disable ip domain lookup
+ip domain-name NAME  # define domain name
+ip default-network IP-NETWORK  # assign network address for def gw (network addr must already be present in routing table)
+config-register HEX-REG  # boot reg setting; 2100 (rom monitor), 2101 (rom memory/flash), 2102 (nvram), 2142(password recovery/reset)
+|no cdp run  # enable|disable cdp advertisements
+service timestamps log|debug  # enable time stamps for logging and debugging messages
+
+## SDM - Security Device Manager ?
 router(config)#ip http server
 router(config)#ip http secure-server
 router(config)#ip http authentication local
@@ -393,57 +430,6 @@ router(config-line)#privilege level 15
 router(config-line)#login local
 router(config-line)#transport input telnet ssh
 router(config-line)#exit
-
-> User Exec mode
-router>ping ip  # extended ping; ping a target ip address from a specified source address (choose 'y' in extended options!)
-router>ping  # use this command solo, to input specifics about ping execution
-router>ping IP  # send ping to specified address
-router>traceroute  # use extended version to specify destination and source
-router>traceroute IP  # trace route of input IP address
- 
-router>show ip route  # print routing table
-router>show ip route IP-NETWORK  # print routing info for specified network address
-router>show ip protocols  # print networks advertised by local routing protocol and passive interfaces also
-router>show protocols  # print interface protocol status (as 'up' or 'down') and network masks
-router>show ip int brief  # short print of ip address assignments on local interfaces (no masks listed)
-router>show controllers INT  # print DCE capability and clockrate info
-router>show int INT  # print stats for particular interface
-
-router>show version  # print currently loaded IOS version, hardware, and device information
-router>show process  # print physical memory allocation
-router>show flash  # print flash memory allocation (used and available memory)
-router>dir flash:  # print flash memory file listing
-router>show clock  # print device time
-router>show clock_rate  # print clock rate use on DCE connections
-
-> Priviledged Exec mode
-router#show run
-router#show run INT
-router#show start
-router#show arp
-router#terminal monitor  # enable log, debug and alert message print to screen console session
-router#copy run start  # copy the active running configuration to NVRAM
-router#erase start  # erase the config in NVRAM
-
-router#reload  # reboot
-router#setup  # enter setup mode
-router#auto secure  # enable security features, disable inactive services
-
-router#cd nvram:  # change directory to nvram
-router#pwd  # present working directory, use to verify presence current directory
-router#dir  # directory listing
-router#show file system  # print file systems, memory allocated to each file
-router#debug  # not recommended (be specific about exact debugging operations), start debugging process
-router#undebug all
-
-> Global Configuration mode
-router(config)# |no ip domain-lookup  # enable|disable ip domain lookup
-router(config)#ip domain-name NAME  # define domain name
-router(config)#ip default-network IP-NETWORK  # assign network address for def gw (network addr must already be present in routing table)
-
-router(config)#config-register HEX-REG-NUMBER  # boot from registry setting; 2100 (rom monitor), 2101 (rom memory/flash), 2102 (nvram), 2142(password recovery/reset)
-router(config)# |no cdp run  # enable|disable cdp advertisements
-router(config)#service timestamps log|debug  # enable time stamps for logging and debugging messages
 
 ## transfer files
 router#copy run tftp  # copy running-config to tftp server
@@ -567,7 +553,7 @@ router(config-if)#ip ospf network point-to-multipoint  # identify network type i
 router(config-router)#router-id IP  # assign ip address as router id of local router
 router(config-router)#neighbor IP  # no mask, identify neighbor router in NBMA networks, no multicasts sent
 
-## router authentication - verify connectivity
+## authentication
 >> RIP
 router(config)#key chain RIP_KEY
 router(config-keychain)#key 1
@@ -712,6 +698,12 @@ router(config)#int s0/0/0
 router(config-if)#ip nat inside
 router(config-if)#int s0/1/0
 router(config-if)#ip nat outside
+
+## ACLs - apply to vty lines 
+DEV(config)#access-list 101 permit ip 10.2.2.0 0.0.0.3 any
+DEV(config)#access-list 101 permit ip 192.168.30.0 0.0.0.255 any
+DEV(config)#line vty 0 15
+DEV(config-line)#access-class 101 in  # enable acl on inbound int
 
 ## ACL - numbered | named, implicit "deny all"
 router#show int INT  # print interfaces w/ ACLs

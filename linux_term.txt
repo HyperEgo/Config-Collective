@@ -455,6 +455,8 @@ SHIFT+g  # FILE bottom
 y  # yank
 p  # paste
 x  # delete char
+dw  # delete word
+d$|D  # delete from cursor to EOL
 dd  # delete line
 u  # undo
 ctrl+r  # redo

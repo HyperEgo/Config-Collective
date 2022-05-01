@@ -115,13 +115,16 @@ show mac address-table count  # print mac addr entries + total remaining
 show mac address-table aging-time  # print global and per-vlan mac addr inactive timeout
 clear mac address-table dynamic |vlan VLAN|int INT|address MAC # empty all mac addr table dynamic entries or specify
 
+## config ip add, df gw
 switch>enable
 switch#config t
-switch(config)#ip default-gateway IP-ROUTER, no mask  # define default gateway
-switch(config)#no ip domain-lookup  # disable dns lookup (cli configuration convenience)
+switch(config)#interface vlan 1  # management vlan
+switch(config-if)#ip address IP MASK
+switch(config-if)#ip default-gateway IP  # define default gateway
+switch(config)#no shut
+
+switch(config)#no ip domain-lookup  # disable dns lookup
 switch(config)#ip domain-name NAME  # declare domain name
-switch(config)#shutdown vlan VLAN-ID  # administratively shuts down vlan (no frames forwarded from vlan!)
-switch(config)#no shut vlan VLAN-ID
 
 ## vlan manage
 show vlan brief  # print interface assignments for local vlans

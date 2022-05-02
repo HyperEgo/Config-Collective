@@ -118,9 +118,9 @@ clear mac address-table dynamic |vlan VLAN|int INT|address MAC # empty all mac a
 ## config ip add, df gw
 switch>enable
 switch#config t
+switch(config)#ip default-gateway IP  # define default gateway
 switch(config)#interface vlan 1  # management vlan
 switch(config-if)#ip address IP MASK
-switch(config-if)#ip default-gateway IP  # define default gateway
 switch(config)#no shut
 
 switch(config)#no ip domain-lookup  # disable dns lookup

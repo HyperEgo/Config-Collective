@@ -1,0 +1,129 @@
+# Docker
+
+## keystrokes
+ctrl+p, ctrl+q  # detach from running container
+
+## tag convention e.g. registry.example.com:port/organization/image-name:version-tag
+docker tag SRC_IMG[:TAG] TARGET_IMG[:TAG]  # tag image
+docker image tag SRC-IMG:TAG TARGET-IMG:TAG
+
+## add $USER to docker group
+sudo groupadd docker  # create docker group (may already exist)
+sudo gpasswd -a $USER docker  # append docker group to $USER
+newgrp docker  # avoid logout|in to affect group change
+docker run hello-world  # test, no sudo
+
+man dockerfile
+man docker build
+
+docker ps |l|a|s # print curr containers, [l]atest, [a]ll, total file [s]ize
+docker version
+docker info  # print stats e.g. containers - running, stopped, server version
+docker search STRING  # search online repo
+e.g.>
+docker search --filter "stars=80" --filter "is-official=true" ubuntu  # filter ubuntu img w/ 80+ stars
+docker search --limit=25 ubuntu  # limit search results
+
+docker inspect OPTION NAME|ID  # inspect image
+docker rmi IMAGE-ID  # remove image
+docker images  # print images
+docker image ls NAME  # show info for specific image
+docker image CMD  # e.g. docker image build|history|import
+docker image import ARCHIVE  # import img from archive
+e.g.>
+docker image import nginx.tar  # may have to name, tag img after import
+
+docker logs OPTION CNTR  # print container logs
+docker logs -f IMAGE  # print log details for image, [f]orce
+docker attach OPTION CNTR  # jump in to running container
+docker exec OPTION CNTR CMD ARG
+docker exec -ti CNTR bash  # attach process to running container, [i]nteractive, connect [t]ty
+docker kill CNTR  # kill container
+docker rm CNTR  # remove container
+docker commit OPTION CNTR IMG-NAME|IMG-ID:TAG  # create new image from container changes
+
+docker run --memory maximum-allowed-memory IMG-NAME CMD
+docker run --rm -ti -p CNTR-PORT --name IMG-NAME:TAG CMD  # open container ports, [rm]=remove on exit
+docker run --rm -ti -p HOST:CNTR-PORT --name IMG-NAME:TAG CMD
+e.g.>
+docker run --name example -d ubuntu bash -c "less /etc/password"
+docker run --rm -ti ubuntu:latest # run container, delete container when exiting
+docker run -ti -p 8080 -w /home ubuntu:14.04 bash  # run ubuntu img, working dir='/home', prompt=bash, port 8080 open
+docker run -ti ubuntu:latest bash  # run image, [t]erminal, [i]nteractive
+docker run -ti ubuntu bash -c "sleep 3; echo all done"  # run container, execute bash cmds
+docker run -p 1234:1234/udp
+docker run -p 127.0.0.1:1234:1234/tcp  # make pvt service pvt to a container
+docker run -d -ti ubuntu bash  # run container, detached mode (daemon), no enter container
+docker run -d -p 5000:5000 --restart=always --name registry registry:2  # run local registry container, restart if fail
+
+docker stop CNTR-ID  # stop container
+
+docker rmi -f CNTR-ID  # remove container from local repo, [f]orce
+
+docker pull IMG-NAME:TAG
+docker push IMG-NAME|IMG-ID:TAG  # push img to registry
+
+docker save -o IMG-ID|IMG-NAME  # save image to tar file, [o]utput string
+e.g.>
+docker save -o archive.tar.gz debian:sid busybox ubuntu:14.04  # save img to archive
+docker load -i my-images.tar.gz  # load img from register, [i]nput string
+docker import /path/to/exampleimage.tgz  # import image from tarball to registry
+
+docker container export IMG-NAME > ARCH  # export container file system to archive
+e.g.>
+docker container export jovial_jackson > nginx.tar
+docker container CMD  # e.g. docker container attach|commit|cp|create
+
+docker build -f /path/to/Dockerfile .  # execute container build, include dependencies in docker file
+docker network ls  # list all networks known to docker (Engine daemon)
+docker volume ls  # list all volumes known to docker
+
+docker port CNTR PRT-PORT|PROTO  # list active ports
+docker port echo-server
+~> 45678/tcp -> 0.0.0.0:32770  # image port 45678 open to any ip at port 32770
+~> 45679/tcp -> 0.0.0.0:32769
+
+## PORTS - connect containers - part 1
+docker run --rm -ti -p OUT:IN
+e.g.>
+docker run --rm -ti -p 45678:45678 -p 45679:45679 --name echo-server ubuntu:14.04 bash  # start, open ports 
+CNTR# nc -lp 45678 | nc -lp 45679  # netcat, listen on ports, forward data from 45678 to 45679
+pc1> nc localhost 45678
+pc1> nc localhost 45679
+curl localhost:45678  # test port number
+
+## PORTS - connect containers - part 2
+docker run --rm -ti ubuntu:14.04 bash
+CNTR# nc 10.35.3.24 45678  # netcat listen ip, port
+CNTR# nc 10.35.3.24 45679
+
+## DIRECT - connect containers
+docker run --rm -ti --name server ubuntu:14.04 bash  # first container
+docker run --rm -ti --link server --name client ubuntu:14.04 bash  # second container, link
+
+## PRVT Networks - connect containers
+docker network CMD  # e.g. docker network connect|create|disconnect|inspect|prune
+docker network create faux-net
+docker run --rm -ti --net=faux-net --name server ubuntu:14.04 bash
+CNTR1# nc -lp 1234
+docker run --rm -ti --link server --net=faux-net --name client ubuntu:14.04 bash
+CNTR2# nc server 1234
+
+## SHARED volumes w/ host
+docker run -ti -v path/to/volume:path/to/share/dir IMG CMD
+e.g.>
+docker run -ti -v /usr/daveg/example:/shared-folder ubuntu bash
+docker run -ti -p 8080 -v /home/ninjaboy/shared-volume:/home -w /home ubuntu:14.04 bash
+
+## SHARED volumes btwn containers
+docker run -ti --name NAME -v /shared-volume ubuntu bash
+CNTR1# echo "hello" >> /shared-volume/data-file.txt
+docker run -ti --volumes-from NAME ubuntu bash
+CNTR2# ...
+
+## COMPOSE - yaml|.yml
+apt install docker-compose
+docker-compose up | down -d # exec yaml, [d]aemon bkgrnd
+docker-compose scale confluence-test=6
+docker-compose logs -f --tail=all
+docker-compose exec confluence bash  # attach shell instance to running container|image

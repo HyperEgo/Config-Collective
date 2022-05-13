@@ -3,78 +3,74 @@
 WORKING-DIR => STAGED => LOCAL repo => REMOTE repo
 create | edit -> add -> commit -> push
 
-untracked files ==> working dir
-tracked files ==> repo
+untracked files = working dir
+tracked files = repo
 
-cat /etc/gitconfig  // global creds
-cat ~/.gitconfig  // local user creds
+cat /etc/gitconfig  # global creds
+cat ~/.gitconfig  # local user creds
 
-git config --global user.name "Jimbo Tanner"
-git config --global user.email jimbo-tanner@countryboy.com
+git config --global user.name NAME
+git config --global user.email EMAIL
 git config --global core.editor "vim"
 git config --global color.ui true
 git config --global alias.st "status"
 git config --global alias.lgg "log --graph --oneline --decorate --abbrev-commit --all"
 git config --global alias.ci "commit"
-git config --global --unset GIT_CMD   // remove git alias
-git config --list  // print global creds
-git config PARM  // print parameter details
-git config --get remote.origin.url  // display upstream url for remote named 'origin'
+git config --global --unset CMD  # remove git alias
+git config --list  # print global creds
+git config PARM  # print parameter details
+git config --get remote.origin.url  # display upstream url for remote named 'origin'
 git config http.sslVerify "false"
 git config credential.helper cache
 
-git status  // print current repo status
-git log --oneline --graph --decorate --all  // print log output oneline, w/ curr tree graphics
-git log BRANCH  // print branch logs
+git status  # print current repo status
+git log --oneline --graph --decorate --all  # print log output oneline, w/ curr tree graphics
+git log BRCH  # print BRCH logs
 
-git branch  // see current branch
-git branch BRANCH  // create branch, stay on current
-git branch --merged  // print merged branches for current
-git branch -m BRANCH NEW_BRANCH  // rena[m]e branch
-git branch -d BRANCH  // [d]elete branch
-git branch -r  // print [r]emote branches
-git branch -a  // print [a]ll remote branches
+git branch BRCH  # create branch, stay on current
+git branch -m BRCH NEW_BRCH  # rena[m]e branch
+git branch |a|d|r|--merged  # print curr branch, [a]ll, [d]el, [r]emote
 
-git checkout BRANCH  // switch to branch
-git checkout -b BRANCH  // create [b]ranch, check it out
-git checkout -b SUB_BRANCH BRANCH  // checkout subordinate branch from "main" branch
-git checkout -- FILE  // checkout | override file from repo in to working dir
+git checkout BRCH  # switch to branch
+git checkout -b BRCH  # create [b]ranch, check it out
+git checkout -b SUB_BRCH BRCH  # checkout subordinate branch from "main" branch
+git checkout HEAD -- FILE  # checkout FILE from HEAD (e.g. master) to working dir
 
-git diff  // compare working dir and repo
-git diff --staged  // compare staged area and repo
-git diff --color-words  // compare changes side-by-side, color contrast
+git diff |--staged|--color-words  # compare to repo: working, staged, use color words
 
-git add FILE  // add file
-git rm FILE  // remove file from staged to working dir (e.g. after commit, before push)
-git reset HEAD FILE  // remove file from staged area to working dir
-git clean -f  // remove [f]iles from working dir
-git show BRANCH | SHA  // print commit details
+git add FILE  # add file
+git rm FILE  # remove file from staged to working dir (e.g. after commit, before push)
+git clean -f  # remove [f]iles from working dir
 
-git commit -m "first commit"  // commit files to current branch w/ [m]essage
-git commit -a  // commit files to current branch, open editor for extended commit msg
-git commit -am "add all modified files"  // commit all modified files, no new or deleted files
-git commit --amend -m "add to previous commit"  // amend to most recent commit
+git show BRCH|SHA  # print commit details
+git show REV:path/to/FILE  # print FILE from REV
 
-git merge BRANCH  // merge branch to current (**dangerous, verify curr branch BEFORE executing)
-git merge --no-ff BRANCH  // execute merge, no fast forward
-git merge --ff-only BRANCH  // execute merge, only fast forward merge, abort otherwise
-git merge --abort  // abort merge
+git commit -m MSG  # commit files to curr branch w/ [m]essage
+git commit -e  # commit files to curr branch, open [e]ditor
+git commit -am MSG  # commit all modified files, no new or deleted files
+git commit --amend -m MSG  # amend to most recent commit
 
-git remote -v  // print remotes, current branch
-git remote add ALIAS REMOTE  // add alias for remote
-git remote add origin URL // add remote named 'origin' for URL
-git remote rm ALIAS  // remove remote
+git merge BRCH  # merge branch to current (**dangerous, verify curr branch BEFORE executing)
+git merge --no-ff BRCH  # execute merge, no fast forward
+git merge --ff-only BRCH  # execute merge, only fast forward merge, abort otherwise
+git merge --abort  # abort merge
 
-git push -u ALIAS BRANCH  // push branch changes to remote [u]pstream tracking
-git push -u origin master  // push changes to remote named 'origin' on 'master' branch
-git push ALIAS --delete REMOTE  // keep local alias, delete remote
-git push --set-upstream origin master  // set upstream remote named 'origin' for 'master' branch
+git remote -v  # print remotes, curr branch
+git remote add ALIAS REMOTE  # add ALIAS for REMOTE
+git remote rm ALIAS  # remove remote ALIAS
+git remote add REMOTE URL # add REMOTE w/ URL
+e.g.> git remote add origin URL
 
-git clone URL  // clone repo, assume MASTER branch
-git clone -b BRANCH URL DIR  // clone repo to directory
-git clone -b BRANCH --single-branch URL  // clone specific branch
+git push ALIAS --delete REMOTE  # keep local alias, delete remote
+git push -u REMOTE BRCH  # push BRCH to REMOTE, [u]pstream tracking
+e.g.> git push -u origin master
+e.g.> git push --set-upstream origin master  # set upstream remote named 'origin' for 'master' branch
 
-git fetch ALIAS  // sync with remote to "origin/master" NOT master
+git clone URL  # clone repo, assume MASTER branch
+git clone -b BRCH URL DIR  # clone repo to directory
+git clone -b BRCH --single-branch URL  # clone specific branch
+
+git fetch ALIAS  # sync with remote to "origin/master" NOT master
 git pull = git fetch + git merge
 
 ## create local repo
@@ -84,15 +80,14 @@ git commit -m "first commit"
 git push
 
 ## create remote repo, local exclusive
-remote> git init --bare  // bare repo, no working dir
-local> git remote add origin URL  // add remote named 'origin' for remote URL
-local> git remote -v  // list 'pull', 'fetch' connected remotes
-local> git push origin master  // push changes to remote named 'origin' on 'master' branch
+remote> git init --bare  # bare repo, no working dir
+local> git remote add origin URL  # add remote named 'origin' for remote URL
+local> git remote -v  # list 'pull', 'fetch' connected remotes
+local> git push origin master  # push changes to remote named 'origin' on 'master' branch
 
 ## create remote repo, shared
 mkdir -p /share/devrepo.git
-sudo chgrp GROUP /share/devrepo.git  // set dir group name
-sudo chmod g+s|g+ws /share/devrepo.git  // set file attrib inheritance
+sudo chgrp GROUP /share/devrepo.git  # set dir group name
+sudo chmod g+s|g+ws /share/devrepo.git  # set file attrib inheritance
 cd /share/devrepo.git
-git init --bare --shared=group  // explicitly set repo to shared status - multiple user contributes
-
+git init --bare --shared=group  # explicitly set repo to shared status - multiple user contributes

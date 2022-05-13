@@ -34,6 +34,7 @@ show run  # print running-config
 show start  # print startup-config
 copy run start  # copy running-config to startup-config
 copy start run  # copy startup-config to running-config
+logging synchronous  # sync log msg display w/ other output, limit interrupts
 
 ## erase start configuration
 erase startup-config

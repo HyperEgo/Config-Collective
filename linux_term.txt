@@ -44,8 +44,8 @@
 /proc/version  # cat for linux kernel version, OS flavor, gcc compiler
 /sbin/shutdown -r 15  # cmd [sudo], reboot after 15 mins
 /srv  # RHEL site specific data services, e.g. FTP, WWW, CVS
-/sys/block/DEVICE/queue/scheduler  # set device scheduler e.g. cfq, anticipatory, deadline, noop
-/sys/block/DEVICE/stat  # I/O read device info, block devices
+/sys/block/DEV/queue/scheduler  # set device scheduler e.g. cfq, anticipatory, deadline, noop
+/sys/block/DEV/stat  # I/O read device info, block devices
 /sys/class  # virtual filesystem loaded in RAM, similiar devices, memory monitor
 /root  # root user home dir
 /usr/lib/modules  # list kernel version
@@ -62,6 +62,25 @@
 export HISTTIMEFORMAT="%Y-%m-%d %T "  # time-date format for cmd history
 export HISTCONTROL=ignoreboth  # ignore first space on writes to cmd history
 
+# Ports
+20 tcp|udp ftp  # file transfer protocol, data
+21 tcp|udp ftp  # file transfer protocol, control
+22 tcp ssh  # secure shell
+23 tcp|udp telnet  # remote unencrypted text-based comms
+25 tcp smtp  # simple mail transfer protocol
+53 tcp|udp dns  # domain name server
+69 udp tftp  # trivial file transfer protocol
+123 udp ntp  # network time protocol
+161 upd snmp  # simple network mngmt protocol
+389 tcp|udp ldap  # light weight directory access protocol
+631 tcp cups  # common Unix printing system
+636 tcp ldaps  # light weight directory access protocol secure
+1194 tcp|udp openvpn  # virtual private network server
+3128 tcp squid  # proxy server
+3306 tcp sql  # MS proprietary relational db manager
+5900 tcp|udp vnc  # virtual network computing
+
+# keystrokes
 CMD +SPACE +TABx2  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
 F11  # terminal full screen toggle
 ctrl+l  # clear screen
@@ -69,7 +88,11 @@ ctrl+a  # cursor line begin
 ctrl+e  # cursor line end
 ctrl+u  # delete cmd
 ctrl+r, INPUT  # reverse search, ctrl+r - cycle, <enter> - execute
-for i in {1..100}; do sudo cp -R /etc /backup/sys; done &  # example 'for loop', copy, exec in background
+ctrl+SHIFT+t  # open terminal tab
+ctrl+SHIFT+w  # close curr tab
+
+# CLI
+for i in {1..100}; do sudo cp -R /etc /backup/sys; done &  # e.g. 'for loop', copy, exec in background
 apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 apt-cache search REGEX  # query the APT cache, search available package lists
 apt-get update  # Debian update package cache
@@ -84,7 +107,7 @@ cat FILE | sort | uniq -d|u # print [d]uplicates, [u]nique names
 chage -l USER  # print account age info
 chattr +i FILE  # edit file attributes, [R]ecursive, [i]mmutable
 lsattr FILE  # print FILE attribs e.g. [i]mmutable, [a]ppend only
-chgrp -R GROUP DIR  # edit directory group affiliation
+chgrp -R GRP DIR  # edit directory group affiliation
 chown -R $USER DIR  # edit directory ownership
 chmod -R 775 DIR  # edit directory permissions
 chmod -R {ugo}+{rwx} DIR  # edit dir perms, [u]ser, [g]roup, [o]ther, [r]ead, [w]rite, [e]xecute
@@ -113,14 +136,14 @@ dpkg -i PGK  # Debian [i]nstall PKG
 dpkg-reconfigure  # Debian reconfigure installed packages
 dpkg -s PKG  # Debian [s]tatus PKG
 du  # print file space usage
-dumpe2fs -b DEVICE  # print device bad blocks
-e2label DEVICE LABEL  # label device, e.g. e2label /dev/sdX WEB_SERVER
+dumpe2fs -b DEV  # print device bad blocks
+e2label DEV LABEL  # label device, e.g. e2label /dev/sdX WEB_SERVER
 echo $HOME  # print home variable
 echo $UID  # print user id
 echo -n "value" | openssl md5 -hmac "key"  # gen md5 hash from data input
-ethtool DEVICE  # print net driver and hd setting for DEVICE
+ethtool DEV  # print net driver and hd setting for DEV
 env  # print user environment variables
-fdisk -l DEVICE  # edit, [l]ist part table, e.g. fdisk -l /dev/random
+fdisk -l DEV  # edit, [l]ist part table, e.g. fdisk -l /dev/random
 find . -iname "FILE*"  # find filenames | begin w/ "FILE"
 find . -iname ".svn" -exec rm -rvf "{}" \;  # delete .svn files recursively
 find . -inum INODE -exec rm -i "{}" \;  # delete file by INODE number
@@ -129,11 +152,11 @@ find . -type d -iname “log”  # find [d]irectory by keyword
 find /var/log -type f -size +100k  # find [f]iles in /var/log greater than 100 KB
 find /var/log -type f -mmin -30  # find files updated in last 30 minutes 
 find /var/log -type f -size 0 -or -size +100k -mmin -30  # find files empty or +100 KB and updated last 30 mins
-fsck [-R|r] DEVICE  # filesystem check, skip [R]oot filesystem, [r]epair
-getent group GROUP  # print group membership list
+fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
+getent group GRP  # print group membership list
 getent hosts  # print hosts db
 getfacl DIR  # print ACL attribs for DIR
-setfacl -R -m g:GROUP:r DIR  # grant read-only perms to GROUP for DIR
+setfacl -R -m g:GRP:r DIR  # grant read-only perms to GRP for DIR
 getsebool -a  # SELinux print boolean list
 gpg --gen-key|send-key  # generate key pair, send to server
 grep --exclude-dir=.svn 'DEPRECATED_'  # search keyword, exclude dir
@@ -150,9 +173,9 @@ history NUM  # print history last NUM lines
 host  # DNS lookup utility
 iconv --list # print coded character sets
 init 6  # systemd service manager, reboot
-iostat DEVICE  # print DEVICE read | write stat
-ioping -c NUM DEVICE  # ping latency request to DEVICE NUM times
-ip addr show |DEVICE  # print net device ip info
+iostat DEV  # print DEV read | write stat
+ioping -c NUM DEV  # ping latency request to DEV NUM times
+ip addr show |DEV  # print net device ip info
 ip monitor -t  # listen for net link traffic, [t]imestamp
 ip route  # print local route table entry
 iptable -nL  # print ip table rules [L]ist, [n]umeric output addr port
@@ -188,7 +211,7 @@ lsusb -tv  # list USB devices, [t]ype, [v]erbose
 md5sum FILE  # print MD5 message digest
 sha256sum  # print SHA256 message digest
 mke2fs -t  # create filesystem, e.g. ext3, ext4
-modinfo DEVICE.ko.xz  # print kernel module info e.g. modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
+modinfo DEV.ko.xz  # print kernel module info e.g. modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
 more FILE  # print contents, forward only
 mount -a  # mount [a]ll filesystems in fstab
 mount -t  # specify filesystem [t]ype
@@ -198,8 +221,8 @@ netstat -tuplen | grep "LISTEN"  # print listening ports
 nmap -sV SERVER -p PORT  # print SERVER port status e.g. nmap -sV server02 -p 21
 nmcli connection show  # print network device metrics: name, UUID, type, device
 nmcli device show  # print network device status: device, type, state, connection
-nmcli con up|down DEVICE  # enable|disable net DEVICE e.g. ens32
-nmcli con edit DEVICE  # open Net Manager dev editor > set ipv4.address 10.50.1.101/24
+nmcli con up|down DEV  # enable|disable net DEV e.g. ens32
+nmcli con edit DEV  # open Net Manager dev editor > set ipv4.address 10.50.1.101/24
 nmtui  # text UI for Net Manager
 nslookup SERVER  # print name SERVER ip addr
 od -vAn -N1 -td1 < /dev/urandom  # write 1 byte signed decimal integer
@@ -249,20 +272,20 @@ tar OPTIONS --exclude=PATTERN | --remove-files  # exclude file glob pattern, rem
 tar -zcvf ARCH.tar.gz CONTENTS  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
 tar -tvf ARCH.tar.gz  # print archive file list, [t]list
 tar -zxvf ARCH.tar.gz -C DIR  # e[x]tract archive to DIR
-tcpdump -i DEVICE  # dump [i]nterface DEVICE traffic e.g. sudo tcpdump -i ens32
+tcpdump -i DEV  # dump [i]nterface DEV traffic e.g. sudo tcpdump -i ens32
 telinit CMD  # edit System V Init runlevel
 top  # M - organize by memory, P - cpu usage, r - renice, reprioritizer PID
 touch /home/$USER/file{1,2,3}  # create file1, file2, file3 in /home/$USER
 traceroute -T DEST  # run trace w/ tcp packets, def port 80
 truncate -s 0 FILE  # truncate FILE to [s]ize, delete alternative
-tune2fs -l DEVICE  # view DEVICE filesystem info
+tune2fs -l DEV  # view DEV filesystem info
 udevadm control -R  # reload rules file
 udevadm monitor -u  # print received udev events
 ulimit -a  # print cpu stats, virtual mem, stack size
 umask  # print default file perms, e.g. 666-umask=default
 unzip ARCH.zip  # extract contents to curr dir
 useradd -D  # print user default attribs
-usermod -aG GROUP {USER}  # add curr user to GROUP or specify USER, [a]ppend, [G]roup
+usermod -aG GRP USER  # add curr user to GRP or specify USER, [a]ppend, [G]roup
 usermod -L|U USER  # [L]ock | [U]nlock USER account
 usermod -m|d DIR USER  # [m]ove USER home [d]irectory to DIR
 users  # print users logged in
@@ -279,21 +302,25 @@ wc -l  # print word count, [l]ines e.g. ls DIR | wc -l = file count
 xkill {PROC}  # kill windowed service by name | mouse
 xrdp PARMS  # MS remote desktop tool, start xrdp daemon, edit firewall exceptions
 xz -k CONTENTS  # compress CONTENTS [k]eep original .xz, .lzma
-yum deplist PKG  # Fedora print deps list, e.g. yum deplist python36-rpm.x86_64
-yum info PKG  # Fedora query PKG info
-yum install -y epel-release cups-pdf
-yum provides CFG-FILE  # print config file package association e.g. yum provides /etc/vsftpd/vsftpd.conf
-yum remove -y PKG  # remove PKG
 lpr FILE.txt  # CUPS, convert text FILE to pdf, def dest /home/$USER/Desktop
 lpq  # list printer queue
 zip -r ARCH.zip CONTENTS  # compress CONTENTS [r]ecursive
 
+## dir mngmt
 dirs  # print dir stack
 popd  # pop stack
 pushd DIR  # push to stack
 
+## tools, gfx
 cmatrix  # terminal 'matrix' animation
-tmux  # terminal multiplexer, <ctrl+b>-prefix, <?>-help, <%>-split horiz, <">-split vert, <x>-close, <d>-detach
+ ctrl+b  # prefix
+ ?  # help
+ %  # split horiz
+ "  # split vert
+ x  # close
+ d  # detach
+
+tmux  # terminal multiplexer
 ~/.tmux.conf
 set -g default-terminal 'screen-256color'  # improve colors
 set -g history-limit 10000
@@ -312,31 +339,13 @@ pvcreate DEV1 DEV2 ..  # create physical volume across devices
 vgcreate VGLABEL DEV1 DEV2 ..  # create volume group from physical volume assignments
 lvcreate --name LVNAME --size LVSIZE VGLABEL  # e.g. sudo lvcreate --name sysbk --size 1GB backup
 
-lvextend -L{SIZE} LVDEVICE  # extend logical volume to SIZE e.g. sudo lvextend -L5GB /dev/backup/databk
-lvreduce -L{SIZE} LVDEVICE  # reduce logical volume to SZIE e.g. sudo lvreduce -L1GB /dev/backup/logbk
-mkfs.ext4 LVDEVICE  # create logical volume filesystem
-mount LVDEVICE MOUNTDIR  # mount logical volume e.g. sudo mount /dev/backup/sysbk /backup/sys
+lvextend -L{SIZE} LV-DEV  # extend logical volume to SIZE e.g. sudo lvextend -L5GB /dev/backup/databk
+lvreduce -L{SIZE} LV-DEV  # reduce logical volume to SZIE e.g. sudo lvreduce -L1GB /dev/backup/logbk
+mkfs.ext4 LV-DEV  # create logical volume filesystem
+mount LV-DEV MOUNTDIR  # mount logical volume e.g. sudo mount /dev/backup/sysbk /backup/sys
 umount MOUNTDIR  # unmount previous mounted device
 LVDEVCE MOUNTDIR FSTYPE defaults 0 0  # edit entries to /etc/fstab for auto mount on reboot
-# /dev/backup/sysbk /backup/sys xfs defaults 0 0  # fstab example
-
-# Ports
-20 tcp|udp ftp  # file transfer protocol, data
-21 tcp|udp ftp  # file transfer protocol, control
-22 tcp ssh  # secure shell
-23 tcp|udp telnet  # remote unencrypted text-based comms
-25 tcp smtp  # simple mail transfer protocol
-53 tcp|udp dns  # domain name server
-69 udp tftp  # trivial file transfer protocol
-123 udp ntp  # network time protocol
-161 upd snmp  # simple network mngmt protocol
-389 tcp|udp ldap  # light weight directory access protocol
-631 tcp cups  # common Unix printing system
-636 tcp ldaps  # light weight directory access protocol secure
-1194 tcp|udp openvpn  # virtual private network server
-3128 tcp squid  # proxy server
-3306 tcp sql  # MS proprietary relational db manager
-5900 tcp|udp vnc  # virtual network computing
+e.g.> /dev/backup/sysbk /backup/sys xfs defaults 0 0  # fstab example
 
 # SED parsing
 sed 's/ss//g'  	# remove ss string for all occurrences on the line [g]lobal
@@ -352,6 +361,11 @@ yum list "python*"  # print packages, default exclusive
 yum search "python"  # search repo db, default inclusive
 yumdownloader PKG --destdir DIR --resolve
 yumdownloader python36 --destdir ~/Downloads/python36/ --resolve  # directory created if no exist
+yum deplist PKG  # Fedora print deps list, e.g. yum deplist python36-rpm.x86_64
+yum info PKG  # Fedora query PKG info
+yum install -y epel-release cups-pdf
+yum provides CFG  # print config file package association e.g. yum provides /etc/vsftpd/vsftpd.conf
+yum remove -y PKG  # remove PKG
 
 ## Create local repo
 find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
@@ -360,7 +374,8 @@ createrepo .
 sed 's/enabled = 0/enabled = 1' /etc/yum.repos.d/redhat.repo
 yum repolist
 yum makecache
-yum install PKG | --nogpgcheck  # install package no gpg pub key check
+yum install PKG | --nogpgcheck  # install PKG, no gpg-key check, unofficial RHELx
+rpm -ivh PKG --nodeps  # install PKG, ignore dependencies, official RHELx
 
 # Filesystem - create mount
 lsblk  # print connected devices w/ mounts
@@ -382,11 +397,6 @@ vim /etc/fstab  # edit fstab, use UUID or label
 mount -L LABEL MOUNT  # mount using label
 mount -a  # test mounts, sudo
 
-# crypto
-shred FILE  # overwrite FILE contents, secure wipe
-cryptsetup OPTIONS ACTION ACTION-ARG  # manage volume encryption
-cryptsetup -v --verify-passphrase luksFormat VOLUME  # prompts for UPPER case 'YES'
-
 ## ssh key setup
 ssh-keygen  # creates public, pvt key pair
 # /default/.ssh/id_rsa  # pvt key
@@ -394,16 +404,21 @@ ssh-keygen  # creates public, pvt key pair
 # /default/.ssh/authorized_keys  # connecting device pub key file
 ssh-copy-id SERVER  # copy pub key to SERVER
 
+# crypto
+shred FILE  # overwrite FILE contents, secure wipe
+cryptsetup OPTIONS ACTION ACTION-ARG  # manage volume encryption
+cryptsetup -v --verify-passphrase luksFormat VOLUME  # prompts for UPPER case 'YES'
+
 # SVN
-A - Added
-C - Conflicted
-D - Deleted
-I - Ignored
-M - Modified
-R - Replaced
-X - Unrevisioned directory created by externals definition
-? - Not tracked by version control
-! - Missing (removed by non-SVN command)
+A  # Added
+C  # Conflicted
+D  # Deleted
+I  # Ignored
+M  # Modified
+R  # Replaced
+X  # Unrevisioned directory created by externals definition
+?  # Not tracked by version control
+!  # Missing (removed by non-SVN command)
 
 svn ls /project/directory/branches -v  # list branches
 svn log -q -l5 URL  # print logs [q]uiet, [l]ine numbers
@@ -499,7 +514,7 @@ python3  # start python interpreter
 >>> help("modules")  	 # print local modules installed, get help info
 >>> help("_struct")
 
-# PIP - plugin manager
+## PIP - plugin manager
 yum update -y && yum upgrade -y
 yum install -y python3
 pip3 install --upgrade pip
@@ -510,42 +525,7 @@ docker inspect CONTAINER  # view container configurations, e.g. id, state metric
 docker network disconnect bridge CONTAINER  # disable network connection
 pip3 install --no-index --find-links *  # install plugin w/ deps local, offline mode
 
-# BASHRC
-alias duc='du -ch | sort -n'  # print space consumers w/ total
-alias ll='ls -halF --color=auto'
-alias hh='history'
-alias naut='nautilus $(pwd)'
-
-## prompt colors
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-blue=$(tput setaf 4)
-magenta=$(tput setaf 5)
-cyan=$(tput setaf 6)
-white=$(tput setaf 7)
-reset=$(tput sgr0)
-bold=$(tput bold)
-
-PS1='\[$bold\]\[$blue\]\u\[$white\]@\[$bold\]\[$cyan\]\h\[$reset\]> \[$red\]\W\[$reset\] \$ '
-
-## PATH - remove duplicates
-function removeDupPath() {
-	local foo=$(sed 's/:/\n/g' <<< $PATH | sort | uniq -u)
-	local fum=$(sed 's/:/\n/g' <<< $PATH | sort | uniq -d)
-	local foo+=" $fum"
-	PATH=$(echo $foo | sed 's/ /:/g')
-}
-
-## PATH - export
-PATH="$HOME/bin:$HOME/.local/bin:$PATH"
-export PATH
-
-# Terminal
-ctrl+SHIFT+t  # open terminal tab
-ctrl+SHIFT+w  # close curr tab
-
-# C++ compiler test
+# C++ compiler - test
 vim foo.c
 #include<stdio.h>
 int main(void){
@@ -581,7 +561,7 @@ mdadm --create /dev/md1 --level=0 --raid-devices=2 /dev/sdb /dev/sdc  # create R
 mkfs -t ext4 /dev/md1
 mkdir /raid_root
 chown -R USER /raid_root
-chgrp -R GROUP /raid_root
+chgrp -R GRP /raid_root
 mount /dev/md1 /raid_root
 
 ## Edit fstab

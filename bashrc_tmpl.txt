@@ -1,8 +1,16 @@
-# BASHRC
+# bashrc template - ~/.bashrc
+
+## alias
 alias duc='du -ch | sort -n'  # print space consumers w/ total
 alias ll='ls -halF --color=auto'
 alias hh='history'
 alias naut='nautilus $(pwd)'
+
+## nav
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias bb='cd -'
 
 ## prompt colors
 red=$(tput setaf 1)

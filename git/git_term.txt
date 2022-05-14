@@ -6,25 +6,16 @@ create | edit -> add -> commit -> push
 untracked files = working dir
 tracked files = repo
 
-cat /etc/gitconfig  # global creds
-cat ~/.gitconfig  # local user creds
+/etc/gitconfig  # global config, enterprise
+~/.gitconfig  # local config
 
-git config --global user.name NAME
-git config --global user.email EMAIL
-git config --global core.editor "vim"
-git config --global color.ui true
-git config --global alias.st "status"
-git config --global alias.lgg "log --graph --oneline --decorate --abbrev-commit --all"
-git config --global alias.ci "commit"
-git config --global --unset CMD  # remove git alias
+git config --global CMD  # config global git parms e.g. ~/.gitconfig
+git config --global --unset CMD  # remove cmd
 git config --list  # print global creds
-git config PARM  # print parameter details
 git config --get remote.origin.url  # display upstream url for remote named 'origin'
 git config http.sslVerify "false"
 git config credential.helper cache
 
-git status  # print current repo status
-git log --oneline --graph --decorate --all  # print log output oneline, w/ curr tree graphics
 git log BRCH  # print BRCH logs
 
 git branch BRCH  # create branch, stay on current
@@ -87,7 +78,7 @@ local> git push origin master  # push changes to remote named 'origin' on 'maste
 
 ## create remote repo, shared
 mkdir -p /share/devrepo.git
-sudo chgrp GROUP /share/devrepo.git  # set dir group name
+sudo chgrp GRP /share/devrepo.git  # set dir group name
 sudo chmod g+s|g+ws /share/devrepo.git  # set file attrib inheritance
 cd /share/devrepo.git
 git init --bare --shared=group  # explicitly set repo to shared status - multiple user contributes

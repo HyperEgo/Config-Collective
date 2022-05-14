@@ -1,394 +1,383 @@
-Linux+ (XKO-004) notes - NGC Lynda
+# Linux+ XKO-004 - Lynda
 
-// User Account management
-cat /etc/passwd  // list user accounts, group number, home dirs, bash location
-cat /etc/group  // list groups w/ users attached
-cat /etc/shadow  // list user password, aging info ('!!' password not set)
-cat /etc/securetty  // show tty connections (comment out to disable)
+# User Account management
+cat /etc/passwd  # list user accounts, group number, home dirs, bash location
+cat /etc/group  # list groups w/ users attached
+cat /etc/shadow  # list user password, aging info ('!!' password not set)
+cat /etc/securetty  # print tty connections (comment out to disable)
 
-cat /root/anaconda-ks.cfg  // RHEL kick-start file created after install
-localectl  // show language and keyboard key map
-localectl list-locales | grep ^en  // list languages, English interpreted regions
-localectl set-locale LANG=en_US.utf8  // set language to US English
-localectl list-keymaps | grep ^us  // list keyboard key maps, English interpreted regions
-localectl set-kemap us  // set keyboard key map to 'us'
-date --utc  // show universal time [Zulu]
-date +"%s"  // show seconds since Jan 1, 1970
-date --date='@<seconds>'  // show date from input seconds
+cat /root/anaconda-ks.cfg  # RHEL kick-start file created after install
+localectl  # print language and keyboard key map
+localectl list-locales | grep ^en  # list languages, English interpreted regions
+localectl set-locale LANG=en_US.utf8  # set language to US English
+localectl list-keymaps | grep ^us  # list keyboard key maps, English interpreted regions
+localectl set-kemap us  # set keyboard key map to 'us'
+date --utc  # print universal time [Zulu]
+date +"%s"  # print seconds since Jan 1, 1970
+date --date='@<seconds>'  # print date from input seconds
 date --date='@1481192709'
-date --date '+10 days'  // show date '10' days from current
+date --date '+10 days'  # print date '10' days from current
 date --date 'next thursday'
-cal  // show calendar for current month
-cal -3  // show calendar three months from current
-cal 1752  // show calendar for year 1752 (switched from Julian => Gregorian)
+cal  # print calendar for current month
+cal -3  # print calendar three months from current
+cal 1752  # print calendar for year 1752 (switched from Julian => Gregorian)
 
-updatedb  // update locate command database
-locate -S  // show locate command stats
+updatedb  # update locate command database
+locate -S  # print locate command stats
 locate bzip2
-locate -c bzip2  // show locate count result only
-locate -A bzip man  // show locate keyword multiple file names
-locate --regexp '^/usr.*pixmaps.*jpg$'  // basic regex show matches start w/ 'usr', end with 'jpg'
-locate --regex '^/usr.*(pixmaps|backgrounds).*jpg'  // extended regex show matches start w/ 'usr', end with 'jpg', 'pixmaps OR 'backgrounds'
+locate -c bzip2  # print locate count result only
+locate -A bzip man  # print locate keyword multiple file names
+locate --regexp '^/usr.*pixmaps.*jpg$'  # basic regex print matches start w/ 'usr', end with 'jpg'
+locate --regex '^/usr.*(pixmaps|backgrounds).*jpg'  # extended regex print matches start w/ 'usr', end with 'jpg', 'pixmaps OR 'backgrounds'
 
-/dev/random  // random char generator
-/dev/null  // bottomless pit
+/dev/random  # random char generator
+/dev/null  # bottomless pit
 
 find <location> <parms> <text-key>
-find /etc &> /dev/null  // redirect all output to 'bottomless pit' (e.g. hide command output)
-find / -name *bzip2*  // show file w/ 'bzip2' name inclusive
-find / -user grant  // show files for use
-find / -group grant  // show files for group
-find / -size +50k  // show files > 50k
-find / -size +1M -exec stat -c "%s %n" {} \; | sort -n  // show files > 1M, stats => size, name; sort numeric small to large
-find / -mtime -1  // show files modified < one day
-find / -mtime +1  // show files modified > one day
-find /home -type f  // show only files
-find /home -type d  // show only directories
+find /etc &> /dev/null  # redirect all output to 'bottomless pit' (e.g. hide command output)
+find / -name *bzip2*  # print file w/ 'bzip2' name inclusive
+find / -user grant  # print files for use
+find / -group grant  # print files for group
+find / -size +50k  # print files > 50k
+find / -size +1M -exec stat -c "%s %n" {} \; | sort -n  # print files > 1M, stats => size, name; sort numeric small to large
+find / -mtime -1  # print files modified < one day
+find / -mtime +1  # print files modified > one day
+find /home -type f  # print only files
+find /home -type d  # print only directories
 
-grep <options> <text-key>  // global reg expression
-grep -v '^$' test.txt  // show only non-blank lines (^-begin, $-end)
-grep -i 'root' /etc/passwd  // show textkey, case [i]nsensitive
-find / -name *.txt | grep apache  // search location for text files, grep textkey (pipe find results to grep)
-grep 'user[0-9]' file.txt  // show matches for 'user0..user9'
-grep 'user[[:digit:]]' file.txt  // show matches for 'user0..user9' (e.g. character class enumeration)
-grep 'user[[:digit:][:space:]]' file.txt  // show matches for 'user0..user9' or 'user_' (trailing space)
-grep 'user[![:digit:]]' file.txt  // show (negate) matches for everything but 'user0..user9'
-grep '^http.*tcp.*service$' /etc/services  // basic regex show matches begin w/ 'http', end w/ 'service'
-egrep '^http.*(tcp|udp).*service$' /etc/services  // extended regex show matches start w/ 'http', group 'tcp or udp', end w/ 'service'
+grep OPTION KEY  # global reg expression
+e.g.>
+grep -v '^$' test.txt  # print only non-blank lines (^-begin, $-end)
+grep -i 'root' /etc/passwd  # print textkey, case [i]nsensitive
 
-psswd <user-name>  // set user password
-psswd --expire <user-name>  // expire user password
+find / -name *.txt | grep apache  # search location for text files, grep textkey (pipe find results to grep)
+grep 'user[0-9]' file.txt  # print matches for 'user0..user9'
+grep 'user[[:digit:]]' file.txt  # print matches for 'user0..user9' (e.g. character class enumeration)
+grep 'user[[:digit:][:space:]]' file.txt  # print matches for 'user0..user9' or 'user_' (trailing space)
+grep 'user[![:digit:]]' file.txt  # print (negate) matches for everything but 'user0..user9'
+grep '^http.*tcp.*service$' /etc/services  # basic regex print matches begin w/ 'http', end w/ 'service'
+egrep '^http.*(tcp|udp).*service$' /etc/services  # extended regex print matches start w/ 'http', group 'tcp or udp', end w/ 'service'
 
-chage -l | --list <user-name>  // list user account aging info, no sudo
+psswd $USER  # set user password
+psswd --expire $USER  # expire user password
+
+chage -l | --list $USER  # list user account aging info, no sudo
 chage --list grant
-chage -d | --lastday <days>  // set days since pd was last changed
-chage -d 0 <user-name>  // set days=0 forces user pd change at next login
+chage -d | --lastday DAY  # set days since pd was last changed
+chage -d 0 $USER  # set days=0 forces user pd change at next login
 chage --lastday 2017-10-25
-chage -m | --mindays <days>  // minimum days before pd can be changed
-chage --mindays 0  // user can change pd at anytime, no time restriction
-chage -M | --maxdays <days>  // set max days user pd is valid
+chage -m | --mindays DAY  # minimum days before pd can be changed
+chage --mindays 0  # user can change pd at anytime, no time restriction
+chage -M | --maxdays DAY  # set max days user pd is valid
 chage --maxdays 99999
-chage -W | --warndays <days>  // set days to warn user before pd change is required
+chage -W | --warndays DAY  # set days to warn user before pd change is required
 chage --warndays 7
-chage -E | --expiredate <expire-date>  // set days to account expire
+chage -E | --expiredate DATE  # set days to account expire
 chage --expiredate 2017-10-25
-chage -I | --inactive <days>  // set days inactive after pd expire for account lockdown
+chage -I | --inactive DAY  # set days inactive after pd expire for account lockdown
 chage --inactive 7
-chage -I -1 -m 0 -M 99999 -E -1 <user-name>  // disable all pd aging; I=-1 set pd inactive never, E=-1 set account expire never
+chage -I -1 -m 0 -M 99999 -E -1 $USER  # disable all pd aging; I=-1 set pd inactive never, E=-1 set account expire never
 
-useradd <user-name>  // add user account
-userdel <user-name>  // delete user, keep home dir + files
-userdel -r <user-name>  // delete user + home dir + files
-usermod -d <home-dir>  // define user home dir
-usermod -aG <group-name(s)> <user-name>  // append user to groups, a=append, G=group
-usermod -l <login-name> <user-name>  // change user login name
-usermod -L <user-name> // lock user account password ('!' prefix passwd, denotes locked account) - does not lock working SSH keys
-usermod -U <user-name> // unlock user account
-usermod -s <shell> <user-name>  // specify default login shell
-usermod -s /sbin/nologin <user-name>  // change user shell to nologin, completely block user login attempt
-usermod -s /bin/bash <user-name>  // reinstate user login shell session to bash
+useradd $USER  # add user account
+userdel $USER  # delete user, keep home dir + files
+userdel -r $USER  # delete user + home dir + files
+usermod -d DIR  # define user home dir
+usermod -aG GRP $USER  # append user to groups, a=append, G=group
+usermod -l NAME $USER  # change user login name
+usermod -L $USER # lock user account password ('!' prefix passwd, denotes locked account) - does not lock working SSH keys
+usermod -U $USER # unlock user account
+usermod -s <shell> $USER  # specify default login shell
+usermod -s /sbin/nologin $USER  # change user shell to nologin, completely block user login attempt
+usermod -s /bin/bash $USER  # reinstate user login shell session to bash
 
-chown [options] <user>:<group> <file>  // file ownership cmd
-chown bob file.txt  // change file owner
-chown :bobgroup file.txt  // change file group
-chown bob:bobgroup file.txt  // change file owner and group
-chown -R bob:bobgroup /home/bob  // change file owner and group recursively
-useradd testuser  // create user
-useradd -G accounting bob  // create user 'bob' add to group 'accounting'
-cat /etc/passwd  // list users
-groupadd testgroup  // create group
-cat /etc/group  // list groups
-chmod [options] <permissions> <file-name>  // file mod cmd
+chown OPTION $USER:GRP FILE  # file ownership cmd
+e.g.>
+chown bob file.txt  # change file owner
+chown :bobgroup file.txt  # change file group
+chown bob:bobgroup file.txt  # change file owner and group
+chown -R bob:bobgroup /home/bob  # change file owner and group recursively
+useradd testuser  # create user
+useradd -G accounting bob  # create user 'bob' add to group 'accounting'
+groupadd testgroup  # create group
+chmod [options] <permissions> FILE  # file mod cmd
 chmod 750 file.txt
 chmod u=rwx,g=rx,o= file.txt
-chmod u+rwx file.txt  // add 'rwx' perm to 'user'
-chmod o-x file.txt  // subtract 'x' perm from 'other'
-chmod ugo-x file.txt  // subtract 'x' perm from 'user, group, other'
-chmod a-x file.txt  // subtract 'x' perm from 'user, group, other'
-chmod -R a-x /home/bob  // subtract 'x' perm recursively from /home/bob
-umask  // show default file perms
-umask -S  // show default file perms, symbolic notation
+chmod u+rwx file.txt  # add 'rwx' perm to 'user'
+chmod o-x file.txt  # subtract 'x' perm from 'other'
+chmod ugo-x file.txt  # subtract 'x' perm from 'user, group, other'
+chmod a-x file.txt  # subtract 'x' perm from 'user, group, other'
+chmod -R a-x /home/bob  # subtract 'x' perm recursively from /home/bob
+umask  # print default file perms
+umask -S  # print default file perms, symbolic notation
 ~> umask - 777 = default directory perms
 ~> umask - 666 = default file perms
-umask <numeric>   // change umask temporarily
+umask <numeric>   # change umask temporarily
 umask 022
-~> vim ~/.bashrc ~> umask 0022  // change umask user value persist
-~> vim /etc/profile.d/umask.sh  // change umask system wide value persist
+~> vim ~/.bashrc ~> umask 0022  # change umask user value persist
+~> vim /etc/profile.d/umask.sh  # change umask system wide value persist
 ~> if [ "$UID" -ge 1000 ] ;then
 	umask 022
 ~~>fi
-chmod 4755 /usr/bin/su  // set SUID (super user) bit execute perms [file]
+chmod 4755 /usr/bin/su  # set SUID (super user) bit execute perms [file]
 chmod u+s /usr/bin/su
-chmod 2755 /usr/bin/screen  // set SGID (super group) bit group owner perms [directory]
+chmod 2755 /usr/bin/screen  # set SGID (super group) bit group owner perms [directory]
 chmod g+s /usr/bin/screen
-find / -perm -4000  // show files with SUID bit set
-find / -perm -2000  // show file with SGID bit set
-chmod 1777 stickydir/  // set sticky bit [directory], user cannot delete or move non-owned files
+find / -perm -4000  # print files with SUID bit set
+find / -perm -2000  # print file with SGID bit set
+chmod 1777 stickydir/  # set sticky bit [directory], user cannot delete or move non-owned files
 
-chattr +i file.txt  // set file to [i]mmutable
-chattr +a file.txt  // set file to [a]ppend only 
-lsattr file.txt  // show file attrib
+chattr +i file.txt  # set file to [i]mmutable
+chattr +a file.txt  # set file to [a]ppend only 
+lsattr file.txt  # print file attrib
 
-getfacl -t aclfile.txt  // show file acl attribs, [t]abular format
+getfacl -t aclfile.txt  # print file acl attribs, [t]abular format
 getfacl -R -t /home > home-perms.txt
-setfacl -m user:<user-name>:<permissions> <file-name>  // set file acl cmd, user
-setfacl -m user:root:rwx aclfile.txt  // set file acl attribs
-setfacl -m group:<group-name>:<permissions> <file-name>  // set file acl cmd, group
+setfacl -m user:$USER:PERM FILE  # set file acl cmd, user
+e.g.> setfacl -m user:root:rwx aclfile.txt  # set file acl attribs
+setfacl -m group:GRP:PERM FILE  # set file acl cmd, group
+e.g.> 
 setfacl -m group:accounting:rx aclfile.txt
-setfacl -m user:bob:rwx,group:accounting:rx aclfile.txt  // set both user and group acl
+setfacl -m user:bob:rwx,group:accounting:rx aclfile.txt  # set both user and group acl
 setfacl -m u:bob:rwx,g:accounting:rx aclfile.txt
-setfacl -R -m user:bob:rwx /home/bob  // set file acl recursively
-setfacl -d -m user:bob:rwx dir1  // set default acl on dir
-setfacl -x user:root acldeldir  // delete specific acl for user 'root'
-setfacl -x root acldeldir/  // delete acls for user 'root'
-setfacl -x group:root acldeldir/  // delete acls for group 'root'
-setfacl -x default:user:root acldeldir  // delete default acl
-setfacl -k acldeldir/  // delete all default acls for acldeldir
-setfacl -b acldeldir  // delete all acls for acldeldir
-setfacl -R -b acldeldir/  // delete all acls recursively for acldeldir
+setfacl -R -m user:bob:rwx /home/bob  # set file acl recursively
+setfacl -d -m user:bob:rwx dir1  # set default acl on dir
+setfacl -x user:root acldeldir  # delete specific acl for user 'root'
+setfacl -x root acldeldir/  # delete acls for user 'root'
+setfacl -x group:root acldeldir/  # delete acls for group 'root'
+setfacl -x default:user:root acldeldir  # delete default acl
+setfacl -k acldeldir/  # delete all default acls for acldeldir
+setfacl -b acldeldir  # delete all acls for acldeldir
+setfacl -R -b acldeldir/  # delete all acls recursively for acldeldir
 
-tar --xattrs -cvpf etc.tar /etc  // archive w/ metadata; [c]reate, [v]erbose, maintain [p]ermissions, [f]ile
-tar --xattrs --gzip -cvpf etc.tar.gz /etc  // archive and compress w/ gzip
-tar --xattrs --bzip2 -cvpf etc.tar.bz2 /etc  // archive and compress w/ bzip2
-tar --xattrs --xz -cvpf etc.tar.xz /etc  // archive and compress w/ xz
-tar --xattrs -xvpf etc.tar  // e[x]tract archive, [v]erbose, maintain [p]ermissions, [f]ile
-tar --xattrs -xvpf etc.tar -C /home/user1/Downloads  // e[x]tract archive, [v]erbose, maintain [p]ermissions, [f]ile, -C=dest directory
-tar -tf etc.tar  // list files archive
+tar --xattrs -cvpf etc.tar /etc  # archive w/ metadata; [c]reate, [v]erbose, maintain [p]ermissions, [f]ile
+tar --xattrs --gzip -cvpf etc.tar.gz /etc  # archive and compress w/ gzip
+tar --xattrs --bzip2 -cvpf etc.tar.bz2 /etc  # archive and compress w/ bzip2
+tar --xattrs --xz -cvpf etc.tar.xz /etc  # archive and compress w/ xz
+tar --xattrs -xvpf etc.tar  # e[x]tract archive, [v]erbose, maintain [p]ermissions, [f]ile
+tar --xattrs -xvpf etc.tar -C /home/user1/Downloads  # e[x]tract archive, [v]erbose, maintain [p]ermissions, [f]ile, -C=dest directory
+tar -tf etc.tar  # list files archive
 tar -tf etc.tar | grep firewall
-tar --gzip -tf etc.tar.gz  // list files archive compression
+tar --gzip -tf etc.tar.gz  # list files archive compression
 
-gzip <file-name>  // compress files, no archive - deletes org file!
-gunzip <file-name>.gz  // uncompress file, no archive - deletes compressed file!
-bzip2 <file-name>
-bunzip2 <file-name>.bz2
-xz <file-name>
-unxz <file-name>.xz
-zip <file-name>.zip <file-name>  // compress files, no delete org file
-unzip <file-name>.zip
+gzip FILE  # compress files, no archive - deletes org file!
+gunzip ZIP.gz  # uncompress file, no archive - deletes compressed file!
+bzip2 FILE
+bunzip2 ZIP.bz2
+xz FILE
+unxz FILE.xz
+zip ZIP.zip FILE  # compress files, no delete org file
+unzip ZIP.zip
 
-
-// SSH key management (rhhost1_local -> rhhost2_remote)
-rhhost1> ssh-keygen  // create rsa pvt|public key pair
-rhhost1> ls -l ~/.ssh  // list .ssh hidden dir (pvt|public key files)
-rhhost1> cat ~/.ssh/id_rsa.pub  // show rsa public key contents
-rhhost1> ssh-add  // add key set to local ssh agent for management (optional)
-rhhost1> ssh-copy-id user1@rhhost2-ip-addr  // copy local public key to remote 
+# SSH key management (HOST1_local -> HOST2_remote)
+HOST1> ssh-keygen  # create rsa pvt|public key pair
+HOST1> ls -l ~/.ssh  # list .ssh hidden dir (pvt|public key files)
+HOST1> cat ~/.ssh/id_rsa.pub  # print rsa public key contents
+HOST1> ssh-add  # add key set to local ssh agent for management (optional)
+HOST1> ssh-copy-id user1@HOST2-ip-addr  # copy local public key to remote 
 ~> local public key stored in remote dir ~/.ssh/authorized_keys
 ~> remote fingerprint stored in local dir ~/.ssh/known_hosts
 
+# SSH tunnel port forwarding
+cat /etc/passwd | ssh HOST2 "cat - >"  # pipe data via ssh tunnel, no port forward
+client> ssh -L <client-port>:<remote>:<remote-port> <client>  # port forward to remote host from client
+HOST1> ssh -L 3306:127.0.0.1:3306 user1@HOST2.localnet.com
+HOST1> ssh -L 3306:ubhost1.localnet.com:3306 user1@HOST2.localnet.com
+HOST1> ssh -L 3306:127.0.0.1:3306 -L 5901:127.0.0.1:5901 user1@HOST2.localnet.com  # forward multiple ports
 
-// SSH tunnel port forwarding
-cat /etc/passwd | ssh rhhost2 "cat - >"  // pipe data via ssh tunnel, no port forward
-client> ssh -L <client-port>:<remote>:<remote-port> <client>  // port forward to remote host from client
-rhhost1> ssh -L 3306:127.0.0.1:3306 user1@rhhost2.localnet.com
-rhhost1> ssh -L 3306:ubhost1.localnet.com:3306 user1@rhhost2.localnet.com
-rhhost1> ssh -L 3306:127.0.0.1:3306 -L 5901:127.0.0.1:5901 user1@rhhost2.localnet.com  // forward multiple ports
+client> ssh -R <remote-port>:<client>:<client-port> <remote>  # reverse port from remote to client
+HOST1 => ubhost1 => HOST2  # create indirect connection from HOST to HOST2, circumvent firewall
+HOST2> ssh -R 10000:127.0.0.1:22 user1@ubhost1.localnet.com  # reverse port from ubhost1:10000 to HOST2:22
+HOST1> ssh -p 10000 user1@ubhost1.localnet.com  # forward port from HOST1:22 to ubhost1:10000
 
-client> ssh -R <remote-port>:<client>:<client-port> <remote>  // reverse port from remote to client
-rhhost1 => ubhost1 => rhhost2  // create indirect connection from rhhost to rhhost2, circumvent firewall
-rhhost2> ssh -R 10000:127.0.0.1:22 user1@ubhost1.localnet.com  // reverse port from ubhost1:10000 to rhhost2:22
-rhhost1> ssh -p 10000 user1@ubhost1.localnet.com  // forward port from rhhost1:22 to ubhost1:10000
+# File System, Paths
+yum install -y tree  # visual file structure diagram
+file path/to/file  # print file type information
+cd ~  # go to home dir
+cd -  # go to previous dir
+mkdir -p ~/parent/child  # create parent + child directory
+mkdir ~/{dir1,dir2,dir3}  # create multiple directories
+ls -d ~/dir?  # list directory metadata, glob last digit
+touch file{a,b,c,d}.txt  # create multiple files
+~> file[cd].txt  # file glob pattern match: filec.txt -> filed.txt
+~> file{c,d}.txt  # file glob pattern match: only filec.txt, filed.txt
+~> file?.txt  # file glob pattern match: any fileX.txt
+ln file.txt filelink.txt  # create hard link
+ln -s file.txt filesymlink.txt  # create soft link
+stat file.txt  # print status info for file
 
-
-// File System and Paths
-yum install -y tree  // visual file structure diagram
-file <file-location>  // show file type information
-cd ~  // go to home dir
-cd -  // go to previous dir
-mkdir -p ~/parent/child  // create parent + child directory
-mkdir ~/{dir1,dir2,dir3}  // create multiple directories
-ls -d ~/dir?  // list directory metadata, glob last digit
-touch file{a,b,c,d}.txt  // create multiple files
-~> file[cd].txt  // file glob pattern match: filec.txt -> filed.txt
-~> file{c,d}.txt  // file glob pattern match: only filec.txt, filed.txt
-~> file?.txt  // file glob pattern match: any fileX.txt
-ln file.txt filelink.txt  // create hard link
-ln -s file.txt filesymlink.txt  // create soft link
-stat file.txt  // show status info for file
-
-term1> mkfifo named_pipe  // create named pipe
-term1> echo "test" > named_pipe  // use named pipe to send output to second terminal
+term1> mkfifo named_pipe  # create named pipe
+term1> echo "test" > named_pipe  # use named pipe to send output to second terminal
 term2> cat named_pipe
 
-ls > /home/lsout.txt  // redirect stdout to file, overwrite
-ls >> /home/lsout.txt  // redirect stdout to file, append
-ls 2> /home/lsout.err  // redirect stderr to file, overwrite
-ls 2>> /home/lsout.err  // redirect stderr to file, append
-ls &> /home/lsout.err  // redirect all output to file, overwrite (no output to terminal)
-ls &>> /home/lsout.err  // redirect all output to file, append (no output to terminal)
-ls | tee -a lsout.txt  // output to file and terminal, append
-sort < /home/lsout.txt > /home/sorted.txt  // sort input file 'lsout.txt', redirect to output file 'sorted.txt'
+ls > /home/lsout.txt  # redirect stdout to file, overwrite
+ls >> /home/lsout.txt  # redirect stdout to file, append
+ls 2> /home/lsout.err  # redirect stderr to file, overwrite
+ls 2>> /home/lsout.err  # redirect stderr to file, append
+ls &> /home/lsout.err  # redirect all output to file, overwrite (no output to terminal)
+ls &>> /home/lsout.err  # redirect all output to file, append (no output to terminal)
+ls | tee -a lsout.txt  # output to file and terminal, append
+sort < /home/lsout.txt > /home/sorted.txt  # sort input file 'lsout.txt', redirect to output file 'sorted.txt'
 
+# File System management
+ls -li  # print file list w/ inode numbers
+find . -inum INODE -exec rm -i {} \;  # remove file by inode number
+mkfs -t ext4 DEV  # format device w/ ext4 file system
+e.g.> mkfs -t ext4 /dev/vgdata/lvdata
+ls /sbin/mk*  # list all files start with 'mk' (make file sys)
+tune2fs -j DEV  # add journal mechanism to legacy file system (e.g. ext2), no data loss
+e.g.> tune2fs -j /dev/vgdata/lvdata
 
-// File System management
-ls -li  // show file list w/ inode numbers
-find . -inum <inode-number> -exec rm -i {} \;  // remove file by inode number
-mkfs -t ext4 <device-name>  // format device w/ ext4 file system
-mkfs -t ext4 /dev/vgdata/lvdata
-ls /sbin/mk*  // list all files start with 'mk' (make file sys)
-tune2fs -j <device-name>  // add journal mechanism to legacy file system (e.g. ext2), no data loss
-tune2fs -j /dev/vgdata/lvdata
-
-resize2fs <device-name>  // resize ext4 file system type
+resize2fs DEV  # resize ext4 file system type
 resize2fs /dev/vgdata/lvdata, resize2fs /dev/vgdata/lvdata 500M
-e2fsck -ff <device-name>  // file system quick check - 5 categories
-fsck -n <device-name>  // file system check, -n=do not fix results, un-mount first
-fsck -A  // check all files
-fsck -y  // mark 'yes' to all file system repairs
+e2fsck -ff DEV  # file system quick check - 5 categories
+fsck -n DEV  # file system check, -n=do not fix results, un-mount first
+fsck -A  # check all files
+fsck -y  # mark 'yes' to all file system repairs
 
-sosreport  // create report of file system; stored in /var/tmp/; creates bkup of sys config
+sosreport  # create report of file system; stored in /var/tmp/; creates bkup of sys config
 yum install -y dump
-dump -0uf /home/lvraid.dump /dev/vgraid/lvraid  // create dump of sosreport
-restore -rf /home/lvraid.dump  // restore dump config to curr dir
+dump -0uf /home/lvraid.dump /dev/vgraid/lvraid  # create dump of sosreport
+restore -rf /home/lvraid.dump  # restore dump config to curr dir
 
-mkfs -t xfs -f <device-name>  // format device, create xfs file system
-xfs_repair <device-name>  // repair XFS fs
-xfs_admin <device-name>  // change fs parameters, create label
-xfsdump <device-name>  // incremental fs dump capability
-xfs_freeze <device-name>  // suspend access to fs
-xfs_quota <device-name>  // manage fs quotas
-xfs_growfs <device-name>  // resize XFS fs larger
+mkfs -t xfs -f DEV  # format device, create xfs file system
+xfs_repair DEV  # repair XFS fs
+xfs_admin DEV  # change fs parameters, create label
+xfsdump DEV  # incremental fs dump capability
+xfs_freeze DEV  # suspend access to fs
+xfs_quota DEV  # manage fs quotas
+xfs_growfs DEV  # resize XFS fs larger
 
+# LVM device monitoring
+mount DEV MOUNT  # mount device
+mount -t ext4 /dev/vgdata/lvdata /media/lvdata  # use ext4 driver to mount ext2|3 legacy device
+umount MOUNT
+blkid  # list block id; device name, UUID, LABEL, TYPE, PTTYPE
+lsblk  # list block partition; NAME, MAJ:MIN, SIZE, RO, TYPE, MOUNTPOINT
+lsblk -f  # list block partition w/ fstype; NAME, FSTYPE, LABEL, UUID, MOUNTPOINT
+df -h  # list disk free usage, [h]uman readable: Size, Used, Avail, Use%, Mounted on
+df -T  # list disk free usage w/ fstype; Filesystem, Type, 1K-blocks, Used, Available, Use%, Mounted on
+pvs  # physical volume summary; PV, VG, Fmt, Attr, PSize, PFree
+vgs  # volume group summary; VG, #PV, #LV, #SN, Attr, VSize, VFree
+lvs  # logical volume summary; LV, VG, Attr, LSize, Pool, Origin, Data%, Meta%, Move, Log, Cpy%Sync, Convert
 
-// LVM device monitoring
-mount <device-name> <mount-point>  // mount device
-mount -t ext4 /dev/vgdata/lvdata /media/lvdata  // use ext4 driver to mount ext2|3 legacy device
-umount <mount-point>
-blkid  // list block id; device name, UUID, LABEL, TYPE, PTTYPE
-lsblk  // list block partition; NAME, MAJ:MIN, SIZE, RO, TYPE, MOUNTPOINT
-lsblk -f  // list block partition w/ fstype; NAME, FSTYPE, LABEL, UUID, MOUNTPOINT
-df -h  // list disk free usage, [h]uman readable: Size, Used, Avail, Use%, Mounted on
-df -T  // list disk free usage w/ fstype; Filesystem, Type, 1K-blocks, Used, Available, Use%, Mounted on
-pvs  // physical volume summary; PV, VG, Fmt, Attr, PSize, PFree
-vgs  // volume group summary; VG, #PV, #LV, #SN, Attr, VSize, VFree
-lvs  // logical volume summary; LV, VG, Attr, LSize, Pool, Origin, Data%, Meta%, Move, Log, Cpy%Sync, Convert
-
-
-// LVM device management
-pvcreate <device-name>  // create physical volume, empty, un-mount first, warning for data destroy
-pvmove <device-name01> <device-name02>  // move data to another separate pv
-pvmove /dev/sdc1 /dev/sdd1
-vgcreate <volume-group> <physical-volume(s)>  // create volume group
-vgreduce <volume-group> <device-name>  // remove device from volume group
+# LVM device management
+pvcreate DEV  # create physical volume, empty, un-mount first, warning for data destroy
+pvmove DEV1 DEV2  # move data to another separate pv
+e.g.> pvmove /dev/sdc1 /dev/sdd1
+vgcreate VOL-GRP <physical-volume(s)>  # create volume group
+vgreduce VOL-GRP DEV  # remove device from volume group
 vgreduce vgdata /dev/sdc1
-lvcreate --name <volume-name> --size <size> <volume-group>  // create logical volume
+lvcreate --name VOL-NAME --size SIZE VOL-GRP  # create logical volume
 lvcreate --name lvdata --size 500M vgdata
-vgchange -ay  // activate lvm path after creation, if necessary
+vgchange -ay  # activate lvm path after creation, if necessary
 
-vgremove <volume-group>  // remove volume group, verify w/ lsblk
+vgremove VOL-GRP  # remove volume group, verify w/ lsblk
 vgremove vgraid
-pvremove <device-name>  // remove physical volume data from device
-pvremove /dev/sdb1
+pvremove DEV  # remove physical volume data from device
+e.g.> pvremove /dev/sdb1
 
-vgextend <volume-group> <device-name>  // extend volume group, no warning for data destroy
+vgextend VOL-GRP DEV  # extend volume group, no warning for data destroy
 vgextend vgdata /dev/sdd1
-lvresize -l <capacity> <device-name>  // extend logical volume to 
-lvresize -l 100%FREE /dev/vgdata/lvdata  // extend logical volume to 100% free space
-lvresize -l -r 100%VG /dev/vgdata/lvadata  // extend logical volume to 100% of volume group, [r]ecursively resize file system
-lvresize -L -r <capacity> <device-name>  // shrink logical volume, [r]ecursively resize file system
-lvresize -L 400M /dev/vgdata/lvdata
+lvresize -l CAP DEV  # extend logical volume to CAP
+e.g.>
+lvresize -l 100%FREE /dev/vgdata/lvdata  # extend logical volume to 100% free space
+lvresize -l -r 100%VG /dev/vgdata/lvadata  # extend logical volume to 100% of volume group, [r]ecursively resize file system
+lvresize -L -r CAP DEV  # shrink logical volume, [r]ecursively resize file system
+e.g.> lvresize -L 400M /ev/vgdata/lvdata
 
+# RAID create using LVM
+vgcreate vgraid DEV  # create RAID using LVM, verify w/ pvs cmd
+e.g.> vgcreate vgraid /dev/sdb1 /dev/sdc1 /dev/sdd1  # n-1 * min disk capacity = total RAID 5 capacity e.g. 3 disks => 3-1 * 472MB = 944 MB
+lvcreate --type TYPE -i DEV-NUM -l CAP -n VOL VOL-GRP  # create logical RAID volume
+e.g.> lvcreate --type raid5 -i 2 -l 100%VG -n lvraid vgraid  # -i=total drives-1 (RAID 5), -l=capacity, -n=logical vol name; verify w/ lvs
+mkfs -t ext4 /dev/vgraid/lvraid  # create file system on RAID partition
 
-// RAID create using LVM
-vgcreate vgraid <device-name(s)>  // create RAID using LVM, verify w/ pvs cmd
-vgcreate vgraid /dev/sdb1 /dev/sdc1 /dev/sdd1  // n-1 * min disk capacity = total RAID 5 capacity e.g. 3 disks => 3-1 * 472MB = 944 MB
-lvcreate --type <raid-type> -i <device-number> -l <capacity> -n <logical-volume> <volume-group>  // create logical RAID volume
-lvcreate --type raid5 -i 2 -l 100%VG -n lvraid vgraid  // -i=total drives-1 (RAID 5), -l=capacity, -n=logical vol name; verify w/ lvs
-mkfs -t ext4 /dev/vgraid/lvraid  // create file system on RAID partition
-
-
-// RAID create using mdadm
-gdisk <device-name>  // disk partition tool; empty, un-mount, unlimited GPT partitions, < 18 exabytes (EB) ~ 1 million TB = 1 EB
+# RAID create using mdadm
+gdisk DEV  # disk partition tool; empty, un-mount, unlimited GPT partitions, < 18 exabytes (EB) ~ 1 million TB = 1 EB
 > n - new partition
 > Partition number = (default)
 > First sector = (default)
-> Last sector = +500M  // (default - entire disk) define size
+> Last sector = +500M  # (default - entire disk) define size
 > Hex code or GUID = (default or e.g. 'fd00' - RAID partition)
 OR
-> t - change partition type code (e.g. 'fd00' - RAID partition)  // skip new partition parameters
+> t - change partition type code (e.g. 'fd00' - RAID partition)  # skip new partition parameters
 > p - print partition
 > w - write to disk
-mdadm --create <raid-partition> <device-name(s)> <RAID-level> <RAID-device-number> <bitmap-config>
-mdadm --create /dev/md/mdraid /dev/sdb1 /dev/sdc1 /dev/sdd1 /dev/sde1 --level=5 --raid-devices=4 --bitmap=internal
+mdadm --create PART DEV LVL DEV-RAID BIT-MAP
+e.g.> mdadm --create /dev/md/mdraid /dev/sdb1 /dev/sdc1 /dev/sdd1 /dev/sde1 --level=5 --raid-devices=4 --bitmap=internal
 > Continue creating array? y
-cat /proc/mdstat  // show RAID personality types for installed devices
-mdadm --detail -scan  // show RAID array device, metadata, name, UUID
-systemctl enable mdmonitor  // enable mdmonitor on boot
-systemctl start mdmonitor  // start mdmonitor as currently running service
+cat /proc/mdstat  # print RAID personality types for installed devices
+mdadm --detail -scan  # print RAID array device, metadata, name, UUID
+systemctl enable mdmonitor  # enable mdmonitor on boot
+systemctl start mdmonitor  # start mdmonitor as currently running service
 
+# RAID mdadm management
+mdadm --query PART  # summary info
+mdadm --detail PART  # detail info
+mdadm --fail DEV  # mark device as faulty
+mdadm --remove DEV  # remove device from array
+mdadm --add DEV  # add device to array
+mdadm --stop PART  # stop RAID
+mdadm --remove PART  # remove RAID after stopped
+mdadm --zero-superblock DEV  # remove RAID metadata on device
+man mdadm  # manual for mdadm tool
 
-// RAID mdadm management
-mdadm --query <raid-partition>  // summary info
-mdadm --detail <raid-partition>  // detail info
-mdadm --fail <device-name>  // mark device as faulty
-mdadm --remove <device-name>  // remove device from array
-mdadm --add <device-name>  // add device to array
-mdadm --stop <raid-partition>  // stop RAID
-mdadm --remove <raid-partition>  // remove RAID after stopped
-mdadm --zero-superblock <device-name>  // remove RAID metadata on device
-man mdadm  // manual for mdadm tool
+# RPM package management
+rpm -qa | sort  # [q]uery db [a]ll installed packages sort alpha
+rpm -qa --last  # query db installed packages sort by date, top recent
+rpm -qa Group="System Environment/Shells"  # print packages tagged w/ "System Environment/Shells"
+rpm -qi bash  # query db [i]nformation for program
+rpm -qf /bin/bash  # query db [f]ile information
+rpm -ql yum  # query install rpm [l]ocation
+rpm -qd yum  # query install package [d]ocumentation
+rpm -qc yum  # query install [c]onfiguration files
+rpm -q --provides bash  # query file package feature provides
+rpm -q --requires bash  # query file package requirements
+rpm -q --changelog bash  # query file changelog
+rpm -qip PKG  # [q]uery rpm [p]ackage [i]nformation (name, version, release, architecture, install date(none), grp, size, etc.)
+rpm -qlp PKG  # print [p]ackage [f]ile [l]isting and install location
 
+#  Source software install
+yum group install -y "Development tools"  # install software from group "Development tools"
+wget URL  # dl tar file
+tar -xzvpf TAR  # extract tar archive, x=extract, z=gzip, v=verbose, p=permissions, f=file
+make configure  # make tool created config script
+./configure --prefix=/usr/local  # run config script w/ arg for binary file location
+make install  # compile source, install software
+PKG --version  # check installed software version
 
-// RPM package management
-rpm -qa | sort  // [q]uery db [a]ll installed packages sort alpha
-rpm -qa --last  // query db installed packages sort by date, top recent
-rpm -qa Group="System Environment/Shells"  // show packages tagged w/ "System Environment/Shells"
-rpm -qi bash  // query db [i]nformation for program
-rpm -qf /bin/bash  // query db [f]ile information
-rpm -ql yum  // query install rpm [l]ocation
-rpm -qd yum  // query install package [d]ocumentation
-rpm -qc yum  // query install [c]onfiguration files
-rpm -q --provides bash  // query file package feature provides
-rpm -q --requires bash  // query file package requirements
-rpm -q --changelog bash  // query file changelog
-rpm -qip <package-name>  // [q]uery rpm [p]ackage [i]nformation (name, version, release, architecture, install date(none), grp, size, etc.)
-rpm -qlp <package-name>  // show [p]ackage [f]ile [l]isting and install location
-
-
-//  Source software install
-yum group install -y "Development tools"  // install software from group "Development tools"
-wget <url-location>  // dl tar file
-tar -xzvpf <tar-file>  // extract tar archive, x=extract, z=gzip, v=verbose, p=permissions, f=file
-make configure  // make tool created config script
-./configure --prefix=/usr/local  // run config script w/ arg for binary file location
-make install  // compile source, install software
-<package-name>  --version  // check installed software version
-
-
-// YUM package management
-yum info <package-name>  // show package information
+# YUM package management
+yum info PKG  # print package information
 yum install -y yum-utils
-yum install -y yum-plugin-downloadonly  // install yum dl only plugin
-yum install --downloadonly --downloaddir=/tmp/packages http  // dl http packages to /tmp/packages
-yum localinstall <package-name>  // local package install from current directory
-yum reinstall --skip-broken <package-name>  // dl new package from repository, install override current package; skip broken dependencies
-yum list updates  // list package updates available [installed, base, updates]
-yum upgrade <package-name>  // update current package only, do not remove obsolete packages
-yum remove <package-name>  // remove package specified, dependencies and config files NOT removed
-yum autoremove <package-name>  // remove package AND dependencies
-package-cleanup --leaves  // list packages not currently used (does not delete)
+yum install -y yum-plugin-downloadonly  # install yum dl only plugin
+yum install --downloadonly --downloaddir=/tmp/packages http  # dl http packages to /tmp/packages
+yum localinstall PKG  # local package install from current directory
+yum reinstall --skip-broken PKG  # dl new package from repository, install override current package; skip broken dependencies
+yum list updates  # list package updates available [installed, base, updates]
+yum upgrade PKG  # update current package only, do not remove obsolete packages
+yum remove PKG  # remove package specified, dependencies and config files NOT removed
+yum autoremove PKG  # remove package AND dependencies
+package-cleanup --leaves  # list packages not currently used (does not delete)
 
+# YUM Group package management
+yum group list ids  # list group packages by category w/ ids (inside parentheses)
+yum group install "Security Tools"  # install group packages by name
+yum group install group-tools  # install group packages by id, from Available Groups
+yum group remove security-tools  # remove group packages (all previously installed packages may not be removed)
+yum autoremove @security-tools  # remove all group packages and dependencies using package tools '@' symbol
+yum group update GRP-ID  # update all group packages by id
+yum group info GRP-ID  # list group info, optional group packages not installed by default
+vim /etc/yum.conf  # yum config file, set group package optional installs
+yum group install GRP-ID --setopt=group_package_types=mandatory,default,optional  # execute group package optional installs
 
-// YUM Group package management
-yum group list ids  // list group packages by category w/ ids (inside parentheses)
-yum group install "Security Tools"  // install group packages by name
-yum group install group-tools  // install group packages by id, from Available Groups
-yum group remove security-tools  // remove group packages (all previously installed packages may not be removed)
-yum autoremove @security-tools  // remove all group packages and dependencies using package tools '@' symbol
-yum group update <group-id>  // update all group packages by id
-yum group info <group-id>  // list group info, optional group packages not installed by default
-vim /etc/yum.conf  // yum config file, set group package optional installs
-yum group install <group-id> --setopt=group_package_types=mandatory,default,optional  // execute group package optional installs
-
-
-// YUM Repo management
-cd /etc/yum.repos.d/  // explore yum repository files
-vim CentOS-Base.repo  // stores repository credentials
+# YUM Repo management
+cd /etc/yum.repos.d/  # explore yum repository files
+vim CentOS-Base.repo  # stores repository credentials
 > [base]
 > name=CentOS-$releasever - Base
 > mirrorlist=http://mirrolist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
-> #baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch  // uncomment if no mirror, static line ref to repo
-> gpgcheck=1  // GPG signature check boolean; ON=1, OFF=0
+> #baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch  # uncomment if no mirror, static line ref to repo
+> gpgcheck=1  # GPG signature check boolean; ON=1, OFF=0
 > gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 > [centosplus]
@@ -396,393 +385,378 @@ vim CentOS-Base.repo  // stores repository credentials
 > mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=centosplus&infra=$infra
 > #baseurl=http://mirror.centos.org/centos/$releasever/centosplus/$basearch/
 > gpgcheck=1
-> enabled=0  // disable repository
+> enabled=0  # disable repository
 > gpgkey=file:///etc/pki/rmp-gpg/RPM-GPG-KEY-CentOS-7
 
-yum repolist  // list enabled repositories: repo id, repo name, status [packages]
-yum repolist [enabled | disabled]  // list repos based on criteria
-yum repoinfo  // list repository info (id, name, revision, updated, pkgs, size, mirrors, baseurl, expire, Filter, filename)
-yum --disablerepo="*" --enablerepo="centosplus" list available  // disable all repos, enable centosplus repo, get list of all available packages
-yum --disablerepo="*" --enablerepo="centosplus" install golang  // install golang packages from disabled repo (without edits to yum.conf)
+yum repolist  # list enabled repositories: repo id, repo name, status [packages]
+yum repolist enabled|disabled  # list repos based on criteria
+yum repoinfo  # list repository info (id, name, revision, updated, pkgs, size, mirrors, baseurl, expire, Filter, filename)
+yum --disablerepo="*" --enablerepo="centosplus" list available  # disable all repos, enable centosplus repo, get list of all available packages
+yum --disablerepo="*" --enablerepo="centosplus" install golang  # install golang packages from disabled repo (without edits to yum.conf)
 
+# dpkg = Debian Package Manager, apt = advanced package tool, ppa = Personal Package Archive
+dpkg --info PKG  # print package info (local only)
+dpkg -c PKG   # print install files
+dpkg -L APP-NAME  # print install files via db (previously installed packages only)
+dpkg -i PKG  # install package
+dpkg -S FILE  # print which package file belongs
+dpkg -r PKG  # remove package
 
-// dpkg = Debian Package Manager, apt = advanced package tool, ppa = Personal Package Archive
-dpkg --info <package-name>  // show package info (local only)
-dpkg -c <packge-name>   // list install files
-dpkg -L <application-name>  // list install files via db (previously installed packages only)
-dpkg -i <package-name>  // install package
-dpkg -S <file-name>  // show which package file belongs
-dpkg -r <package-name>  // remove package
+apt search PKG  # prints all packages (installed, uninstalled)
+apt list PKG-PARM  # list packages based on criteria
+apt list --installed PKG  # list packages install
+apt update  # update indexes of available software
+apt list --upgradable  # list packages that have newer versions available
+apt print PKG  # print package details: version, priority, origin, maintainer, Original-Maintainer, bugs, etc.
+apt info PKG  # print package details
+apt-get download PKG  # dl package
 
-apt search <package-name>  // shows all packages (installed, uninstalled)
-apt list <package-name>[criteria]  // list packages based on criteria
-apt list --installed <package-name>  // list packages install
-apt update  // update indexes of available software
-apt list --upgradable  // list packages that have newer versions available
-apt show <package-name>  // show package details: version, priority, origin, maintainer, Original-Maintainer, bugs, etc.
-apt info <package-name>  // show package details
-apt-get download <package-name>  // dl package
+apt install PKG  # install package
+apt upgrade PKG  # upgrade package (install newest version)
+apt remove PKG  # remove package, excluding dependencies
+apt autoremove  # remove all packages no longer needed, including dependencies
+apt purge PKG  # remove package w/ config files
+apt full-upgrade  # upgrade entire distro (not singular packages)
 
-apt install <package-name>  // install package
-apt upgrade <package-name>  // upgrade package (install newest version)
-apt remove <package-name>  // remove package, excluding dependencies
-apt autoremove  // remove all packages no longer needed, including dependencies
-apt purge <package-name>  // remove package w/ config files
-apt full-upgrade  // upgrade entire distro (not singular packages)
+apt policy  # list repository config locations
+grep '^deb' /etc/apt/sources.list /etc/apt/sources.list.d/*  # list 'deb' repository config locations
+add-apt-repository 'deb http://archive.canonical.com/ubuntu/ disco partner'  # add ubuntu repo
+add-apt-repository --remove 'deb http://archive.canonical.com/ubuntu/ disco partner'  # remove ubuntu repo
+add-apt-repository ppa:libreoffice/ppa  # add libre office repo
+add-apt-repository --remove ppa:libreoffice/ppa  # remove libre office repo
 
-apt policy  // list repository config locations
-grep '^deb' /etc/apt/sources.list /etc/apt/sources.list.d/*  // list 'deb' repository config locations
-add-apt-repository 'deb http://archive.canonical.com/ubuntu/ disco partner'  // add ubuntu repo
-add-apt-repository --remove 'deb http://archive.canonical.com/ubuntu/ disco partner'  // remove ubuntu repo
-add-apt-repository ppa:libreoffice/ppa  // add libre office repo
-add-apt-repository --remove ppa:libreoffice/ppa  // remove libre office repo
+# Systemd management
+systemctl list-unit-files -at service  # list all service unit files
+systemctl list-units -at service  # list all enabled running | non-running services
+systemctl list-units -t service --state running  # list only running services
+systemctl list-unit-files -at service  # list persistent services at boot
+systemctl status rsyslog  # print status of rsyslog service
+systemctl cat rsyslog  # list contents of rsyslog service unit file
+systemctl status SRVC  # print service status: Loaded, Active, Main PID, Group
+systemctl start SRVC  # start service
+systemctl stop SRVC  # stop service
+systemctl restart SRVC  # stop then start service
+systemctl is-active SRVC  # print service 'active' message only
+systemctl mask SRVC  # restrict service from running (manual or automatic)
+systemctl unmask SRVC  # unrestrict service from running (manual or automatic)
+systemctl is-enabled SRVC  # print service 'enabled' message only
+systemctl enable SRVC  # persist service at boot
+systemctl disable SRVC  # no persist service at boot
 
+# SysV legacy management
+chkconfig --list  # list all services w/ run levels
+chkconfig --add SRVC  # add symbolic link
+chkconfig --del SRVC  # delete symbolic link
+chkconfig --level 345 http on  # create links to start http service on run levels 3, 4, 5
+service SRVC start  # start service
+service SRVC stop  # stop service
+service SRVC restart  # stop then start service
+service SRVC reload  # reload service config file without stop, start
+service SRVC stauts  # print service status
+service --status-all  # print all service status
+/etc/init.d/httpd start  # start service without 'service' keyword
+init <run-level>  # set run level: 0=shutdown, 1=single-usr, 2=multi-usr, 3=multi-usr+network, 4=undefined, 5=multi-usr+network+gui, 6=reboot
 
-// Systemd management
-systemctl list-unit-files -at service  // list all service unit files
-systemctl list-units -at service  // list all enabled running | non-running services
-systemctl list-units -t service --state running  // list only running services
-systemctl list-unit-files -at service  // list persistent services at boot
-systemctl status rsyslog  // show status of rsyslog service
-systemctl cat rsyslog  // list contents of rsyslog service unit file
-systemctl status <service-name>  // show service status: Loaded, Active, Main PID, Group
-systemctl start <service-name>  // start service
-systemctl stop <service-name>  // stop service
-systemctl restart <service-name>  // stop then start service
-systemctl is-active <service-name>  // show service 'active' message only
-systemctl mask <service-name>  // restrict service from running (manual or automatic)
-systemctl unmask <service-name>  // unrestrict service from running (manual or automatic)
-systemctl is-enabled <service-name>  // show service 'enabled' message only
-systemctl enable <service-name>  // persist service at boot
-systemctl disable <service-name>  // no persist service at boot
-
-
-// SysV legacy management
-chkconfig --list  // list all services w/ run levels
-chkconfig --add <service-name>  // add symbolic link
-chkconfig --del <service-name>  // delete symbolic link
-chkconfig --level 345 http on  // create links to start http service on run levels 3, 4, 5
-service <service-name> start  // start service
-service <service-name> stop  // stop service
-service <service-name> restart  // stop then start service
-service <service-name> reload  // reload service config file without stop, start
-service <service-name> stauts  // show service status
-service --status-all  // show all service status
-/etc/init.d/httpd start  // start service without 'service' keyword
-init <run-level>  // set run level: 0=shutdown, 1=single-usr, 2=multi-usr, 3=multi-usr+network, 4=undefined, 5=multi-usr+network+gui, 6=reboot
-
-
-// AT Service
-yum install -y at  // install service
-systemctl start atd  // start service
-systemctl enable atd  // persist service at boot
-at now +5min  // create one-time at job
+# AT Service
+yum install -y at  # install service
+systemctl start atd  # start service
+systemctl enable atd  # persist service at boot
+at now +5min  # create one-time at job
 > mkdir ~/Documents.bak
-> rsync -a ~/Documents/ ~/Documents.bak  // use rsync to back up Documents dir
-> <ctrl+d>  // save changes
-atq  // list curr at jobs w/ number
-at -c <at-job-number>  // show shell env + at job contents
-atrm <at-job-number>  // cancel at job
+> rsync -a ~/Documents/ ~/Documents.bak  # use rsync to back up Documents dir
+> <ctrl+d>  # save changes
+atq  # list curr at jobs w/ number
+at -c <at-job-number>  # print shell env + at job contents
+atrm <at-job-number>  # cancel at job
 
-batch  // create batch job, run when sys load avg < 0.8 (not busy!)
+batch  # create batch job, run when sys load avg < 0.8 (not busy!)
 > touch ~/batchfile.txt
-> <ctrl+d>  // save changes
-atq  // list curr batch jobs w/ number
+> <ctrl+d>  # save changes
+atq  # list curr batch jobs w/ number
 
-// CRON Service
-yum install -y cronie crontabs  // install cron service
-systemctl start crond  // start service
-systemctl enable crond  // persist service at boot
-/var/spool/cron/<user>  // user cron job dir
-/etc/cron.d  // sys cron job dir
-ls -d /etc/cron.*  // list sys cron periodic dirs (hourly, daily, weekly, monthly)
+# CRON Service
+yum install -y cronie crontabs  # install cron service
+systemctl start crond  # start service
+systemctl enable crond  # persist service at boot
+/var/spool/cron/%USER  # user cron job dir
+/etc/cron.d  # sys cron job dir
+ls -d /etc/cron.*  # list sys cron periodic dirs (hourly, daily, weekly, monthly)
 
 ref: crontab.guru, crontab-generator.org
 format: minute hour day-of-month month day-of-week <command>
 
-crontab -e  // create user crontab (enter default editor)
-> 0 1 * * * rsync -a ~/Documents/ ~/Documents.bak  // create cron job, save, exit
-crontab -l  // list curr cron jobs
+crontab -e  # create user crontab (enter default editor)
+> 0 1 * * * rsync -a ~/Documents/ ~/Documents.bak  # create cron job, save, exit
+crontab -l  # list curr cron jobs
 
-vim /etc/cron.d/backupdocs  // create sys crontab (enter default editor)
-> 0 1 * * * root rsync -a /home/grant/Documents/ /home/grant/Documents.bak  // create cron job, save, exit
-> 45 23 * * 6 grant rsync -a touch /home/example.txt  // create cron job, save, exit
+vim /etc/cron.d/backupdocs  # create sys crontab (enter default editor)
+> 0 1 * * * root rsync -a /home/grant/Documents/ /home/grant/Documents.bak  # create cron job, save, exit
+> 45 23 * * 6 grant rsync -a touch /home/example.txt  # create cron job, save, exit
 
+# VIM - VI improved
+u  # undo changes (command mode)
+ctrl+r  # redo changes (command mode) 
+cl  # cut letter
+cw  # cut word
+cc  # cut line
+yl  # yank letter
+yw  # yank word
+yy  # yank line
+dl  # delete letter
+dw  # delete word
+dd  # delete line
+5dd  # delete 5 lines
+p  # paste
+:nohl  # turn off highlight
+:%s/Line/NewLine  # search 'Line' replace w/ 'NewLine' (single first instance)
+:%s/Line/NewLine/g  # search 'Line' replace w/ 'NewLine' (all instances)
 
-// VIM - VI improved
-u  // undo changes (command mode)
-ctrl+r  // redo changes (command mode) 
-cl  // cut letter
-cw  // cut word
-cc  // cut line
-yl  // yank letter
-yw  // yank word
-yy  // yank line
-dl  // delete letter
-dw  // delete word
-dd  // delete line
-5dd  // delete 5 lines
-p  // paste
-:nohl  // turn off highlight
-:%s/Line/NewLine  // search 'Line' replace w/ 'NewLine' (single first instance)
-:%s/Line/NewLine/g  // search 'Line' replace w/ 'NewLine' (all instances)
-
-
-// SELinux management
-id -Z  // show SELinux user context
-ps -eZ  // show running process [e]verything, Z=security
-ls -lZ  // show files, [l]ong, Z=security
-ls -lZ /usr/bin/passwd  // show password file security context
-ls -lZ /etc/shadow  // show shadow file security context
-chcon -t <context-type> <file-name>  // change file security context, temporarily
+# SELinux management
+id -Z  # print SELinux user context
+ps -eZ  # print running process [e]verything, Z=security
+ls -lZ  # print files, [l]ong, Z=security
+ls -lZ /usr/bin/passwd  # print password file security context
+ls -lZ /etc/shadow  # print shadow file security context
+chcon -t <context-type> FILE  # change file security context, temporarily
 chcon -t etc_t ~/file.txt
-restorecon <file-name>  // change file security context to default (based on SELinux policy)
-touch /.autorelabel  // change all files security context to default after reboot
-semanage fcontext -a -t <context-type> <file-name>  // change file security context policy, [a]dd, [t]ype
+restorecon FILE  # change file security context to default (based on SELinux policy)
+touch /.autorelabel  # change all files security context to default after reboot
+semanage fcontext -a -t <context-type> FILE  # change file security context policy, [a]dd, [t]ype
 semanage fcontext -a -t etc_t /home/user1/file.txt
-semanage fcontext -l | grep <file-name>  // show file security context policy, [l]ist
+semanage fcontext -l | grep FILE  # print file security context policy, [l]ist
 semanage fcontext -l | grep file.txt
-semanage boolean -l  // list SELinux boolean status w/ description
-semanage boolean -l | egrep 'SELinux|mozilla_plugin_use_gps'  // show boolean status for header and boolean value
-sestatus -b  // list SELinux boolean status
-getsebool -a  // list SELinux boolean status, [a]ll
+semanage boolean -l  # list SELinux boolean status w/ description
+semanage boolean -l | egrep 'SELinux|mozilla_plugin_use_gps'  # print boolean status for header and boolean value
+sestatus -b  # list SELinux boolean status
+getsebool -a  # list SELinux boolean status, [a]ll
 getsebool mozilla_plugin_use_gps
-setsebool <boolean-name> <value>  // set boolean switch, temporarily
+setsebool <boolean-name> <value>  # set boolean switch, temporarily
 setsebool mozilla_plugin_use_gps on
-setsebool -P <boolean-name> <value>  // set boolean switch, persist on reboot, [P]olicy
+setsebool -P <boolean-name> <value>  # set boolean switch, persist on reboot, [P]olicy
 
-vim /var/log/audit/audit.log  // SELinux log file (enforcing, permissive), audit.d running
-vim /var/log/messages  // SELinux log file, audit.d not running
-sealert  // start SELinux alert browser application
-ausearch -m avc  // show all 'avc' error messages ([a]cess [v]ector [c]ache - SELinux RAM based cache), [m]essage
+vim /var/log/audit/audit.log  # SELinux log file (enforcing, permissive), audit.d running
+vim /var/log/messages  # SELinux log file, audit.d not running
+sealert  # start SELinux alert browser application
+ausearch -m avc  # print all 'avc' error messages ([a]cess [v]ector [c]ache - SELinux RAM based cache), [m]essage
 ausearch -m avc -ts today
-ausearch -m avc -ts recent  // last ten minutes
-aureport  // summary reports of audit log activity 
+ausearch -m avc -ts recent  # last ten minutes
+aureport  # summary reports of audit log activity 
 
-// AppArmor management (modes: complaining, enforcing) [SUSE, Debian, Ubuntu]
-apt install apparmor-profiles apparmor-profiles-extra  // install apparmor profiles
-aa-status  // show apparmor status
-aa-enforce /etc/apparmor.d/usr/sbin/cupsd  // change apparmor profile mode enforce
-aa-complain /etc/apparmor.d/usr/sbin/cupsd  // change apparmor profile mode complain
-apparmor_parser -R /etc/apparmor.d/usr/sbin/cupsd  // disable profile, [R]ecursive
-/etc/pam.d  // PAM - pluggable authentication module service files dir
+# AppArmor management (modes: complaining, enforcing) [SUSE, Debian, Ubuntu]
+apt install apparmor-profiles apparmor-profiles-extra  # install apparmor profiles
+aa-status  # print apparmor status
+aa-enforce /etc/apparmor.d/usr/sbin/cupsd  # change apparmor profile mode enforce
+aa-complain /etc/apparmor.d/usr/sbin/cupsd  # change apparmor profile mode complain
+apparmor_parser -R /etc/apparmor.d/usr/sbin/cupsd  # disable profile, [R]ecursive
+/etc/pam.d  # PAM - pluggable authentication module service files dir
+etc/security/pwquality.conf  # default pwd policy file
 
-cat /etc/security/pwquality.conf  // default pwd policy file
-
-// TCP Wrappers
+# TCP Wrappers
 cat /etc/hosts.allow
 cat /etc/hosts.deny
-<services>:<clients>: [:<option1>:<option2>:]  // comma separated services, clients=hosts|ip
+SRVC:CLIENT: [:OPTION]  # comma separated services, clients=hosts|ip
 ~> wildcards => ALL-match everything, LOCAL-FQDN w/o dot, KNOWN-dns hostname, UNKNOWN, PARANOID-drops if fw|bkwd dns no match
 ~> ALL: ALL
-~> sshd: 192.168.1.  // match service on network
-~> ALL: 192.168.1.100  // match all services on host
-~> sshd, vsftpd: 19.168.1.100,LOCAL  // match services on host + local hosts
+~> sshd: 192.168.1.  # match service on network
+~> ALL: 192.168.1.100  # match all services on host
+~> sshd, vsftpd: 19.168.1.100,LOCAL  # match services on host + local hosts
 
-grep tcp /etc/services | less  // list tcp services, un-named pipe to 'less'
-grep tcp /etc/services | awk '{print $1}' | sort | less  // list tcp services, print 1st column only, sort
+grep tcp /etc/services | less  # list tcp services, un-named pipe to 'less'
+grep tcp /etc/services | awk '{print $1}' | sort | less  # list tcp services, print 1st column only, sort
 
-// IP Tables
-iptables -A INPUT -p -tcp --dport 80 -j ACCEPT  // create iptable rule, input chain, accept tcp traffic port 80
+# IP Tables
+iptables -A INPUT -p -tcp --dport 80 -j ACCEPT  # create iptable rule, input chain, accept tcp traffic port 80
 iptables -A INPUT -p -tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -N INTERNAL  // create custom iptable chain
+iptables -N INTERNAL  # create custom iptable chain
 iptables -A INPUT -i eth01 -j INTERNAL
 
-// Firewalld
-man firewalld.zones  // show firewall zone info
-firewall-cmd --state  // show firewalld status
-firewall-cmd --get-services  // list services to configure by name
-firewall-cmd --timeout=60  // set reset timer, revert rules after timer expires (remote management)
+# Firewalld
+man firewalld.zones  # print firewall zone info
+firewall-cmd --state  # print firewalld status
+firewall-cmd --get-services  # list services to configure by name
+firewall-cmd --timeout=60  # set reset timer, revert rules after timer expires (remote management)
 firewall-cmd --zone=public --permanent --add-service=ssh
 firewall-cmd --permanent --remove-service=http
 firewall-cmd --permanent --add-port=443/tcp
 firewall-cmd --permanent --add-port=5901-5910/tcp
-firewall-cmd --reload  // reload firewall to enable configurations
-firewall-cmd --list-services  // list services enabled in curr zone
-firewall-cmd --list-ports  // list ports enabled in curr zone
+firewall-cmd --reload  # reload firewall to enable configurations
+firewall-cmd --list-services  # list services enabled in curr zone
+firewall-cmd --list-ports  # list ports enabled in curr zone
 firewall-cmd --get-default-zone
 firewall-cmd --list-all-zones
-firewall-cmd --permanent --new-zone=coffeeshop  // create new zone
+firewall-cmd --permanent --new-zone=coffeeshop  # create new zone
 firewall-cmd --set-default-zone=coffeeshop
-firewall-cmd --permanent --add-source=10.10.10.0/24  // add source ip to zone
-firewall-cmd --list-all --zone=coffeeshop  // show status info for zone
+firewall-cmd --permanent --add-source=10.10.10.0/24  # add source ip to zone
+firewall-cmd --list-all --zone=coffeeshop  # print status info for zone
 
-// NAT (uses firewalld - masquerading, forwarding, rich rules)
-firewall-cmd --permanent --query-masquerade  // show masquerade status
-firewall-cmd --permanent --zone=coffeeshop --add-masquerade  // add traffic to zone is masqueraded
+# NAT (uses firewalld - masquerading, forwarding, rich rules)
+firewall-cmd --permanent --query-masquerade  # print masquerade status
+firewall-cmd --permanent --zone=coffeeshop --add-masquerade  # add traffic to zone is masqueraded
 firewall-cmd --permanent --zone=coffeeshop --add-rich-rule='rule family=ipv4 source address=192.168.100.0/24 masquerade'
-firewall-cmd --permanent --zone=coffeeshop --add-rich-rule='rule family=ipv4 source address=192.168.1.0/24 forward-port port=22 protocol=tcp to-port=2222 to-addr=192.168.100.101'  // forward port 22 to inside host
-firewall-cmd --permanent --zone=coffeeshop --add-forward-port=port=22:proto=tcp:toport2222:toaddr=192.168.100.101  // forward port 22 to inside host 2222
+firewall-cmd --permanent --zone=coffeeshop --add-rich-rule='rule family=ipv4 source address=192.168.1.0/24 forward-port port=22 protocol=tcp to-port=2222 to-addr=192.168.100.101'  # forward port 22 to inside host
+firewall-cmd --permanent --zone=coffeeshop --add-forward-port=port=22:proto=tcp:toport2222:toaddr=192.168.100.101  # forward port 22 to inside host 2222
 
-
-// Fail2Ban - firewall rules for banning (iptables, firewalld)
-yum install -y epel-release  // add EPEL repo
-yum install -y fail2ban fail2ban-systemd  // install fail2ban
-cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local  // copy create local config
+# Fail2Ban - firewall rules for banning (iptables, firewalld)
+yum install -y epel-release  # add EPEL repo
+yum install -y fail2ban fail2ban-systemd  # install fail2ban
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local  # copy create local config
 vim /etc/fail2ban/jail.local
-~> backend = systemd  // log fail2ban using systemd
+~> backend = systemd  # log fail2ban using systemd
 ~> [sshd]
-~~> enabled = true  // turn on jailing for sshd
-systemctl start firewalld  // turn on firewall for curr session
-systemctl enable firewalld  // persist on boot
+~~> enabled = true  # turn on jailing for sshd
+systemctl start firewalld  # turn on firewall for curr session
+systemctl enable firewalld  # persist on boot
 systemctl start fail2ban
 systemctl enable fail2ban
 systemctl fail2ban-client status
 
+# Logging (rsyslog, journald)
+/etc/cron.daily/logrotate  # cron job log rotator
+/etc/logrotate.conf  # log rotator config file
+/etc/logrotate.d  # logrotate services dir
+/etc/rsyslog.conf  # rsyslog config file
+/var/log/messages  # rsyslog file
+/var/log/journal  # journald file
+/var/run  # journald log, no-persist
 
-// Logging (rsyslog, journald)
 systemctl start rsyslog
 systemctl enable rsyslog
-less -N /etc/rsyslog.conf  // rsyslog config file
-cat /var/log/messages  // rsyslog file
-grep -v 'systemd:' /var/log/messages  // invert grep search rsyslog
-tail -f /var/log/messages  // follow rsyslog
-cat /etc/cron.daily/logrotate  // cron job log rotator
-vim /etc/logrotate.conf  // log rotator config file
-logger "RHCSA is so worth it"  // write to rsyslog
-cd /etc/logrotate.d  // logrotate services dir
-
-vim /var/run  // journald log, non-persist
-journalctl -k // show log, [k]ernel only
-journalctl /sbin/crond  // list log entries for service
-journalctl -u crond // list log entries for [u]nit name
-journalctl -f  // [f]ollow binary log
-mkdir -p /var/log/journal  // create dir for persistence
-systemctl restart systemd-journald  // restart service to affect persistence
-ls -l /var/log/journal  // show journald file
-journalctl -b -1  // show system boot events
+grep -v 'systemd:' /var/log/messages  # invert grep search rsyslog
+tail -f /var/log/messages  # follow rsyslog
+logger "MSG"  # write to rsyslog
+journalctl -k # print log, [k]ernel only
+journalctl /sbin/crond  # list log entries for service
+journalctl -u crond # list log entries for [u]nit name
+journalctl -f  # [f]ollow binary log
+mkdir -p /var/log/journal  # create dir for persistence
+systemctl restart systemd-journald  # restart service to affect persistence
+journalctl -b -1  # print system boot events
 journalctl --since "2015-01-10 17:15:00"
 journalctl --since "2015-01-10 17:15:00" --until "2015-01-11 03:00"
 journalctl --since yesterday
 journalctl --since "09:00: --until "1 hour ago"
 
-cron.* /var/log/cron.log  // synced static path, write to file sys at every entry
-cron.* -/var/log/cron.log  // non-synced static path, write to file sys periodically
-cron* ?dynamiccronlog  // create dynamic path, using template
+cron.* /var/log/cron.log  # synced static path, write to file sys at every entry
+cron.* -/var/log/cron.log  # non-synced static path, write to file sys periodically
+cron* ?dynamiccronlog  # create dynamic path, using template
 
-// Network troubleshooting
-~> routing
-route
-netstat -r
-ip route
-~> packet hops
-nmap
-traceroute
-tracepath
-mtr
-~> local switching
-arp
-~> network saturation
-iftop
-ipperf
-~> packet drops, timeouts
-ping
-tcpdump
-Wireshark
-netcat
-~> name resolution
-nslookup
-dig
-host
-whois
-~> network adapters
-ethtool
-nmcli
-ip
-ifconfig
+# Network troubleshooting
+## routing
+ route
+ netstat -r
+ ip route
+## packet hops
+ nmap
+ traceroute
+ tracepath
+ mtr
+## local switching
+ arp
+## network saturation
+ iftop
+ ipperf
+## packet drops, timeouts
+ ping
+ tcpdump
+ Wireshark
+ netcat
+## name resolution
+ nslookup
+ dig
+ host
+ whois
+## network adapters
+ ethtool
+ nmcli
+ ip
+ ifconfig
 
-// CPU monitoring and config
-cat /proc/cpuinfp
-uptime
-loadaverage
-sar  // collects and displays all sys activities
-sadf  // generates report in csv, xml, etc. format
-iostat  // generates cpu and io stats
-mpstat  // show cpu stats
-pidstat  // reports stats on process id
-Ksar  // java tool to visualize sar reports
+# CPU monitoring and config
+ /proc/cpuinfp
+ uptime
+ loadaverage
+ sar  # collects and displays all sys activities
+ sadf  # generates report in csv, xml, etc. format
+ iostat  # generates cpu and io stats
+ mpstat  # print cpu stats
+ pidstat  # reports stats on process id
+ Ksar  # java tool to visualize sar reports
+ sysctl  # kernel tuning tool
+ tuned  # kernel tuning service
+## memory troubleshooting
+ vmstat  # print processes, memory, paging, block IO, traps, disks, cpu activity
+ free  # print free memory
+ cat /proc/meminfo  # memory stats
+## process priority management
+ nice  # set initial process nice lvl
+ renice  # change process nice level
+ top  # monitor, change process nice lvl
+ kill  # kill by pid
+ killall  # kill by name
+ pkill  # kill by pattern
+ ps  # process list
+ lsof  # list files open by running process
+ pgrep  # search process
+ strace PROC 2>&1 | grep KEY  # watch prog run, search, outputs to stdout & stderr
+## hardware troubleshooting
+ lshw  # list all hardware
+ dmidecode  # list low level hd from bios view
+## dns troubleshooting
+ /etc/nsswitch.conf
+ /etc/hosts
+ /etc/resolv.conf  # global dns servers
+ /etc/sysconfig/network-scripts/ifcfg-eth0
+ dig @192.168.1.254 ford.com
 
-sysctl  // kernel tuning tool
-tuned  // kernel tuning service
-
-~> memory troubleshooting
-vmstat  // show processes, memory, paging, block IO, traps, disks, cpu activity
-free  // show free memory
-cat /proc/meminfo  // memory stats
-~> process priority management
-nice  // set initial process nice lvl
-renice  // change process nice level
-top  // monitor, change process nice lvl
-kill  // kill by pid
-killall  // kill by name
-pkill  // kill by pattern
-ps  // process list
-lsof  // list files open by running process
-pgrep  // search process
-
-strace <program> 2>&1 | grep <search>  // watch prog run, search, outputs to stdout & stderr
-
-~> hardware troubleshooting
-lshw  // list all hardware
-dmidecode  // list low level hd from bios view
-~> dns troubleshooting
-cat /etc/nsswitch.conf
-cat /etc/hosts
-cat /etc/resolv.conf  // global dns servers
-vim /etc/sysconfig/network-scripts/ifcfg-eth0
-dig @192.168.1.254 ford.com
-
-
-// Git Version Control
-[new file] => git add -> [stage file] => git commit -> [save to local repo] => git push -> [save to remote]
-grant@soundlinuxtraining.com  // Grant McWilliams email
+# Git Version Control
+new FILE => git add -> stage FILE => git commit -> save local repo => git push -> save remote
+grant@soundlinuxtraining.com  # Grant McWilliams email
 yum install -y git
-cat /etc/gitconfig  // system config
-$HOME/.gitconfig  // user config
-/path/to/project/.git/config  // project config
-git config --system | --global | --local  // set config for system | user | project level
-git config --global user.name "Grant McWilliams"  // set Git user name
-git config --global user.email "somebody@idunno.com"  // set Git email
-git config --global core.editor "vim"  // set Git editor (OS specific)
-git config --global color.ui true  // turn on colors
-git config --list  // list configs
-git init  // initialize git repo
-git status
-git add newfile.txt  // track file
-git commit -m "initial commit"  // save changes
-git commit -a  // commit all changes, enter editor (multi-line comments)
-git commit -am "second commit"  // add all changes and commit w/ message
-git branch  // show branches, '*' denotes curr branch
-git branch testconfig  // create branch
-git checkout <br-name>  // switch to branch
-git diff <branch01>..<branch02>  // diff branches
-git diff master..development
-master> git merge development  // fast forward merge of development in to master branch
-git log  // show commit changes for curr branch
-git log --graph --oneline
+/etc/gitconfig  # system config
+$HOME/.gitconfig  # user config
+/path/to/project/.git/config  # project config
 
-git remote add origin https://github.com/GrantMcW/GitProjectOne.git  // add remote 'origin' + url to curr git project
-git push -u origin master  // push files on master branch to remote 'origin'
-git push  // push changes to remote for tracking branches
-git fetch  // pull files from remote, no merge
-git merge  // manual merge of pulled local files
+git config --system|--global|--local  # set config for system | user | project level
+git config --global user.name "Grant McWilliams"  # set Git user name
+git config --global user.email "somebody@idunno.com"  # set Git email
+git config --global core.editor "vim"  # set Git editor (OS specific)
+git config --global color.ui true  # turn on colors
+git config --list  # list configs
+git init  # initialize git repo
+git status
+git add newfile.txt  # track file
+git commit -m "initial commit"  # save changes
+git commit -a  # commit all changes, enter editor (multi-line comments)
+git commit -am "second commit"  # add all changes and commit w/ message
+git branch  # print branches, '*' denotes curr branch
+git branch testconfig  # create branch
+git checkout BRCH  # switch to branch
+git diff BRCH1..BRCH2  # diff branches
+e.g.> git diff master..development
+master> git merge development  # fast forward merge of development in to master branch
+git log |--graph --oneline  # print commit changes curr branch
+git remote add origin https://github.com/GrantMcW/GitProjectOne.git  # add remote 'origin' + url to curr git project
+git push -u origin master  # push files on master branch to remote 'origin'
+git push  # push changes to remote for tracking branches
+git fetch  # pull files from remote, no merge
+git merge  # manual merge of pulled local files
 git pull = fetch + merge
 
-
-// Automation and Scripting
+# Automation, Scripting
 ~> file globbing != regex; globs match file names, regex match text
-#!/bin/bash  // specify absolute path to bash interpreter executable
-#!/usr/bin/env bash  // use 'env' to search system path for bash interpreter
-mkdir ~/bin  // dir in system path to insert scripts, RHEL 7+ (run as cmds)
-bash <script.sh>  // execute script as bash arg, no set permissions
-~> echo '$0 is' "$0"  // single quote - literal, double quote - interpreted preserve spaces, $0 - executable path
+#!/bin/bash  # specify absolute path to bash interpreter executable
+#!/usr/bin/env bash  # use 'env' to search system path for bash interpreter
+mkdir ~/bin  # dir in system path to insert scripts, RHEL 7+ (run as cmds)
+bash SCRIPT  # execute script as bash arg, no set permissions
+~> echo '$0 is' "$0"  # single quote - literal, double quote - interpreted preserve spaces, $0 - executable path
 ~> $1 - 1st arg, $2 - 2nd arg, $@ - all args (word split items), $* - all args (one entity)
 
+## script preamble
 #!/bin/bash
 # script-output.sh
 echo "This part of the script worked"  	# send to stdout
 echo "Error: this part failed" >&2  	# send to stderr
-~> $ script_output.sh > stdout.txt 2> stderr.txt  // execute script, send output to both stdout and stderr
+~> $ script_output.sh > stdout.txt 2> stderr.txt  # execute script, send output to both stdout and stderr
 
 #!/bin/bash
 # readpipe.sh
@@ -795,6 +769,7 @@ fi
 echo "Pipe: ${pipearray[@]}"		# stdout 'pipearray' contents
 ~> $ cat /etc/passwd | ./readpipe.sh
 
+## conditionals, case
 case $AGE in  # wildcards, char sets, char classes, no regex
 	[1-9]) echo "You are quite young"	;;
 	[5-9]) echo "Time for elementary school";;
@@ -825,8 +800,9 @@ if [[ -n $VAR ]]  # check non-zero length
 -ot  # if file is older than another
 -ef  # if two files have same inode numbers
 
-for item in <list> ;do  # for loop structure
-	<work on $item>
+## loops
+for item in LIST ;do  # for loop structure
+	do work $item
 done
 
 for item in 1 2 3 4 5 ;do  # for loop, static list
@@ -854,10 +830,9 @@ for i in $(seq 0 $(( ${#array[@]} - 1)) ) ;do  # loop array items by index using
 	echo "${array[$i]}"
 done
 
-OLDIFS="$IFS"  	# IFS default delimiter = <space>
+OLDIFS="$IFS"  	# IFS default delimiter = SPACE
 IFS=$'\n'	# create custom IFS delimiter
 for file in $(find /etc) ;do
 	echo "$file"
 done
 IFS="$OLDIFS"
-

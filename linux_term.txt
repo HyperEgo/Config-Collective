@@ -1,3 +1,5 @@
+# linux terminal 
+
 #!/usr/bin/env bash|python3  # env find executable
 /boot/grub2/grub.cfg  # boot loader gen grub-mkconfig
 /dev  # device filesystem by udev manage calls direct to kernel
@@ -7,6 +9,7 @@
 /etc/cups  # open source printing system
 /etc/default  # default system settings config
 /etc/dhcp/dhclient.conf  # /sbin/dhclient config file
+/etc/environment  # Debian, $PATH var
 /etc/group  # groups account info
 /etc/hosts  # map hostnames to IP addrs, local server access
 /etc/init.d  # System V Init scripts
@@ -86,10 +89,14 @@ F11  # terminal full screen toggle
 ctrl+l  # clear screen
 ctrl+a  # cursor line begin
 ctrl+e  # cursor line end
-ctrl+u  # delete cmd
+ctrl+u  # delete line
 ctrl+r, INPUT  # reverse search, ctrl+r - cycle, <enter> - execute
 ctrl+SHIFT+t  # open terminal tab
 ctrl+SHIFT+w  # close curr tab
+ctrl+page-up  # cycle tab left
+ctrl+page-down  # cycle tab right
+shift+ctrl+page-up  # cycle tab most left
+shift+ctrl+page-down  # cycle tab most right
 
 # CLI
 for i in {1..100}; do sudo cp -R /etc /backup/sys; done &  # e.g. 'for loop', copy, exec in background
@@ -183,7 +190,7 @@ iptables-save  # save config file, IPv4/6 packet filtering, NAT admin tool
 iwconfig  # print wireless devices
 jobs  # print curr jobs
 journalctl --disk-usage  # print journal filesystem usage
-journalctl -u SERVICE  # print journal entries for SERVICE
+journalctl -u SRVC  # print journal entries for SRVC
 kernel-install  # edit kernel, initramfs images from /boot
 kill %1  # kill job 1
 kill -9 PID  # kill proc by PID, ugly, ungraceful
@@ -228,7 +235,7 @@ nslookup SERVER  # print name SERVER ip addr
 od -vAn -N1 -td1 < /dev/urandom  # write 1 byte signed decimal integer
 od -vAn -N2 -tu2 < /dev/urandom  # write 2 byte unsigned decimal integer
 parted  # partition editor
-pgrep SERVICE-NAME  # return service process id
+pgrep SRVC-NAME  # return service process id
 pidof PROG  # print process id of running program, e.g. firefox
 ping -c NUM  # execute ping NUM times
 ping -I INT  # ping from specific outbound interface
@@ -260,10 +267,10 @@ systemctl isolate graphical.target | multi-user.target  # launch UI | cli
 systemctl set-default TARGET  # set default target at boot
 systemctl get-default  # return default target at boot
 systemctl reboot -i
-systemctl status --all |SERVICE  # print units runtime status
+systemctl status --all |SRVC  # print units runtime status
 systemctl --type=service|target  # print system services | targets
 systemctl list-units |grep -i "service | target | mount"  # print curr loaded modules
-systemctl start | stop | | restart |enable | disable SERVICE  # manage SERVICE
+systemctl start | stop | | restart |enable | disable SRVC  # manage SRVC
 systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
 tail -f FILE  # print file appends
 tail -n10 FILE  # print FILE last 10 lines
@@ -306,21 +313,21 @@ lpr FILE.txt  # CUPS, convert text FILE to pdf, def dest /home/$USER/Desktop
 lpq  # list printer queue
 zip -r ARCH.zip CONTENTS  # compress CONTENTS [r]ecursive
 
-## dir mngmt
+# dir mngmt
 dirs  # print dir stack
 popd  # pop stack
 pushd DIR  # push to stack
 
-## tools, gfx
+# tools, gfx
 cmatrix  # terminal 'matrix' animation
+
+tmux  # terminal multiplexer
  ctrl+b  # prefix
  ?  # help
  %  # split horiz
  "  # split vert
  x  # close
  d  # detach
-
-tmux  # terminal multiplexer
 ~/.tmux.conf
 set -g default-terminal 'screen-256color'  # improve colors
 set -g history-limit 10000
@@ -397,11 +404,11 @@ vim /etc/fstab  # edit fstab, use UUID or label
 mount -L LABEL MOUNT  # mount using label
 mount -a  # test mounts, sudo
 
-## ssh key setup
+# ssh key setup
 ssh-keygen  # creates public, pvt key pair
-# /default/.ssh/id_rsa  # pvt key
-# /default/.ssh/id_rsa.pub  # public key
-# /default/.ssh/authorized_keys  # connecting device pub key file
+ /default/.ssh/id_rsa  # pvt key
+ /default/.ssh/id_rsa.pub  # public key
+ /default/.ssh/authorized_keys  # connecting device pub key file
 ssh-copy-id SERVER  # copy pub key to SERVER
 
 # crypto
@@ -409,71 +416,25 @@ shred FILE  # overwrite FILE contents, secure wipe
 cryptsetup OPTIONS ACTION ACTION-ARG  # manage volume encryption
 cryptsetup -v --verify-passphrase luksFormat VOLUME  # prompts for UPPER case 'YES'
 
-# SVN
-A  # Added
-C  # Conflicted
-D  # Deleted
-I  # Ignored
-M  # Modified
-R  # Replaced
-X  # Unrevisioned directory created by externals definition
-?  # Not tracked by version control
-!  # Missing (removed by non-SVN command)
-
-svn ls /project/directory/branches -v  # list branches
-svn log -q -l5 URL  # print logs [q]uiet, [l]ine numbers
-svn co -rREV URL  # svn check out revision
-svn cp SOURCE TARGET  # svn copy branch
-
-## Merge
-pwd
-/home/user/project-trunk  # curr trunk dir
-svn up
-svn merge --dry-run /project/directory/branches/branch_1
-svn ci -m "merge branch_1 in to trunk"
-svn -R resolved .  # svn resolve deps, [R]ecursive, **after issues corrected
-svn cleanup
-svn unlock --force /path/to/locked/file  # unlock file
-
-# Ant | Maven
-nohup ant &  # run ant background process, log to nohup.out
-ant -p  # print ant commands, must be in build.xml dir
-ant commonClean all
-ant clean 2>&1 | tee -a antlog_$(date +%F_%R).log  # logger, stderr, stdout to log file
-ant all
-ant cmAll
-ant html
-ant mvnDeploy  # deploy ant maven artifacts to Nexus repo (see pom for url)
-mvn compile
-mvn compile clean
-mvn -p  # print maven commands, must be in build.xml dir
-
 # VIM
-:e  # open file
-:!  # run external cmd
-:x!  # save, overwrite, preserve timestamp if no changes
-:wq!  # save, overwrite, clobber timestamp no matter
-:He  # open horizontal view - file browser
-:Ve  # open vertical view - file browser
-:set hls  # enable highlight search
-:set nohls  # disable highlight search
-:noh  # disable highlights
-:set number
-:set nonumber
-
-:%s/Line/NewLine/  # copy replace 'Line' with 'NewLine'
-:%s/Line/NewLine/g  # copy replace 'Line' with 'NewLine' all instances 
-
-gg  # FILE top
-SHIFT+g  # FILE bottom
-
-y  # yank
+e  # next word, end
+w  # next word, begin
+b  # prev word, begin
 p  # paste
 x  # delete char
-dw  # delete word
-d$|D  # delete from cursor to EOL
+y  # yank
+cl  # cut letter
+cw  # cut word
+cc  # cut line
 dd  # delete line
+dl  # delete letter
+d$|D  # delete from cursor to EOL
+dw  # delete word
+yl  # yank letter
+yw  # yank word
+yy  # yank line
 u  # undo
+
 ctrl+r  # redo
 ctrl+o  # jump back
 ctrl+i  # jump forward
@@ -484,6 +445,23 @@ ctrl+f  # forward full screen
 ctrl+d  # forward 1/2 screen
 ctrl+u  # back 1/2 screen
 ctrl+v [visual block], w - jump next column, x - delete, SHIFT+i ADD-TEXT + esc - apply changes
+gg  # FILE top
+SHIFT+g  # FILE bottom
+
+:!  # run external cmd
+:x!  # save, overwrite, preserve timestamp if no changes
+:wq!  # save, overwrite, clobber timestamp no matter
+:He  # open horizontal view - file browser
+:Ve  # open vertical view - file browser
+:e  # open file
+:set hls  # enable highlight search
+:set nohls  # disable highlight search
+:noh  # disable highlights
+:set number
+:set nonumber
+
+:%s/Line/NewLine/  # copy replace 'Line' with 'NewLine'
+:%s/Line/NewLine/g  # copy replace 'Line' with 'NewLine' all instances 
 
 ## tabs
 vim -p FILE1, FILE2  # open in tabs
@@ -503,6 +481,19 @@ vim -p FILE1, FILE2  # open in tabs
 
 imap, t <Esc>:tabnew<CR>  # map 't' -> :tabnew
 
+# Ant, Maven
+nohup ant &  # run ant background process, log to nohup.out
+ant -p  # print ant commands, must be in build.xml dir
+ant commonClean all
+ant clean 2>&1 | tee -a antlog_$(date +%F_%R).log  # logger, stderr, stdout to log file
+ant all
+ant cmAll
+ant html
+ant mvnDeploy  # deploy ant maven artifacts to Nexus repo (see pom for url)
+mvn compile
+mvn compile clean
+mvn -p  # print maven commands, must be in build.xml dir
+
 # Python
 pydoc modules  # print python local installed modules
 python3  # start python interpreter
@@ -521,8 +512,8 @@ pip3 install --upgrade pip
 pip3 download -d . "pywinrm>=0.3.0"  # dl python3 pywinrm plugin installer
 
 ## Docker - test plugin dependences
-docker inspect CONTAINER  # view container configurations, e.g. id, state metrics, network stats
-docker network disconnect bridge CONTAINER  # disable network connection
+docker inspect CNTR  # view container configurations, e.g. id, state metrics, network stats
+docker network disconnect bridge CNTR  # disable network connection
 pip3 install --no-index --find-links *  # install plugin w/ deps local, offline mode
 
 # C++ compiler - test

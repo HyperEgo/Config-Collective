@@ -1,0 +1,27 @@
+# archived linux terminal cmd
+
+# SVN
+A  # Added
+C  # Conflicted
+D  # Deleted
+I  # Ignored
+M  # Modified
+R  # Replaced
+X  # Unrevisioned directory created by externals definition
+?  # Not tracked by version control
+!  # Missing (removed by non-SVN command)
+
+svn ls /project/directory/branches -v  # list branches
+svn log -q -l5 URL  # print logs [q]uiet, [l]ine numbers
+svn co -rREV URL  # svn check out revision
+svn cp SOURCE TARGET  # svn copy branch
+
+## Merge
+pwd
+/home/user/project-trunk  # curr trunk dir
+svn up
+svn merge --dry-run /project/directory/branches/branch_1
+svn ci -m "merge branch_1 in to trunk"
+svn -R resolved .  # svn resolve deps, [R]ecursive, **after issues corrected
+svn cleanup
+svn unlock --force /path/to/locked/file  # unlock file

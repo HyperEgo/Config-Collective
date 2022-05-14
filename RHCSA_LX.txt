@@ -1,618 +1,591 @@
-Red Hat Certified System Administrator [RHCSA] - NGC Training via LX
+# Red Hat Certified System Administrator (RHCSA) - LX
 
-**************************************************
-********* Boot Process and Installation **********
-**************************************************
-BIOS | UEFI >> MBR >> GRUB2 >> Kernel >> Init >> RunLevel
-BIOS = Basic Input Output System
-UEFI = Unified Extensible Firmware Interface
-MBR = Master Boot Record
-GRUB2 = Grand Unified Boot Loader 2
-vim etc/fstab  // file systems auto-mounted at boot
-cat /var/log/messages  // show log for boot issues
-uname -r  // show kernel version
-chroot /sysroot  // access root file tree when in single-user mode
-chroot /mnt/sysimage  // access root file tree when in recovery mode 
-cat /etc/readhat-release  // show rhel release version info
-cat /boot/grub2/grub.cfg  // show boot loader settings, do not edit directly
-vim /etc/default/grub  // grub boot loader config
-vim /etc/grub.d/40_custom  // custom grub menu options
-grub2-mkconfig -o /boot/grub2/grub.cfg  // build new grub boot loader (usu after edit changes)
-grub2-install <device-name>  // (re)install device grub boot loader (e.g. /dev/sda)
-systemctl-list-units -t target  // show boot targets
-systemctl get-default  // show default boot target
-> multi-user.target  // show curr target | run-level
-systemctl set-default multi-user.target  // set boot target
-lvs  // list logical volumes (e.g. swap partition)
-sysctl -a  // list [a]ll kernel parameters (e.g. cdrom, ip_forward [0=disable, 1=enable])
-sysctl -w net.ipv4.ip_forward=1  // set kernel parameter dynamically
-sysctl -p  // [p]ublish kernel parameter changes made to config file
-vim /etc/sysctl.conf  // kernel parameter config file, persists on boot
+# Boot Process, Installation 
+/boot/grub2/grub.cfg  # boot loader settings, do not edit directly
+/etc/fstab  # file systems auto-mounted at boot
+/etc/default/grub  # grub boot loader config
+/etc/grub.d/40_custom  # custom grub menu options
+/etc/modprobe.d/blacklist.conf  # remove module config file, persist on boot
+/etc/readhat-release  # rhel release version info
+/etc/security/limits.conf  # kernel limits config file (set limits per user | group)
+/etc/sysctl.conf  # kernel parameter config file, persists on boot
+/var/log/messages  # log boot issues
 
-ulimit -a  // list kernel limits (e.g. max no. of open files, etc.)
-vim /etc/security/limits.conf  // kernel limits config file (set limits per user | group)
-lsmod  // list kernel modules
-modinfo <module-name>  // show version of kernel module
-modprobe <module-name>  // add module to kernel, no persist
-rmmod <module-name>  // remove module from kernel, no persist
-vim /etc/modprobe.d/blacklist.conf  // remove module config file, persist on boot
+BIOS | UEFI => MBR => GRUB2 => Kernel => Init => RunLevel
+BIOS  # Basic Input Output System
+UEFI  # Unified Extensible Firmware Interface
+MBR  # Master Boot Record
+GRUB2  # Grand Unified Boot Loader 2
 
+uname -r  # show kernel version
+chroot /sysroot  # access root file tree when in single-user mode
+chroot /mnt/sysimage  # access root file tree when in recovery mode 
+grub2-mkconfig -o /boot/grub2/grub.cfg  # build new grub boot loader (usu after edit changes)
+grub2-install <device-name>  # (re)install device grub boot loader (e.g. /dev/sda)
+systemctl-list-units -t target  # show boot targets
+systemctl get-default  # show default boot target
+> multi-user.target  # show curr target | run-level
+systemctl set-default multi-user.target  # set boot target
+lvs  # list logical volumes (e.g. swap partition)
+sysctl -a  # list [a]ll kernel parameters (e.g. cdrom, ip_forward [0=disable, 1=enable])
+sysctl -w net.ipv4.ip_forward=1  # set kernel parameter dynamically
+sysctl -p  # [p]ublish kernel parameter changes made to config file
 
-**************************************************
-**************** The Environment *****************
-**************************************************
-history | grep <keyword>  // search cmd-line input history
-!<number>  // re-run history cmd (e.g. !3)
-history -c  // clear history for curr user
-echo $SHELL  // show shell env var
-echo $PATH  // show path env vars
-env  // show complete env var listing
-printenv  // equivalent to env
-COSTCENTER="Toronto"  // set custom new env var
-export COSTCENTER  // export custom new env var to other shell sessions
-setenv  // show env vars, c-shell
-setenv DEPTCODE "HR"  // create new var, c-shell
-echo $DEPTCODE  // verfiy var contents
+ulimit -a  # list kernel limits (e.g. max no. of open files, etc.)
+lsmod  # list kernel modules
+modinfo MOD-NAME  # show version of kernel module
+modprobe MOD-NAME  # add module to kernel, no persist
+rmmod MOD-NAME  # remove module from kernel, no persist
 
-su <user-name>  // login user
-su - <user-name>  // login user and run scripts
-ls -lt  // long list files by [t]ime modification, most recent descending
-ls -lS  // long list file by [S]ize, largest descending
-ls -ld <dir-name>  // list dir name
-ls -li  // long list inode info, file metadata stored in inode
-mkdir -p <dir-path>  // make dir [p]ath
-mkdir -p /budgets/2016
-info <cmd>  // show detailed info for cmd
-tac <file-name>  // view file contents in reverse order, oppo 'cat' cmd
-ifconfig eth0 | grep inet | grep -v inet6  // show ethernet interface ipv4 addr, exclude ipv6
-ln <source-file> <dest-file>  // create hard link; hard link duplicates org file inode
-ln -s <source-file> <dest-file>  // create soft link; soft link creates new file inode
-ln -s /Sales/client/2013Sales ~/Documents/2013Sales
+# Environment 
+history | grep KEY  # search cmd-line input history
+!NUM  # re-run history cmd (e.g. !3)
+history -c  # clear history for curr user
+echo $PATH|$SHELL  # print shell|path vars
+env|printenv  # print environment vars
 
-echo -e "Logged in users \n" $(who)  // enable newline escape char
+COSTCENTER="Toronto"  # set custom new env var
+export COSTCENTER  # export custom new env var to other shell sessions
+setenv  # show env vars, c-shell
+setenv DEPTCODE "HR"  # create new var, c-shell
+echo $DEPTCODE  # verfiy var contents
+
+su $USER  # login user
+su - $USER  # login user, run scripts
+ls -l|S|t  # [l]ong list, [t]ime mod, [S]ize, recent descending
+ls -ld DIR  # list dir name
+ls -li  # long list, [i]node - metadata
+mkdir -p path/to/dir  # make dir [p]ath
+e.g.> mkdir -p /budgets/2016
+info CMD  # print CMD details
+tac FILE  # print file contents reverse, opposite 'cat'
+ifconfig eth0 | grep inet | grep -v inet6  # show ethernet interface ipv4 addr, exclude ipv6
+ln path/to/src path/to/dest  # create hard link - duplicates org file inode
+ln -s path/to/src path/to/dest  # create soft link - create new file inode
+e.g.> ln -s /Sales/client/2013Sales ~/Documents/2013Sales
+
+echo -e "Logged in users \n" $(who)  # enable newline escape char
 echo $(date) "Add entry to sudo log" >> sudo.log
 
+# CLI
+yum  # yellow-dog updater and modifier
+rpm  # red hat package manager
+tty  # tele type terminal
+ctrl+alt+F1-F7  # tty sessions: F1=gui, F2-F7=user sessions
+PROC &  # run as background process
+> [1] 26576  # outputs job number, PID
+jobs  # show curr jobs
+fg 1  # bring job 1 to foreground
+ctrl+z  # pause curr foreground process (Stopped, not terminated)
+bg 1  # put job 1 to background
+kill PID  # gracefully end bkgd job|proc
+kill -9 PID  # immediately end bkgd job|proc (ungraceful - e.g. dangling memory stores)
 
-**************************************************
-**************** The Command Line ****************
-**************************************************
-yum = yellow-dog updater and modifier
-rpm = red hat package manager
-tty = tele type terminal
-<ctrl>+<alt>+<F1-F7>  // tty sessions: F1=gui, F2-F7=user sessions
-<executable> &  // run as background process
-> [1] 26576  // output job number, PID
-jobs  // show curr jobs
-fg 1  // bring job 1 to foreground
-<ctrl>+<z>  // pause curr foreground process (Stopped, not terminated)
-bg 1  // put job 1 to background
-kill <PID>  // gracefully end bkgd job|proc
-kill -9 <PID>  // immediately end bkgd job|proc (ungraceful - e.g. dangling memory stores)
+grep -i "codey" < 2013Sales  # use file input to grep cmd
+sort < 2013Sales > 2013Sales_sorted.txt  # sort input file, direct results to output file
+ls *201[34]*  # list file names w/ "2013" or "2014"
+ls [East,West]*  # list file names w/ "East" or "West"
+ls *{2013..2015}  # list files names w/ 2013-2015
+ls [HC][A-Z][0-9][0-9]???  # return examples: CV84TRL, HK11POU, HK46ABC, HK81TTG, HK97RWQ
+find . -iname -type f -print  # find file only, ignore case
+find . -user cblackwell  # find files via user
+find . -cmin -3  # find files created in last three minutes
+find . -user cblackwell -name "Project[0-9][0-9].txt" -exec ls -l {} \;  # find file for user w/ criteria, show file parms, placeholder, end stmt
+find . -user cblackwell -name "Project[0-9][0-9].txt" -exec mv {} /tmp \;  # find files, mv to tmp dir
+which ifconfig  # return binary cmd location
+locate -S  # show locate db [s]tats
+sed -n '1~2p' <file-name>  # print every 2nd line, -n=remove duplicates
+sed '1~2d' <file-name>  # delete every 2nd line
+sed 's/Vancover/Montreal/g' <file-name>  # [s]ubstitute Montreal for Vancouver, g=at every instance
+sed 's/^.*0//' <file-name>  # start at beginning, look for any number of characters up to '0', [s]ubstitute with nothing
+PATH=$PATH:/UserFiles/Scripts  # modify path dynamically to check local dir for runnable scripts, no persist - only good for curr shell
 
-grep -i "codey" < 2013Sales  // use file input to grep cmd
-sort < 2013Sales > 2013Sales_sorted.txt  // sort input file, direct results to output file
-ls *201[34]*  // list file names w/ "2013" or "2014"
-ls [East,West]*  // list file names w/ "East" or "West"
-ls *{2013..2015}  // list files names w/ 2013-2015
-ls [HC][A-Z][0-9][0-9]???  // return examples: CV84TRL, HK11POU, HK46ABC, HK81TTG, HK97RWQ
-find . -iname -type f -print  // find file only, ignore case
-find . -user cblackwell  // find files via user
-find . -cmin -3  // find files created in last three minutes
-find . -user cblackwell -name "Project[0-9][0-9].txt" -exec ls -l {} \;  // find file for user w/ criteria, show file parms, placeholder, end stmt
-find . -user cblackwell -name "Project[0-9][0-9].txt" -exec mv {} /tmp \;  // find files, mv to tmp dir
-which ifconfig  // return binary cmd location
-locate -S  // show locate db [s]tats
-sed -n '1~2p' <file-name>  // print every 2nd line, -n=remove duplicates
-sed '1~2d' <file-name>  // delete every 2nd line
-sed 's/Vancover/Montreal/g' <file-name>  // [s]ubstitute Montreal for Vancouver, g=at every instance
-sed 's/^.*0//' <file-name>  // start at beginning, look for any number of characters up to '0', [s]ubstitute with nothing
-PATH=$PATH:/UserFiles/Scripts  // modify path dynamically to check local dir for runnable scripts, no persist - only good for curr shell
+tar -cvf TAR.tar FILE  # [c]reate tar [f]ile, [v]erbose
+tar -tvf TAR.tar  # print con[t]ents, [f]ile, [v]erbose
+tar -czvf TAR.tar FILE # [c]reate tar [f]ile, use g[z]ip compression, [v]erbose
+e.g.> tar -czvf UserFiles.tar.gz /UserFiles
+tar -xzvf TAR.tar # e[x]tract tar file
+gzip FILE  # compress FILE
+gunzip FILE.gz  # decompress FILE
+bzip2 -v -9 FILE*.sh  # compress .sh files [v]erbose, -9=best possible compression
+bzip2 -d FILE  # [d]ecompress
+bunzip2 *.bz2  # decompress .bz2 files
+zip -r ZIP.zip DIR  # zip compress DIR, [r]ecursive
+e.g.> zip -r /Backup/Budgets.zip Budgets
+zip -d Budgets.zip *2011*  # [d]elete matching files from archive
+unzip -l /Backup/Budgets.zip  # [l]ist files stored without decompress
+unzip Budgets.zip  # decompress zip file
 
-tar -cvf <tar-name>.tar <file-name>  // [c]reate tar [f]ile, [v]erbose
-tar -tvf <file-name>.tar  // view con[t]ents of .tar [f]ile, [v]erbose
-tar -czvf <tar-name> <file-name> // [c]reate tar [f]ile, use g[z]ip compression, [v]erbose
-tar -czvf UserFiles.tar.gz /UserFiles
-tar -xzvf  // extract tar file
-gzip <file-name>  // compress file
-gunzip <file-name>.gz  // decompress
-bzip2 -v -9 <file-name> *.sh  // compress .sh files [v]erbose, -9=best possible compression
-bzip2 -d <file-name>  // [d]ecompress
-bunzip2 *.bz2  // decompress .bz2 files
-zip -r <zip-name> <dir-name>  // zip compress, [r]ecursive
-zip -r /Backup/Budgets.zip Budgets
-zip -d Budgets.zip *2011*  // [d]elete matching files from archive
-unzip -l /Backup/Budgets.zip  // [l]ist files stored without decompress
-unzip Budgets.zip  // decompress zip file
+# File Systems, Device Management 
+/etc/iscsi/iscsid.conf  # SCSI device config for initiator, connect over IP network
 
-
-**************************************************
-******* File Systems and Device Management *******
-**************************************************
 MBR - limit four partitions per disk, max size 2TB
-e2label <device-name>  // show label for device
-mount -a  // check /etc/fstab, [a]uto-mount any devices not mounted
-mount -L <label> <location>  // mount device using label
-vim /etc/fstab  // manage mounted devices
-> LABEL=WebData  /tmpmount  ext4  defaults 0 0  // example mount using label
+e2label DEV  # print label for device
+mount -a  # check /etc/fstab, [a]uto-mount any devices not mounted
+mount -L LABEL path/to/device  # mount device using label
+/etc/fstab  # manage mounted devices
+> LABEL=WebData  /tmpmount  ext4  defaults 0 0  # example mount using label
 
-luks = Linux Unified Key Setup on disc format
-cryptsetup -v luksFormat /dev/sbd1  // setup device encryption
-cryptsetup luksOpen /dev/sdb1 filevault  // initialize and map partition
-cryptsetup -v status filevault  // show device encryption status details
-mkfs.ext4 /dev/mapper/filevault  // create filesystem on partition
-mount /dev/mapper/filevault /Data  // mount filesystem to dir
+luks  # Linux Unified Key Setup on disc format
+cryptsetup -v luksFormat /dev/sbd1  # setup device encryption
+cryptsetup luksOpen /dev/sdb1 filevault  # initialize and map partition
+cryptsetup -v status filevault  # show device encryption status details
+mkfs.ext4 /dev/mapper/filevault  # create filesystem on partition
+mount /dev/mapper/filevault /Data  # mount filesystem to dir
 
-vim /etc/crypttab  // mount encrypted filesystem on boot
+/etc/crypttab  # mount encrypted filesystem on boot
 > filevault  /dev/sdb1  none  luks
-vim /etc/fstab
+/etc/fstab
 > /dev/mapper/filevault  /Data  ext4  defaults 0 0
 
-fdisk <device-name>  // start fdisk utility to create disk partition using MBR
-fdisk -l <device-name>  // list MBR partitions on device
-mkfs -t ext4 <device-name> // format partition w/ file system, [t]ype=ext4
-vim /etc/iscsi/iscsid.conf  // SCSI device config for initiator, connect over IP network
-iscsiadm --mode discovery --type sendtargets --portal 192.168.1.240  // SCSI admin, discover devices available on SCSI server
-iscsiadm --mode node --targetname iqn.2015-06.com.example:target --portal 192.168.1.240 --login // connect to SCSI target name
-iscsiadm -m session -o show  // verify connection to remote SCSI target
-lsblk --scsi  // list device blocks including SCSI
-blkid  // show uuid for connected devices
+fdisk DEV  # start fdisk utility to create disk partition using MBR
+fdisk -l DEV  # list MBR partitions on device
+mkfs -t ext4 <device-name> # format partition w/ file system, [t]ype=ext4
+iscsiadm --mode discovery --type sendtargets --portal 192.168.1.240  # SCSI admin, discover devices available on SCSI server
+iscsiadm --mode node --targetname iqn.2015-06.com.example:target --portal 192.168.1.240 --login # connect to SCSI target name
+iscsiadm -m session -o show  # verify connection to remote SCSI target
+lsblk --scsi  # list device blocks including SCSI
+blkid  # show uuid for connected devices
 
-gdisk <device-name>  // start gdisk utility to create disk partition using GPT
-gdisk -l <device-name>  // list GPT partitions on device
-mkfs -t ext4 <device-name>
+gdisk DEV  # start gdisk utility to create disk partition using GPT
+gdisk -l DEV  # list GPT partitions on device
+mkfs -t ext4 DEV
 
-dd if=/dev/zero of=/swapfile bs=1024 count=524288 // disk dump utility, build file on root dir, if=input file, of=output file, bs=block size
-~> 512 MB x 1024 [blk.size] = 524288  // round down to nearest memory size boundary
-mkswap /swapfile  // prepare file for swapping
-chmod 0600 /swapfile  // allow owner to r,w
-swapon /swapfile  // turn swap file
-vim /etc/fstab  // add entry for swap file
+dd if=/dev/zero of=/swapfile bs=1024 count=524288 # disk dump utility, build file on root dir, if=input file, of=output file, bs=block size
+~> 512 MB x 1024 [blk.size] = 524288  # round down to nearest memory size boundary
+mkswap /swapfile  # prepare file for swapping
+chmod 0600 /swapfile  # allow owner to r,w
+swapon /swapfile  # turn swap file
+/etc/fstab  # add entry for swap file
 > /swapfile  swap  swap  defaults 0 0
-vim /etc/default/grub  // edit to enable zswap - compresses swap pgs to memory, avoids writes to disk
-> GRUB_CMDLINE_LINUX=... (add) zswap.enabled=1  // add zswap cmd to declarative
-grub2-mkconfig -o /boot/grub2/grub.cfg  // rebuild grub file after changes
-cat /sys/kernel/debug/zswap/stored_pages  // verify zswap enabled (e.g. number of compressed swap pages)
+/etc/default/grub  # edit to enable zswap - compresses swap pgs to memory, avoids writes to disk
+> GRUB_CMDLINE_LINUX=... (add) zswap.enabled=1  # add zswap cmd to declarative
+grub2-mkconfig -o /boot/grub2/grub.cfg  # rebuild grub file after changes
+cat /sys/kernel/debug/zswap/stored_pages  # verify zswap enabled (e.g. number of compressed swap pages)
 
-lvs  // show status for logical volumes
-lvm  // interactive cmd prompt for logical volume management (e.g. 'help', 'exit')
-pvdisplay  // physical volume display, shows disks that use LVM
-vgdisplay <volume-grp-name>  // volume group display status
-lvdisplay <volume-grp-name>  // logical volume display stats for volume group
-lvcreate -L 5G -n archive vg1 -v  // create logical volume for volume group, -L=size, -v=verbose, -n=name
-lvextend --size +4G /dev/vg1/archive  // extend logical volume
-mkfs -t ext4 /dev/vg1/archive  // create file system for logical volume
-lvremove /dev/vg1/archive  // remove logical volume
-lvcreate -L 9G -T vg1/thinpool  // create thin provisioning pool for logical volumes (can exceed physical hd capacity), -L=size, -T=thin
-lvcreate -V 9G -T vg1/thinpool -n lv1  // create thin logical volume partition, -V=virtual size, -T=thin, -n=name
-lvcreate -L 500M -s -n archive_snap /dev/vg1/archive  // create logical volume snapshot, -L=size, -s=snapshot, -n=name
+lvs  # show status for logical volumes
+lvm  # interactive cmd prompt for logical volume management (e.g. 'help', 'exit')
+pvdisplay  # physical volume display, shows disks that use LVM
+vgdisplay VOL-GRP  # volume group display status
+lvdisplay VOL-GRP  # logical volume display stats for volume group
+lvcreate -L 5G -n archive vg1 -v  # create logical volume for volume group, -L=size, -v=verbose, -n=name
+lvextend --size +4G /dev/vg1/archive  # extend logical volume
+mkfs -t ext4 /dev/vg1/archive  # create file system for logical volume
+lvremove /dev/vg1/archive  # remove logical volume
+lvcreate -L 9G -T vg1/thinpool  # create thin provisioning pool for logical volumes (can exceed physical hd capacity), -L=size, -T=thin
+lvcreate -V 9G -T vg1/thinpool -n lv1  # create thin logical volume partition, -V=virtual size, -T=thin, -n=name
+lvcreate -L 500M -s -n archive_snap /dev/vg1/archive  # create logical volume snapshot, -L=size, -s=snapshot, -n=name
 
-pvcreate -v /dev/sdb1 /dev/sdc1  // create physical volume by adding volume groups
-vgcreate -s 5G vg1 /dev/sdb1  // create volume group
-vgextend vg1 /dev/sdc1  // extend volume group
+pvcreate -v /dev/sdb1 /dev/sdc1  # create physical volume by adding volume groups
+vgcreate -s 5G vg1 /dev/sdb1  # create volume group
+vgextend vg1 /dev/sdc1  # extend volume group
 
-fdisk /dev/sdb  // create disk partitions and flag for RAID usage, type 'p'-partition, 'n'-new, 'fd'-auto detect raid, 'w'-write to disk
+fdisk /dev/sdb  # create disk partitions and flag for RAID usage, type 'p'-partition, 'n'-new, 'fd'-auto detect raid, 'w'-write to disk
 fdisk /dev/sdc
-mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdb1 /dev/sdc1  // create RAID 1 config for disks
-mdadm --detail /dev/md1  // show detail status for RAID devices
-cat /proc/mdstat  // verify RAID config in proc
+mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdb1 /dev/sdc1  # create RAID 1 config for disks
+mdadm --detail /dev/md1  # show detail status for RAID devices
+cat /proc/mdstat  # verify RAID config in proc
 mkfs -t ext4 /dev/md1
-vim /etc/fstab  // persist RAID mount on boot
+etc/fstab  # persist RAID mount on boot
 > /dev/md1  /cust_trans  ext4  default 0 0
 
-mdadm /dev/md1 --add /dev/sdd1  // add device to RAID config
-mdadm --grow --raid-devices=3 /dev/md1   // grow | use device as active addition to array
-mdadm --detail /dev/md1  // verify new device addition
+mdadm /dev/md1 --add /dev/sdd1  # add device to RAID config
+mdadm --grow --raid-devices=3 /dev/md1   # grow | use device as active addition to array
+mdadm --detail /dev/md1  # verify new device addition
 
+# Administration, Permissions 
+/etc/passwd  # user account info
+/etc/shadow  # user password
+/etc/group  # user groups w/ id
 
-**************************************************
-********* Administration and Permissions *********
-**************************************************
-nmcli general status  // show network connection status
-nmcli dev status  // show all network interfaces
-nmcli con up <interface-name>  // activate interface
-nmcli con show  // show all network connections
+nmcli general status  # show network connection status
+nmcli dev status  # show all network interfaces
+nmcli con up INT  # activate interface
+nmcli con show  # print all network connections
 
-yum search <package-name>  // list software available via search function
-yum search wireshark
-yum list | less  // list all available software from all repositories, enable scroll w/ 'less'
-yum list installed | grep wireshark  // check for software install
+yum search PKG  # print software available
+e.g.> yum search wireshark
+yum list|less  # print all available software, all repositories, enable scroll
+yum list installed | grep wireshark  # check for software install
 yum install wireshark*
-yum reinstall wireshark  // re-install software
+yum reinstall wireshark  # re-install software
 yum remove wireshark
-yum repolist  // show any enable software repositories
-yum repolist all  // show all [disabled] repositories
-yum-config-manager --enable "<repo-name>"  // enable repository
-yum info <package-name>  // show detailed package info
+yum repolist  # show any enable software repositories
+yum repolist all  # show all |disabled repositories
+yum-config-manager --enable REPO  # enable repository
+yum info <package-name>  # show detailed package info
 yum info wireshark
 yum update wireshark
 
-createrepo <sub-directory-name>  // create custom repository (e.g. can store approved packages)
-createrepo /custom_repo/
-vim /etc/yum.repos.d/rhel-local.repo  // create local repository file
+createrepo DIR  # create custom repository e.g. can store approved packages
+e.g.> createrepo /custom_repo/
+/etc/yum.repos.d/rhel-local.repo  # create local repository file
 > [custom_repo]
 > name=Custom Local Repository
 > baseurl="file:///custom_repo/"
 > gpgcheck=0
-yum repo list  // verify custom local repository
+yum repo list  # verify custom local repository
 
-umask  // show default user permissions, sys const value 0666 - mask value
-> 0022  // 0666 - 0022 = 0644 [ugo|rwx] >> permissions => user(rw), group(r), other(r)
+umask  # show default user permissions, sys const value 0666 - mask value
+> 0022  # 0666 - 0022 = 0644 [ugo|rwx] >> permissions => user(rw), group(r), other(r)
 
-/etc/passwd  // stores local user account info
-/etc/shadow  // stores local user passwords
-/etc/group  // show user groups w/ ids
-passwd <user-name>  // change user name password as root
-passwd -e <user-name>  // force immediate [e]xpiry of user account
-passwd -n <integer>  // set days mininum password age, must be < max age, '0' = never expire
-passwd -x <integer>  // set days maximum password age, '0' = never expire
-passwd -w <integer>  // set days warning before password expires
-useradd <user-name> -p <user-password> -c <user-description>  // add user to local domain
-userdel <user-name>  // remove user, add -r to [r]emove user home directory
-usermod <user-name> -s <shell-prog>  // modify user login [s]hell (e.g. /bin/bash, /bin/csh)
-usermod jgold -s /bin/csh
-usermod <user-name> -G <group-name>  // add user to additional group
-usermod jgold -G humanresources,sales  // add user to multiple additional groups
-usermod <user-name> -g <group-name>  // change user default group (not add)
-groupadd <group-name>  // add group
-groupdel <group-name>  // remove group
-groupmod <group-name> -n <name>  // edit group name
-chmod +t <dir-name>  // set 'sticky' bit on dir, only owner can rename or delete
-chmod -t <dir-name>  // remove 'sticky' bit on dir
-chmod 755 -R <file-name>  // change file permissions [R]ecursive to sub-dirs
-chown <user-name> *  // change ownership for all files in curr dir
-chown <user-name> -R *  // change ownership for all files in curr dir + sub-dirs
-chgrp <group-name> *  // change group for all files in curr dir
-lsattr <file-name>  // list file attributes
-chattr +|-i <file-name>  // set file [i]mmutable (no edit, no delete)
-chattr +|-a <file-name>  // set file [a]ppendable (append only, no chg exist data, no delete)
-chattr -R +i <dir-name>  // set dir immutable, recursive
+passwd $USER  # change user name password as root
+passwd -e $USER  # force immediate [e]xpiry of user account
+passwd -n NUM  # set days mininum password age, must be < max age, '0' = never expire
+passwd -x NUM  # set days maximum password age, '0' = never expire
+passwd -w NUM  # set days warning before password expires
+useradd $USER -p PASS -c DESCR  # add user to local domain
+userdel $USER  # remove user, add -r to [r]emove user home directory
+usermod $USER -s SHELL  # modify user login [s]hell (e.g. /bin/bash, /bin/csh)
+e.g.> usermod jgold -s /bin/csh
+usermod $USER -G GRP  # add user to additional group
+e.g.> usermod jgold -G humanresources,sales  # add user to multiple additional groups
+usermod $USER -g GRP  # change user default group (not add)
+groupadd GRP  # add group
+groupdel GRP  # remove group
+groupmod GRP -n NAME  # edit group name
+chmod +t DIR  # set 'sticky' bit on dir, only owner can rename or delete
+chmod -t DIR  # remove 'sticky' bit on dir
+chmod 755 -R FILE  # change file permissions [R]ecursive to sub-dirs
+chown $USER *  # change ownership for all files in curr dir
+chown $USER -R *  # change ownership for all files in curr dir + sub-dirs
+chgrp GRP *  # change group for all files in curr dir
+lsattr FILE  # list file attributes
+chattr +|-i FILE  # set file [i]mmutable (no edit, no delete)
+chattr +|-a FILE  # set file [a]ppendable (append only, no chg exist data, no delete)
+chattr -R +i DIR  # set dir immutable, recursive
 
-getfacl <file-name>  // show file acl
-setfacl -m u:<user-name>:<permissions> <file-name>  // set file acl for user, -m=modify
-setfacl -m u:jchavesz:r 2014Sales.txt
-setfacl -m g:<group-name>:<permissions> <file-name>  // set [g]roup perms for file, -m=modify
-setfacl -m g:sales:rwx .
+getfacl FILE  # show file acl
+setfacl -m u:$USER:PERM FILE  # set file acl for user, -m=modify
+e.g.> setfacl -m u:jchavesz:r 2014Sales.txt
+setfacl -m g:GRP:PERM FILE  # set [g]roup perms for file, -m=modify
+e.g.> setfacl -m g:sales:rwx .
 
+# Scripting, Scheduling 
+!#/bin/bash  # start bash shell script
+!#/bin/csh  # start c-shell script
+/etc/systemd/journald.conf  # journal daemon config file
+/sbin/service crond start|stop|status  # cron service metric
+/usr/lib/systemd/system  # systemd service files
+/var/spool/cron  # user crontab storage location
 
-**************************************************
-************ Scripting and Scheduling ************
-**************************************************
-bash  // start inclusive bash session
-!#/bin/bash  // start bash shell script
-csh  // start inclusive c-shell session
-!#/bin/csh  // start c-shell script
-grep -niR "north" | sort -k 2  // sort grep results on column '2'
-grep -i "^north"  // return lines that begin with "north"
-grep -i "\$....$  // return lines that begin with '$' and end with only four digits
-grep -i "[we].st"  // return lines that match "West" or "East"
+bash  # start inclusive bash session
+csh  # start inclusive c-shell session
+grep -niR "north" | sort -k 2  # sort grep results on column '2'
+grep -i "^north"  # return lines that begin with "north"
+grep -i "\$....$  # return lines that begin with '$' and end with only four digits
+grep -i "[we].st"  # return lines that match "West" or "East"
 
-vim /etc/fstab  // check file mount points and quotas
+/etc/fstab  # check file mount points and quotas
 > /dev/disk/by-uuid/081791af-93b6-46fc-981b-a7ca3555066d /Data auto defaults,usrquota,grpquota 0 0
-mount -o remount /Data  // remount file system
-showmount -e <host-name>  // show mount point, exported folders on host
-quotacheck -cug /Data  // [c]reate [u]ser [g]roup quota
+mount -o remount /Data  # remount file system
+showmount -e HOST  # show mount point, exported folders on host
+quotacheck -cug /Data  # [c]reate [u]ser [g]roup quota
 ls -a
 > aquota.group aquota.user
-quotacheck -avug  // show quotas for [a]ll mounted file systems, -v=verbose
-quota -u <user-name>  // show quota infor for user
-edquota -u cblackwell  // edit quota for [u]ser
-edquota -g sales  // edit quota for [g]roup
-edquota -t  // set grace period for soft quota limits
-quotaon -vug /Data  // turn on quotas [u]ser, [g]roup, [v]erbose
-repquota -ug /Data  // get quota report
+quotacheck -avug  # show quotas for [a]ll mounted file systems, -v=verbose
+quota -u $USER  # show quota infor for user
+edquota -u cblackwell  # edit quota for [u]ser
+edquota -g sales  # edit quota for [g]roup
+edquota -t  # set grace period for soft quota limits
+quotaon -vug /Data  # turn on quotas [u]ser, [g]roup, [v]erbose
+repquota -ug /Data  # get quota report
 
-test 10 -gt 5 && echo "True"  // test if condition for echo "True", -gt=greater than
-> if [ -e $filename ]  // test [e]xistence of file inside if stmt
-> if test -w $filename  // test file for [w]rite access w/ test key-word
-> if [ $? -ep 0 ] ...  // evaluate exit status (0=true, 1=false) use after some operation to see if prog exited "true"
+test 10 -gt 5 && echo "True"  # test if condition for echo "True", -gt=greater than
+> if [ -e $filename ]  # test [e]xistence of file inside if stmt
+> if test -w $filename  # test file for [w]rite access w/ test key-word
+> if [ $? -ep 0 ] ...  # evaluate exit status (0=true, 1=false) use after some operation to see if prog exited "true"
 
-/sbin/service crond status  // show cron service status
-/sbin/service crond stop
-/sbin/service crond start
-vim /etc/crontab  // system wide cron tab file
-*/2 * * * * root date >> /logged_in_users.txt; who >> /logged_in_users.txt  // check users logs every two minutes
-ls -l /var/spool/cron  // user crontab storage location
-crontab -l  // [l]ist user crontab entries
-crontab -e  // [e]dit user crontab file
-crontab -r  // [r]emove user crontab entry
-* * 1 */2 0 history -c; echo "History cleared on $(date)" >> ~history.log  // clear history, 1st day of 2nd month
-kill -STOP <PID>  // stop | pause process
-kill -CONT <PID>  // continue process (after stopped)
+/etc/crontab  # system wide cron tab file
+e.g.>
+*/2 * * * * root date >> /logged_in_users.txt; who >> /logged_in_users.txt  # check users logs every two minutes
+crontab -l  # [l]ist user crontab entries
+crontab -e  # [e]dit user crontab file
+crontab -r  # [r]emove user crontab entry
+* * 1 */2 0 history -c; echo "History cleared on $(date)" >> ~history.log  # clear history, 1st day of 2nd month
+kill -STOP PID  # stop | pause process
+kill -CONT PID  # continue process (after stopped)
 
-/sbin/service atd status
-at 4:00am  // sched job at 4am - one-time
+/sbin/service  # atd status
+at 4:00am  # sched job at 4am - one-time
 at 10pm Jan 30
-at now +1 min  // sched job one minute after submitted
+at now +1 min  # sched job one minute after submitted
 at> rm -rf /tmp/*
-at> <ctrl>+<d>  // exit interactive mode
-at -f /UserFiles/at_commands.txt now +1 hour  // sched job to run [f]ile, one hour from now
-atq  // show queued jobs
-at -c <job-id>  // show job [c]ontents
-atrm <job-id>  // remove job
+at> ctrl+d  # exit interactive mode
+at -f /UserFiles/at_commands.txt now +1 hour  # sched job to run [f]ile, one hour from now
+atq  # show queued jobs
+at -c JOB-ID  # show job [c]ontents
+atrm JOB-ID  # remove job
 
-ls -l /etc/systemd/system  // location to create .service & .timer files for systemd jobs
+ls -l /etc/systemd/system  # location to create .service & .timer files for systemd jobs
 
+# Processes, Networking and Logging 
+/etc/hosts  # IP addr to domain name resolution, checked before dns server
+/etc/resolv.conf  # dns config file
+/etc/sysconfig/network-scripts  # host network scripts
+/etc/ntp.conf  # Network Time Protocol config file
+/etc/logrotate.conf  # log rotation config file e.g. w/ attribs: bkup, compression, del, mv
+/etc/logrotate.d  # log rotate dir
+/etc/logrotate.d/syslog  # sys log settings
+/etc/rsyslog.conf  # rsyslog config, specify rules for system logging
+/proc/meminfo  # check host RAM, process file system of active Linux kernel
+/var/log  # main log file dir
 
-**************************************************
-******** Processes, Networking and Logging *******
-**************************************************
-df -H <device-name>  // check hd space
-fdisk -l <device-name>  // list disk partitions (e.g. /dev/sda)
-cat /proc/meminfo  // check host RAM ('proc' = process file system of active Linux kernel)
-top  // show running processes
+df -H DEV  # check hd space
+fdisk -l DEV  # list disk partitions (e.g. /dev/sda)
+top  # show running processes
 > type 'd'-config delay
-> type 'f'-field, <Space>-toggle display item, 's'-select sort item priority, 'q'-quit
+> type 'f'-field, SPACE-toggle display item, 's'-select sort item priority, 'q'-quit
 > press 'down' arrow key-scroll down list
-top -n 5 -b > /top_output.txt  // write output to file, [n]umber of iterations
-top -u <user-name>  // show stat process for user
-top -p <PID>  // show stat for input process(es)
-pstree  // show process tree hierarchy
-runlevel  // show prev, curr host run-level
-init <run-level>  // evoke run-level host behavior
-> past, curr  // show run-levels
-init 0  // shutdown host
-init 3  // start tty session
-init 5  // start gui
-init 6  // reboot host
-man <cmd>  // command manual
-man 5 <cmd>  // show configuration help
-man 7 <cmd>  // show syntax help
-kill -l  // [l]ist kill signals, SIGTERM[15] = default
-kill -1 <process-name> // send SIGHUP[1], process continues to run after shell closed or log-out session
-abrt-cli list  // show bug report crashes
-gnome-abrt  // ui bug report tool
-brctl show  // display bridge command configs
-lspci  // list connected pci devices
+top -n 5 -b > /top_output.txt  # write output to file, [n]umber of iterations
+top -u $USER  # show stat process for user
+top -p PID  # show stat for input process(es)
+pstree  # show process tree hierarchy
+runlevel  # show prev, curr host run-level
+init RUN-LVL  # evoke run-level host behavior
+> past, curr  # show run-levels
+e.g.>
+init 0  # shutdown host
+init 3  # start tty session
+init 5  # start gui
+init 6  # reboot host
 
-systemctl list-units  // list jobs w/ status
-systemctl list-unit-files --type service  // list start-up services, daemons
-systemctl list-dependencies <service-name>  // list service dependencies
-systemctl is-active <service-name>  // verify running service
-systemctl status <service-name>
-systemctl enable <service-name>  // enable service at boot-up
-systemctl disable <service-name>  // disable service at boot
-systemctl mask <service-name>  // service cannot be start manually or by dependency chain
-systemctl unmask <service-name>  // restore dynamic start-up capability
-systemctl start telnet.socket  // manually start service at runtime
+man CMD  # command manual
+man 5 CMD  # show configuration help
+man 7 CMD  # show syntax help
+kill -l  # [l]ist kill signals, SIGTERM[15] = default
+kill -1 PID-NAME # send SIGHUP[1], process continues to run after shell closed or log-out session
+abrt-cli list  # show bug report crashes
+gnome-abrt  # ui bug report tool
+brctl show  # display bridge command configs
+lspci  # list connected pci devices
+
+systemctl list-units  # list jobs w/ status
+systemctl list-unit-files --type service  # list start-up services, daemons
+systemctl list-dependencies SRVC  # list service dependencies
+systemctl is-active SRVC  # verify running service
+systemctl status SRVC
+systemctl enable SRVC  # enable service at boot-up
+systemctl disable SRVC  # disable service at boot
+systemctl mask SRVC  # service cannot be start manually or by dependency chain
+systemctl unmask SRVC  # restore dynamic start-up capability
+systemctl start telnet.socket  # manually start service at runtime
 systemctl restart httpd.service
 
-service <service-name> status
+service SRVC status
 service rsyslog status
-service <service-name> start  // start service during active os
+service SRVC start  # start service during active os
 service postfix start
-service <service-name> restart
+service SRVC restart
 service vsftpd restart
-service <service-name> stop
+service SRVC stop
 
-/usr/lib/systemd/system  // systemd service files
-list -ld /usr/lib/systemd/system/runlevel*  // show systemd runlevel targets
-cat /etc/systemd/journald.conf  // journal daemon config file
-journalctl -n 5  // show log info for systemd, -n=last five entries
-journalctl -f  // show live log view, last 10 entries
-journalctl -b  // show log info from current [b]oot session
-journalctl --disk-usage  // show journal disk usage
+list -ld /usr/lib/systemd/system/runlevel*  # show systemd runlevel targets
+journalctl -n 5  # show log info for systemd, -n=last five entries
+journalctl -f  # show live log view, last 10 entries
+journalctl -b  # show log info from current [b]oot session
+journalctl --disk-usage  # show journal disk usage
 
-ps -aux | sort -nk 4 | tail -5  // sort process [n]umerically, -k=column 4
-renice <nice-value> <PID>  // edit process priority; +19 -> [-]20 (least -> greatest)
-nice --5 <process|script>  // launch process with initial priority value
-watch -n 5 <process-cmd>  // watch process, refresh every 5 seconds
+ps -aux | sort -nk 4 | tail -5  # sort process [n]umerically, -k=column 4
+renice NICE-VAL PID  # edit process priority; +19 -> [-]20 (least -> greatest)
+nice --5 PROC|SCRIPT  # launch process with initial priority value
+watch -n 5 PROC|CMD  # watch process, refresh every 5 seconds
 watch -n 5 df -h
-tail -f <file-name>  // tail file for real time updates
+tail -f FILE  # tail file for real time updates
 
-route  // show host ip routing table
-route add -net 200.1.1.0 netmask 255.255.255.0 gw 192.168.1.2 dev eth01  // set entry in local route table
-route del default  // remove default route
+route  # show host ip routing table
+route add -net 200.1.1.0 netmask 255.255.255.0 gw 192.168.1.2 dev eth01  # set entry in local route table
+route del default  # remove default route
 route add default gw 192.168.1.1 dev eth01
-ip route  // show host route stats
-hostname  // show hostname
-hostname <name>  // set hostname
-ifconfig <network-interface> up | down  // set net interface up or down
-ls /etc/sysconfig/network-scripts  // host network scripts
-systemctl restart network  // restart network service after changes
-cat /etc/hosts  // IP addr to domain name local resolution file, checked before dns server
-cat /etc/resolv.conf  // dns config file
+ip route  # show host route stats
+hostname  # show hostname
+hostname NAME  # set hostname
+ifconfig DEV|NET-INT up | down  # set net interface up or down
+systemctl restart network  # restart network service after changes
 
-ntpdate <time-server>  // connect to time server to synchronize time, one-time
-date  // show date
-cat /etc/ntp.conf  // Network Time Protocol config file
+ntpdate SERVER  # connect to time server to synchronize time, one-time
+date  # show date
 service ntpd start
 service ntpd status
-ntpq  // start ntp interactive prompt
-> peers  // show ntp peers ('*'-denotes curr time source)
-ntpq -pn  // show ntp peers
+ntpq  # start ntp interactive prompt
+> peers  # show ntp peers ('*'-denotes curr time source)
+ntpq -pn  # show ntp peers
 
-ls /var/log  // main log file dir
-dmesg --level=err  // show kernel logs, device errors
+dmesg --level=err  # show kernel logs, device errors
 dmesg | grep -i bluetooth
-cat /etc/logrotate.conf  // show log rotation config file (e.g. w/ attribs: bkup, compression, del, mv)
-ls /etc/logrotate.d  // log rotate dir
-cat /etc/logrotate.d/syslog  // show sys log settings
-logrotate -fv /etc/logrotate.d/sample  // force log rotation, verbose
-vim /etc/rsyslog.conf  // rsyslog config, specify rules for system logging
-service rsyslog restart  // restart after changes
-logger "Hello World"  // send log msg to sys log
-logger -p <log-facility>  // send log msg w/ priority to sys log
+logrotate -fv /etc/logrotate.d/sample  # force log rotation, verbose
+service rsyslog restart  # restart after changes
+logger |-p "MSG"  # send msg to sys logger w/ [p]riority
 
+# Advanced Networking 
+/etc/dhcp/dhcpd.conf  # dhcp server config file
+/etc/dovecot/dovecot.conf  # dovecot inbound mail server config file
+/etc/httpd/conf/httpd.conf  # http server config file
+/etc/named.conf  # dns server config file
+/etc/nsswitch.conf  # password auth config file
+/etc/ntp.conf  # ntp server config file
+/etc/postfix/main.cf  # postfix outbound mail server config file
+/etc/rsyslog.conf  # logging config file
+/etc/vsftpd/vsftpd.conf  # ftp server config file
+/etc/ssh/sshd_config  # ssh server config file
+/etc/ssh/ssh_config  # ssh client config file
+/etc/sssd/sssd.conf  # system security services daemon config file (e.g. connect to ldap server)
+/etc/sysconfig/iptables  # iptables save file
+/usr/lib/firewalld/services  # html services dir
+/var/log/squid/access.log  # squid proxy server log
+/var/log/  # log dir
+/var/ftp  # ftp default archive dir
+/var/www/html/index.html  # default http web file
 
-**************************************************
-************** Advanced Networking ***************
-**************************************************
-// check installed services: dhcp, ntpd, http, telnet, ftp, postfix[SMTP outbound], dovecot[POP3 inbound], authconfig, openldap
-yum list installed | grep bind  // check dns server install
+## installed services: dhcp, ntpd, http, telnet, ftp, postfix[SMTP outbound], dovecot[POP3 inbound], authconfig, openldap
+yum list installed | grep bind  # check dns server install
 
-vim /etc/named.conf  // dns server config file
-vim /etc/dhcp/dhcpd.conf  // dhcp server config file
-vim /etc/ntp.conf  // ntp server config file
-vim /etc/ssh/sshd_config  // ssh server config file
-vim /etc/ssh/ssh_config  // ssh client config file
-vim /etc/httpd/conf/httpd.conf  // http server config file
-vim /var/www/html/index.html  // default http web file
-vim /etc/rsyslog.conf  // logging config file
-vim /etc/vsftpd/vsftpd.conf  // ftp server config file
-vim /var/log/squid/access.log  // squid proxy server log
-vim /etc/postfix/main.cf  // postfix outbound mail server config file
-vim /etc/dovecot/dovecot.conf  // dovecot inbound mail server config file
+ntpq -p  # list ntp peers for curr host
+netstat -anu  # show all numeric udp ports on host
+netstat -ant  # show all numeric tcp ports on host
 
-ntpq -p  // list ntp peers for curr host
-netstat -anu  // show all numeric udp ports on host
-netstat -ant  // show all numeric tcp ports on host
+> ftp HOST  # connect to ftp host, from client
+>> lcd c:\temp  # chg to local dir on client
+>> mget *.rpm  # copy ftp files to client curr dir
 
-ls -l /var/log/  // log dir
-ls -l /var/ftp  // ftp default archive dir
-> ftp <host-name>  // connect to ftp host, from client
->> lcd c:\temp  // chg to local dir on client
->> mget *.rpm  // copy ftp files to client curr dir
+ifconfig eth0 | grep "inet" | grep -v "inet6" | tr -s " " ":" | cut -f3 -d ":"  # get ipv4 addr only, -v=exclude, -s=squeeze (e.g. whitespace), -f=field, -d=delimiter
 
-ifconfig eth0 | grep "inet" | grep -v "inet6" | tr -s " " ":" | cut -f3 -d ":"  // get ipv4 addr only, -v=exclude, -s=squeeze (e.g. whitespace), -f=field, -d=delimiter
-
-firewall-config  // launch UI configurator
-ls -l /usr/lib/firewalld/services  // html services dir
-firewall-cmd state  // show firewall.d status (default='running' RHEL 7)
-firewall-cmd --get-zones  // list all available zones
-firewall-cmd --get-active-zones  // list host curr active zones w/ contents
+firewall-config  # launch UI configurator
+firewall-cmd state  # show firewall.d status (default='running' RHEL 7)
+firewall-cmd --get-zones  # list all available zones
+firewall-cmd --get-active-zones  # list host curr active zones w/ contents
 firewall-cmd --get-services
-firewall-cmd --zone=trusted --add-port=443/tcp  // add rule for port 443
+firewall-cmd --zone=trusted --add-port=443/tcp  # add rule for port 443
 firewall-cmd --zone=trusted --list-ports
-firewall-cmd --zone=public --add-port=3128/tcp --permanent  // add port to public zone, squid server
-firewall-cmd --zone=public --add-port=5901/tcp --permanent  // add port to public zone, vnc-server
-firewall-cmd --reload  // reload firewall for curr changes to take effect
+firewall-cmd --zone=public --add-port=3128/tcp --permanent  # add port to public zone, squid server
+firewall-cmd --zone=public --add-port=5901/tcp --permanent  # add port to public zone, vnc-server
+firewall-cmd --reload  # reload firewall for curr changes to take effect
 
-iptables -L -v  // [L]ist ip firewall rules, [v]erbose
-iptables -F  // clear ip firewall rules
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT  // [A]dd rule INPUT chain, [p]ort tcp, des.port 22, ACCEPT traffic j=target
-iptables -P INPUT DROP  // set [P]olicy for INPUT chain, DROP default behavior
-iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT  // [A]dd rule INPUT chain, [p]ort tcp, [m]atch tcp, des.port 80 ACCEPT 
-iptables -R INPUT 1  // [R]emove rule 1 from INPUT chain
-service iptables save  // persist iptable rules at reboot
-vim /etc/sysconfig/iptables  // iptables save file
+iptables -L -v  # [L]ist ip firewall rules, [v]erbose
+iptables -F  # clear ip firewall rules
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT  # [A]dd rule INPUT chain, [p]ort tcp, des.port 22, ACCEPT traffic j=target
+iptables -P INPUT DROP  # set [P]olicy for INPUT chain, DROP default behavior
+iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT  # [A]dd rule INPUT chain, [p]ort tcp, [m]atch tcp, des.port 80 ACCEPT 
+iptables -R INPUT 1  # [R]emove rule 1 from INPUT chain
+service iptables save  # persist iptable rules at reboot
 
-tc -s qdisc ls dev eth01  // [t]raffic [c]ontrol [s]tat [q]ueuing-[disc]pline [ls]=list for network [dev]ice
-tc qdisc add dev eth01 root netem delay 200ms  // add traffic control for [root] of device, [netem]ulation, delay
-tc qdisc del dev eth01 root  // remove traffic control for device
+tc -s qdisc ls dev eth01  # [t]raffic [c]ontrol [s]tat [q]ueuing-[disc]pline [ls]=list for network [dev]ice
+tc qdisc add dev eth01 root netem delay 200ms  # add traffic control for [root] of device, [netem]ulation, delay
+tc qdisc del dev eth01 root  # remove traffic control for device
 
+# Remote Connections and Access 
+systemctl start vncserver@:1.service  # start tiger-vnc server - remote desktop application
+systemctl daemon-reload  # reload daemon service to ensure curr configs are applied
+scp path/to/src path/to/dest  # copy files securely from source to destination
+scp -Crl 200 root@rhel1:UserFiles/Software /SampleFiles  # [C]ompression, [r]ecursive, [l]imit bandwidth kbps
+ssh -L 8000:rhel1.silversides.local:80 root@rhel1  # port forward using ssh tunnel, [L]ocal port to remote host port
 
-**************************************************
-********** Remote Connections and Access *********
-**************************************************
-systemctl start vncserver@:1.service  // start tiger-vnc server - remote desktop application
-systemctl daemon-reload  // reload daemon service to ensure curr configs are applied
-scp <source> <destination>  // copy files securely from source to destination
-scp -Crl 200 root@rhel1:UserFiles/Software /SampleFiles  // [C]ompression, [r]ecursive, [l]imit bandwidth kbps
-ssh -L 8000:rhel1.silversides.local:80 root@rhel1  // port forward using ssh tunnel, [L]ocal port to remote host port
-
-ssh-keygen -t rsa  // generate pub/pvt key pair authentication, create pvt key passphrase (both keys added to ~/.ssh/)
-ssh-copy-id root@rhel1  // copy public key to remote host ssh-server
-ssh-agent  // initiate pvt key storage on local host
-ssh-add  // add pvt key to local host auth agent memory, input passphrase
-ssh-add -l  // [l]ist pvt key identities (not values) added to auth agent
-vim /etc/ssh/sshd_config  // ssh server config file (e.g. PasswordAuthentication 'no' to automate key authentication)
+ssh-keygen -t rsa  # generate pub/pvt key pair authentication, create pvt key passphrase (both keys added to ~/.ssh/)
+ssh-copy-id root@rhel1  # copy public key to remote host ssh-server
+ssh-agent  # initiate pvt key storage on local host
+ssh-add  # add pvt key to local host auth agent memory, input passphrase
+ssh-add -l  # [l]ist pvt key identities (not values) added to auth agent
+vim /etc/ssh/sshd_config  # ssh server config file (e.g. PasswordAuthentication 'no' to automate key authentication)
 service sshd restart
 
-exportfs -ua // temporarily suspend exported file systems but keep NFS daemons active
-exportfs -r  // unsuspend export file systems
-smbclient -L <remote-host>  // list shared resources on remote host
-vim /etc/sssd/sssd.conf  // system security services daemon config file (e.g. connect to ldap server)
+exportfs -ua # temporarily suspend exported file systems but keep NFS daemons active
+exportfs -r  # unsuspend export file systems
+smbclient -L REMOTE  # list shared resources on remote host
 service sssd status
-vim /etc/nsswitch.conf  // password auth config file
-getent passwd <user-name>  // show account entry from ldap server (not password!)
-ldapsearch -h <host-ip> -x uid=<user-name> -b dc=<search-base>  // search ldap server, -h=host, -x=user, -b=base
-ldapsearch -h 192.168.1.241 -x uid=mbishop -b dc=example,dc=com
+getent passwd $USER  # show account entry from ldap server (not password!)
+ldapsearch -h HOST -x uid=<user-name> -b dc=<search-base>  # search ldap server, -h=host, -x=user, -b=base
+e.g.> ldapsearch -h 192.168.1.241 -x uid=mbishop -b dc=example,dc=com
 
+# SELinux, Troubleshooting 
+/etc/resolv.conf  # dns name-server config file
+/etc/selinux/targeted/modules/active/booleans.local  # SELinux boolean config file
+/etc/sysconfig/network-scripts/ifcfg-<interface-name>  # show network configs for controller
+/etc/sysconfig/selinux  # config file for SELinux
+/sys/fs/selinux/policy  # SELinux policy
+/var/log/messages  # log security alerts
+/var/log/audit/audit.log  # SELinux audit log, used exclusively in Permissive mode
 
-**************************************************
-********** SELinux and Troubleshooting ***********
-**************************************************
-Linux-user => SELinux-user => SELinux-roles
+## Linux-user => SELinux-user => SELinux-roles
 MLS = multi-level security policy
-ls -Z  // list files, show SELinux context info >> SELinux-user:role:type:category
-id -Z  // list SELinux-user info for current Linux-user
-ps -axZ | grep http  // list processes for 'http' with SELinux context info
-cat /etc/sysconfig/selinux  // config file for SELinux
-cat /sys/fs/selinux/policy  // show SELinux policy
-cat /var/log/messages  // show log for security alerts
-cat /var/log/audit/audit.log  // SELinux audit log, used exclusively in Permissive mode
+ls -Z  # print files, show SELinux context info >> SELinux-user:role:type:category
+id -Z  # print SELinux-user info for current Linux-user
+ps -axZ | grep http  # list processes for 'http' with SELinux context info
 
-seinfo  // overview SELinux info
-seinfo -adomain -r  // list SELinux-roles in current os domain
-seinfo -rstaff_r -x  // list types associated with role
-sestatus -v  // show verbose SELinux info
-getenforce  // show SELinux mode [Permissive, Enforcing, Disabled]
-setenforce <mode-number>  // set SELinux mode: 0, 1, 2 - non-persistence on reboot
-semodule -l | grep permissive  // list SELinux 'Permissive' processes
-semanage permissive -a httpd_t  // add SELinux 'Permissive' mode for specific process
-semanage permissive -d httpd_t  // remove SELinux 'Permissive' mode for specific process
-getsebool -a  // list SELinux boolean values
-setsebool <-P> ftpd_anon_write on  // set SELinux boolean, (optional) -P=persistent on reboot
-cat /etc/selinux/targeted/modules/active/booleans.local  // SELinux boolean config file
+seinfo  # overview SELinux info
+seinfo -adomain -r  # list SELinux-roles in current os domain
+seinfo -rstaff_r -x  # list types associated with role
+sestatus -v  # show verbose SELinux info
+getenforce  # show SELinux mode [Permissive, Enforcing, Disabled]
+setenforce MODE  # set SELinux mode: 0, 1, 2 - non-persistence on reboot
+semodule -l | grep permissive  # list SELinux 'Permissive' processes
+semanage permissive -a httpd_t  # add SELinux 'Permissive' mode for specific process
+semanage permissive -d httpd_t  # remove SELinux 'Permissive' mode for specific process
+getsebool -a  # list SELinux boolean values
+setsebool |P ftpd_anon_write on  # set SELinux boolean, (optional) -P=persistent on reboot
 
-semanage login -l  // list Linux-user => SELinux-user, MLS range, service
-semanage login -a -s staff_u jchavez  // add SELinux-user to Linux-user (user must already exist)
-semanage user -l  // list SELinux-user to role mapping w/ prefix, MLS level & range
-chcon -u staff_u PhoneCallLog  // change SELinux-user context for specific file
-restorecon index.html  // refer to SELinux policy rules in db, auto chg file back to default
-semanage module -l  // list modules available with curr policy
-semanage port -l | grep ftp  // SELinux security label => protocol => port number bindings
-semanage port -a -t ftp_data_port_t -p tcp 30  // [a]dd port to SELinux security label
-semanage port -m -t unreserved_port_t -p tcp 80  // [m]odify, re-assign port to SELinux security label
+semanage login -l  # list Linux-user => SELinux-user, MLS range, service
+semanage login -a -s staff_u jchavez  # add SELinux-user to Linux-user (user must already exist)
+semanage user -l  # list SELinux-user to role mapping w/ prefix, MLS level & range
+chcon -u staff_u PhoneCallLog  # change SELinux-user context for specific file
+restorecon index.html  # refer to SELinux policy rules in db, auto chg file back to default
+semanage module -l  # list modules available with curr policy
+semanage port -l | grep ftp  # SELinux security label => protocol => port number bindings
+semanage port -a -t ftp_data_port_t -p tcp 30  # [a]dd port to SELinux security label
+semanage port -m -t unreserved_port_t -p tcp 80  # [m]odify, re-assign port to SELinux security label
 
-ifup <interface-name>  // enable network interface
-cat /etc/resolv.conf  // dns name-server config file
-cat /etc/sysconfig/network-scripts/ifcfg-<interface-name>  // show network configs for controller
-lsof  // list open files
-lsof -u <user-name> | grep -v mem  // list open files for user, exclude [mem]ory mapped files
-fuser -v -n tcp 22  // identify processes that use specific files [v]erbose, [n]umeric listing
-fsck <device-name>  // device-name file system check (e.g. /dev/sda)
-xfs_repair -n <device-name>  // overview potentially corrupted xfs file-system, [n]o repair
-xfs_repair -v <device-name>  // repair xfs file system [v]erbose, dismount device before repair (e.g. umount /dev/sda)
+ifup INT  # enable network interface
+lsof  # list open files
+lsof -u $USER | grep -v mem  # list open files for user, exclude [mem]ory mapped files
+fuser -v -n tcp 22  # identify processes that use specific files [v]erbose, [n]umeric listing
+fsck DEV  # device-name file system check (e.g. /dev/sda)
+xfs_repair -n DEV  # overview potentially corrupted xfs file-system, [n]o repair
+xfs_repair -v DEV  # repair xfs file system [v]erbose, dismount device before repair (e.g. umount /dev/sda)
 
+# Intro to Virtualization 
+/boot/init*  # boot initialization files
+/var/lib/libvirt/images # default location for vm image files
 
-**************************************************
-********* Introduction to Virtualization *********
-**************************************************
-ls /var/lib/libvirt/images // default location for vm image files
-virt-install [parameters] [vm-name] [path|location|size]  // install virtual machine
+virt-install PARM NAME PATH|LOCAL|SIZE  # install virtual machine
 virt-install --ram 2048 --name rhel7.0 --disk path=/vm_disks/webserv.img,size=8 --network network:default
-virt-top  // get top vm running processes
-ssh [vm-name@ip]  // ssh to virtual machine
+virt-top  # get top vm running processes
+ssh [vm-name@ip]  # ssh to virtual machine
 
-man virsh  // see man for virsh=virtual shell
-virsh domdisplay [vm-name]  // show VNC connections
+man virsh  # see man for virsh=virtual shell
+virsh domdisplay NAME  # show VNC connections
 > vnc://localhost:1
-vncviewer [vnc-name]:[number]  // connect to VNC port for virtual machine
-vncviewer localhost:1
+vncviewer VNC:NUM  # connect to VNC port for virtual machine
+e.g.> vncviewer localhost:1
 
-virsh start [vm-name]  // start
-virsh shutdown [vm-name]  // stop
-virsh destroy [vm-name]  // ungraceful exit
+virsh start NAME  # start
+virsh shutdown NAME  # stop
+virsh destroy NAME  # ungraceful exit
 
-virsh  // start virtual shell interactive mode
-> domstate [vm-name]  // get vm state
-> vcpinfo [vm-name]  // get virtual cpu config for vm
-> domiflist  // get interface name, type, source, model, MAC info
-> exit  // leave interactive cmd prompt
+virsh  # start virtual shell interactive mode
+> domstate NAME  # get vm state
+> vcpinfo NAME  # get virtual cpu config for vm
+> domiflist  # get interface name, type, source, model, MAC info
+> exit  # leave interactive cmd prompt
 
-virsh edit [vm-name]  // edit xml config file for virtual host (e.g. allow vnc connectivity)
-virsh screenshot [vm-name]  // get screenshot of vm
+virsh edit NAME  # edit xml config file for virtual host (e.g. allow vnc connectivity)
+virsh screenshot NAME  # get screenshot of vm
 
-virsh cpu-stats [vm-name]  // see cpu stats for ea vm core
-virsh list --all  // list all virtual machines on host, running and non-running
-virsh net-list --all  // view all virtual networks
-virsh net-dumpxml default  // get virtual net configs
-virsh dumpxml [vm-name]  // get xml dump of entire config
-virsh dominfo [vm-name]  // display stat info for virtual machine
-virsh nodedev-list --cap vports  // show N_Port ID virtualization compatibility
-virsh setmem [vm-name] [mem-descriptor]  // set RAM memory for virtual machine
-virsh snapshot-create [vm-name]  // create snap shot
-virsh console [vm-name]  // get console shell for virtual machine
+virsh cpu-stats NAME  # see cpu stats for ea vm core
+virsh list --all  # list all virtual machines on host, running and non-running
+virsh net-list --all  # view all virtual networks
+virsh net-dumpxml default  # get virtual net configs
+virsh dumpxml NAME  # get xml dump of entire config
+virsh dominfo NAME  # display stat info for virtual machine
+virsh nodedev-list --cap vports  # show N_Port ID virtualization compatibility
+virsh setmem NAME MEM-DESCR  # set RAM memory for virtual machine
+virsh snapshot-create NAME  # create snap shot
+virsh console NAME  # get console shell for virtual machine
 
-virsh autostart [vm-name]  // auto start
-virsh autostart --disable [vm-name]  // cancel auto start
-ksvalidator  // validate kickstart automation file
+virsh autostart NAME  # auto start
+virsh autostart --disable NAME  # cancel auto start
+ksvalidator  # validate kickstart automation file
 
 yum install *dracut*
-ls -l /boot/init*  // list boot initialization files
-dracut  // exec dracut
-adcli preset-computer --domain=silversides.local --one-time-password=Pa$$w0rd rhel2.silversides.local  // kickstart file
-ldapsearch -H <parameters>  // verify node to LDAP
-virt-install <parameters> // install guest VM
-
+dracut  # exec dracut
+adcli preset-computer --domain=silversides.local --one-time-password=Pa$$w0rd rhel2.silversides.local  # kickstart file
+ldapsearch -H PARM  # verify node to LDAP
+virt-install PARM # install guest VM

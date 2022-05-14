@@ -1,0 +1,13 @@
+# Git config file - ~/.gitconfig
+
+[user]
+	email = $EMAIL
+	name = $USER
+[core]
+	editor = vim
+[color]
+	ui = true
+[alias]
+	st = status
+	lgg = log --graph --oneline --decorate --abbrev-commit --all
+	ci = commit

@@ -1,12 +1,14 @@
 # Linux+ XKO-004 - Lynda
 
 # User Account management
-cat /etc/passwd  # list user accounts, group number, home dirs, bash location
-cat /etc/group  # list groups w/ users attached
-cat /etc/shadow  # list user password, aging info ('!!' password not set)
-cat /etc/securetty  # print tty connections (comment out to disable)
+/dev/null  # bottomless pit
+/dev/random  # random char generator
+/etc/group  # groups w/ users
+/etc/passwd  # user accounts, group number, home dirs, bash location
+/etc/securetty  # tty connections (comment out to disable)
+/etc/shadow  # user password, aging info ('!!' password not set)
+/root/anaconda-ks.cfg  # RHEL kick-start file created after install
 
-cat /root/anaconda-ks.cfg  # RHEL kick-start file created after install
 localectl  # print language and keyboard key map
 localectl list-locales | grep ^en  # list languages, English interpreted regions
 localectl set-locale LANG=en_US.utf8  # set language to US English
@@ -30,10 +32,8 @@ locate -A bzip man  # print locate keyword multiple file names
 locate --regexp '^/usr.*pixmaps.*jpg$'  # basic regex print matches start w/ 'usr', end with 'jpg'
 locate --regex '^/usr.*(pixmaps|backgrounds).*jpg'  # extended regex print matches start w/ 'usr', end with 'jpg', 'pixmaps OR 'backgrounds'
 
-/dev/random  # random char generator
-/dev/null  # bottomless pit
-
-find <location> <parms> <text-key>
+find path/to/file PARM KEY
+e.g.>
 find /etc &> /dev/null  # redirect all output to 'bottomless pit' (e.g. hide command output)
 find / -name *bzip2*  # print file w/ 'bzip2' name inclusive
 find / -user grant  # print files for use
@@ -159,13 +159,13 @@ tar -tf etc.tar  # list files archive
 tar -tf etc.tar | grep firewall
 tar --gzip -tf etc.tar.gz  # list files archive compression
 
-gzip FILE  # compress files, no archive - deletes org file!
-gunzip ZIP.gz  # uncompress file, no archive - deletes compressed file!
-bzip2 FILE
-bunzip2 ZIP.bz2
+gzip FILE  # compress FILE, no archive - delete FILE!
+gunzip ZIP.gz  # decompress ZIP, no archive - delete ZIP!
+bzip2 FILE  # compress
+bunzip2 ZIP.bz2  # decompress
 xz FILE
-unxz FILE.xz
-zip ZIP.zip FILE  # compress files, no delete org file
+unxz ZIP.xz
+zip ZIP.zip FILE  # compress FILE, no delete FILE
 unzip ZIP.zip
 
 # SSH key management (HOST1_local -> HOST2_remote)
@@ -455,7 +455,7 @@ service SRVC reload  # reload service config file without stop, start
 service SRVC stauts  # print service status
 service --status-all  # print all service status
 /etc/init.d/httpd start  # start service without 'service' keyword
-init <run-level>  # set run level: 0=shutdown, 1=single-usr, 2=multi-usr, 3=multi-usr+network, 4=undefined, 5=multi-usr+network+gui, 6=reboot
+init RUN-LVL  # set run level: 0=shutdown, 1=single-usr, 2=multi-usr, 3=multi-usr+network, 4=undefined, 5=multi-usr+network+gui, 6=reboot
 
 # AT Service
 yum install -y at  # install service
@@ -465,23 +465,26 @@ at now +5min  # create one-time at job
 > mkdir ~/Documents.bak
 > rsync -a ~/Documents/ ~/Documents.bak  # use rsync to back up Documents dir
 > <ctrl+d>  # save changes
-atq  # list curr at jobs w/ number
-at -c <at-job-number>  # print shell env + at job contents
-atrm <at-job-number>  # cancel at job
+atq  # print 'at' jobs w/ number
+at -c JOB  # print shell env + 'at' job contents
+atrm JOB  # remove, cancel 'at' job
 
 batch  # create batch job, run when sys load avg < 0.8 (not busy!)
 > touch ~/batchfile.txt
 > <ctrl+d>  # save changes
-atq  # list curr batch jobs w/ number
+atq  # print batch jobs w/ number
 
 # CRON Service
+/etc/cron.d  # sys cron job dir
+/etc/cron.d/backupdocs  # create sys crontab (enter default editor)
+/var/log/audit/audit.log  # SELinux log file (enforcing, permissive), audit.d running
+/var/log/messages  # SELinux log file, audit.d not running
+/var/spool/cron/%USER  # user cron job dir
+
 yum install -y cronie crontabs  # install cron service
 systemctl start crond  # start service
 systemctl enable crond  # persist service at boot
-/var/spool/cron/%USER  # user cron job dir
-/etc/cron.d  # sys cron job dir
-ls -d /etc/cron.*  # list sys cron periodic dirs (hourly, daily, weekly, monthly)
-
+ls -d /etc/cron.*  # print periodic dirs (hourly, daily, weekly, monthly)
 ref: crontab.guru, crontab-generator.org
 format: minute hour day-of-month month day-of-week <command>
 
@@ -489,27 +492,8 @@ crontab -e  # create user crontab (enter default editor)
 > 0 1 * * * rsync -a ~/Documents/ ~/Documents.bak  # create cron job, save, exit
 crontab -l  # list curr cron jobs
 
-vim /etc/cron.d/backupdocs  # create sys crontab (enter default editor)
 > 0 1 * * * root rsync -a /home/grant/Documents/ /home/grant/Documents.bak  # create cron job, save, exit
 > 45 23 * * 6 grant rsync -a touch /home/example.txt  # create cron job, save, exit
-
-# VIM - VI improved
-u  # undo changes (command mode)
-ctrl+r  # redo changes (command mode) 
-cl  # cut letter
-cw  # cut word
-cc  # cut line
-yl  # yank letter
-yw  # yank word
-yy  # yank line
-dl  # delete letter
-dw  # delete word
-dd  # delete line
-5dd  # delete 5 lines
-p  # paste
-:nohl  # turn off highlight
-:%s/Line/NewLine  # search 'Line' replace w/ 'NewLine' (single first instance)
-:%s/Line/NewLine/g  # search 'Line' replace w/ 'NewLine' (all instances)
 
 # SELinux management
 id -Z  # print SELinux user context
@@ -534,8 +518,6 @@ setsebool <boolean-name> <value>  # set boolean switch, temporarily
 setsebool mozilla_plugin_use_gps on
 setsebool -P <boolean-name> <value>  # set boolean switch, persist on reboot, [P]olicy
 
-vim /var/log/audit/audit.log  # SELinux log file (enforcing, permissive), audit.d running
-vim /var/log/messages  # SELinux log file, audit.d not running
 sealert  # start SELinux alert browser application
 ausearch -m avc  # print all 'avc' error messages ([a]cess [v]ector [c]ache - SELinux RAM based cache), [m]essage
 ausearch -m avc -ts today
@@ -543,17 +525,19 @@ ausearch -m avc -ts recent  # last ten minutes
 aureport  # summary reports of audit log activity 
 
 # AppArmor management (modes: complaining, enforcing) [SUSE, Debian, Ubuntu]
+/etc/pam.d  # PAM - pluggable authentication module service files dir
+/etc/security/pwquality.conf  # default pwd policy file
+
 apt install apparmor-profiles apparmor-profiles-extra  # install apparmor profiles
 aa-status  # print apparmor status
 aa-enforce /etc/apparmor.d/usr/sbin/cupsd  # change apparmor profile mode enforce
 aa-complain /etc/apparmor.d/usr/sbin/cupsd  # change apparmor profile mode complain
 apparmor_parser -R /etc/apparmor.d/usr/sbin/cupsd  # disable profile, [R]ecursive
-/etc/pam.d  # PAM - pluggable authentication module service files dir
-etc/security/pwquality.conf  # default pwd policy file
 
 # TCP Wrappers
-cat /etc/hosts.allow
-cat /etc/hosts.deny
+/etc/hosts.allow
+/etc/hosts.deny
+
 SRVC:CLIENT: [:OPTION]  # comma separated services, clients=hosts|ip
 ~> wildcards => ALL-match everything, LOCAL-FQDN w/o dot, KNOWN-dns hostname, UNKNOWN, PARANOID-drops if fw|bkwd dns no match
 ~> ALL: ALL
@@ -561,8 +545,8 @@ SRVC:CLIENT: [:OPTION]  # comma separated services, clients=hosts|ip
 ~> ALL: 192.168.1.100  # match all services on host
 ~> sshd, vsftpd: 19.168.1.100,LOCAL  # match services on host + local hosts
 
-grep tcp /etc/services | less  # list tcp services, un-named pipe to 'less'
-grep tcp /etc/services | awk '{print $1}' | sort | less  # list tcp services, print 1st column only, sort
+grep tcp /etc/services|less  # list tcp services, un-named pipe to 'less'
+grep tcp /etc/services|awk '{print $1}' | sort | less  # list tcp services, print 1st column only, sort
 
 # IP Tables
 iptables -A INPUT -p -tcp --dport 80 -j ACCEPT  # create iptable rule, input chain, accept tcp traffic port 80
@@ -597,10 +581,11 @@ firewall-cmd --permanent --zone=coffeeshop --add-rich-rule='rule family=ipv4 sou
 firewall-cmd --permanent --zone=coffeeshop --add-forward-port=port=22:proto=tcp:toport2222:toaddr=192.168.100.101  # forward port 22 to inside host 2222
 
 # Fail2Ban - firewall rules for banning (iptables, firewalld)
+/etc/fail2ban/jail.local
+
 yum install -y epel-release  # add EPEL repo
 yum install -y fail2ban fail2ban-systemd  # install fail2ban
 cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local  # copy create local config
-vim /etc/fail2ban/jail.local
 ~> backend = systemd  # log fail2ban using systemd
 ~> [sshd]
 ~~> enabled = true  # turn on jailing for sshd
@@ -673,6 +658,7 @@ cron* ?dynamiccronlog  # create dynamic path, using template
 
 # CPU monitoring and config
  /proc/cpuinfp
+
  uptime
  loadaverage
  sar  # collects and displays all sys activities
@@ -709,12 +695,13 @@ cron* ?dynamiccronlog  # create dynamic path, using template
  dig @192.168.1.254 ford.com
 
 # Git Version Control
+/etc/gitconfig  # global system config
+$HOME/.gitconfig  # local user config
+/path/to/project/.git/config  # local project config
+
 new FILE => git add -> stage FILE => git commit -> save local repo => git push -> save remote
 grant@soundlinuxtraining.com  # Grant McWilliams email
 yum install -y git
-/etc/gitconfig  # system config
-$HOME/.gitconfig  # user config
-/path/to/project/.git/config  # project config
 
 git config --system|--global|--local  # set config for system | user | project level
 git config --global user.name "Grant McWilliams"  # set Git user name
@@ -726,7 +713,7 @@ git init  # initialize git repo
 git status
 git add newfile.txt  # track file
 git commit -m "initial commit"  # save changes
-git commit -a  # commit all changes, enter editor (multi-line comments)
+git commit -e  # commit all changes, open [e]ditor (multi-line comments)
 git commit -am "second commit"  # add all changes and commit w/ message
 git branch  # print branches, '*' denotes curr branch
 git branch testconfig  # create branch
@@ -743,10 +730,11 @@ git merge  # manual merge of pulled local files
 git pull = fetch + merge
 
 # Automation, Scripting
-~> file globbing != regex; globs match file names, regex match text
 #!/bin/bash  # specify absolute path to bash interpreter executable
 #!/usr/bin/env bash  # use 'env' to search system path for bash interpreter
-mkdir ~/bin  # dir in system path to insert scripts, RHEL 7+ (run as cmds)
+
+~> file globbing != regex; globs match file names, regex match text
+mkdir -p ~/bin  # dir in system path to insert scripts, RHEL 7+ (run as cmds)
 bash SCRIPT  # execute script as bash arg, no set permissions
 ~> echo '$0 is' "$0"  # single quote - literal, double quote - interpreted preserve spaces, $0 - executable path
 ~> $1 - 1st arg, $2 - 2nd arg, $@ - all args (word split items), $* - all args (one entity)

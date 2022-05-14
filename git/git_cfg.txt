@@ -1,7 +1,7 @@
 # Git config file
-/etc/gitconfig  # global
-~/.gitconfig  # local $USER
-/path/to/project/.git/config  # local project
+## /etc/gitconfig  # global
+## ~/.gitconfig  # local $USER
+## /path/to/project/.git/config  # local project
 
 [user]
 	email = $EMAIL

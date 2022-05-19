@@ -1,53 +1,81 @@
-Router, switch, general CLI.
+Cisco IOS - Router, Switch
 
-# IOS
+## notes:
+> rename Switch -> SW
+> Router -> ?
+
+# keystrokes
 ?  # print all commands for curr mode
-CMD?  # print CMD word complete options
-CMD ?  # print CMD parameter options
-CMD PARM?  # print CMD PARM word complete options
-CMD PARM1 ?  # print CMD PARM next parameter options
-TAB  # autocomplete
-CTRL+Break  # send interrupt
-CTRL+Shift+6, x  #  suspend curr telent|ssh
-CTRL+c  # stop cmd process
-CTRL+p  # print cmd history
-CTRL+n  # print next cmd history 
-CTRL+f  # move cursor foward
-CTRL+b  # move cursor backward
-CTRL+a  # move cursor to first character
-CTRL+e  # move cursor to last character
-CTRL+r  # refresh cmd line
-CTRL+d  # delete single character
-Esc+b  # move backward one word
-Esc+f  # move foward one word
+cmd?  # print cmd word complete options
+cmd ?  # print cmd parameter options
+cmd PARM?  # print cmd PARM word complete options
+cmd PARM1 ?  # print cmd PARM next parameter options
+tab  # autocomplete
+ctrl+Break  # send interrupt
+ctrl+Shift+6, x  #  suspend curr telent|ssh
+ctrl+c  # stop cmd process
+ctrl+p  # print cmd history
+ctrl+n  # print next cmd history 
+ctrl+f  # move cursor foward
+ctrl+b  # move cursor backward
+ctrl+a  # move cursor to first character
+ctrl+e  # move cursor to last character
+ctrl+r  # refresh cmd line
+ctrl+d  # delete single character
+esc+b  # move backward one word
+esc+f  # move foward one word
 SPACE  # move 1 page down
 
-USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE(console|vty|aux)  # CLI modes
-end|CTRL+z  # move to ENABLE mode
+USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE  # CLI modes
+
+# Universal cmd
+end|ctrl+z  # move to ENABLE mode
 exit  #  move backward one user mode
 logout  # log out of terminal session
 reload  # reboot device
-enable  # go to ENABLE mode
+enable|disable  # enter|exit enable mode
 disable  # go to USER mode
 shut|no shut  # enable|disable interface
-show run  # print running-config
-show start  # print startup-config
 copy run start  # copy running-config to startup-config
 copy start run  # copy startup-config to running-config
-logging synchronous  # sync log msg display w/ other output, limit interrupts
+logging synchronous  # sync log msg output, no interrupt to prev output
+show run  # print running-config
+show start  # print startup-config
+show ip ssh  # print ssh version, auth timeout, retries
+show ssh  # print info ea connected ssh client
+transport input [all|none|telnet|ssh]  # declare service to support
 
-## erase start configuration
+# erase start configuration
 erase startup-config
 write erase
 erase start
 erase nvram:
 
-## set DEV to default
+# set to default
 erase start
 delete vlan.dat
 reload
 
-## Global Configuration mode
+# configure basic password only
+dev(config)# line console 0
+dev(config-line)# password faith
+dev(config-line)# login
+
+dev(config)# line vty 0 15
+dev(config-line)# password hope
+dev(config-line)# login
+
+# configure username + password e.g. ssh
+dev(config)# username USER secret|password PASS
+dev(config)# line vty 0 15
+dev(config-line)# login local  # enable username, password auth
+
+# ssh configuration
+dev(config)# hostname HOST
+dev(config)# ip domain-name NAME
+dev(config)# crypto key generate rsa
+
+# config hostname, banner - ?
 hostname HOSTNAME  # assign a host name
 enable password PASSWORD  # set unencrypted enable password
 enable secret PASSWORD  # set encrypted enable password
@@ -57,18 +85,18 @@ banner motd_#MESSAGE#  # set motd banner MESSAGE
 banner login_#MESSAGE#  # set login MESSAGE, print after motd message
 banner exec_#MESSAGE#  # set executive MESSAGE, print after login process
 
-## Line Configuration mode
-DEV(config)#line console  # enter console line config mode
-DEV(config)#line vty 0 15  # enter virtual terminal line config mode
-DEV(config)#line aux 0  # enter auxiliary line config mode
-DEV(config-line)#password PASSWORD # set password
-DEV(config-line)#login |local  # enforce password login for local account
-DEV(config-line)#logging synchronous  # halt router output interruptions when inputing in cli
-DEV(config-line)#exec-timeout VALUE  # set terminal time-out value, minutes-seconds
-DEV(config-line)#exec-timeout 3  # enable time-out - 3 minutes
-DEV(config-line)#service tcp-keepalives-in  # enable keepalives
+# config console, vty lines - ?
+Dev(config)#line console  # enter console line config mode
+Dev(config)#line vty 0 15  # enter virtual terminal line config mode
+Dev(config)#line aux 0  # enter auxiliary line config mode
+Dev(config-line)#password PASSWORD # set password
+Dev(config-line)#login |local  # enforce password login for local account
+Dev(config-line)#logging synchronous  # halt router output interruptions when inputing in cli
+Dev(config-line)#exec-timeout VALUE  # set terminal time-out value, minutes-seconds
+Dev(config-line)#exec-timeout 3  # enable time-out - 3 minutes
+Dev(config-line)#service tcp-keepalives-in  # enable keepalives
 
-## telnet|ssh
+# telnet|ssh - ?
 show sessions  # print telnet/ssh sessions w/ conn numbers
 show users  # print user log-in list
 telnet|ssh IP
@@ -77,32 +105,16 @@ resume 1
 disconnect CONN-NUMBER
 disconnect 1
 
-## ssh - configure
-DEV(config)#username USERNAME password PASSWORD
-DEV(config)#username student secret cisco
-DEV(config)#cryto key generate rsa  # create public, pvt keys
-DEV#show crypto key mypubkey rsa  # print key configurations, names (public, private)
-DEV(config)#line vty 0 15
-DEV(config-line)#login local  # enforce use of usernames and passwords
-DEV(config-line)#transport input telnet|ssh  # open both telnet and ssh lines
-DEV(config)#ip ssh time-out SECONDS  # set ssh time value
-DEV(config)#ip ssh authentication-retries VALUE
-
-## CDP - Cisco Discovery Protocol
-DEV>show cdp  # print update timer, hold timer, global config status
-DEV>show cdp traffic
-DEV>show cdp interface INT
-DEV>show cdp neighbors
-DEV>show cdp neighbors detail
-DEV>show cdp entry NAME
-DEV>show cdp int  # print all cdp interfaces
-DEV>show cdp int INT  # print info of specified cdp interface
-DEV>enable
-DEV#clear cdp counters  # reset local cdp traffic counters
-DEV#clear cdp table  # empty contents of local cdp table
-DEV#config t
-DEV(config)#cdp run  # enable cdp advertisements
-
+# ssh - configure - ?
+Dev(config)#username USERNAME password PASSWORD
+Dev(config)#username student secret cisco
+Dev(config)#cryto key generate rsa  # create public, pvt keys
+Dev#show crypto key mypubkey rsa  # print key configurations, names (public, private)
+Dev(config)#line vty 0 15
+Dev(config-line)#login local  # enforce use of usernames and passwords
+Dev(config-line)#transport input telnet|ssh  # open both telnet and ssh lines
+Dev(config)#ip ssh time-out SECONDS  # set ssh time value
+Dev(config)#ip ssh authentication-retries VALUE
 
 # SWITCH
 show int status  # print list of each int for speed, duplex, and vlan association settings
@@ -329,47 +341,6 @@ switch(config-if)#mls qos trust cos  # identifies voice traffic as priority
 switch(config-if-range)#switchport voice vlan VLAN-ID  # assign ints to voice vlan
 switch(config-if)#logging synchronous  # stop switch output from interrupting typed commands
 
-
-# ACCESS Point
-BVI = bridge virtual interface  # access GUI
-	1)establish console connection  
-	2)assign ip address to BVI, no shut  
-	3)connect fast ethernet straight-through cable from host pc to AP (DO NOT assign an ip address to fast ethernet interface!)
-	4)statically assign ip address for host pc in same network as BVI  
-	5)connect to AP through BVI by entering BVI address in to http address field of host pc internet browser
-ap#show dot11 network-map  # print network map
-ap#show dot11 adjacent-ap  # print adjacent access point list
-ap#show interface dot11radio0 summary
-ap#show dot11 associations client|all-client  # print radio and statistic associations table
-ap#show dot11 associations statistics  # print stats for dot11 radio interfaces
-ap#clear dot11 statistics dot11radio0  # clears stats for dot11radio 0
-ap#clear dot11 statistics 0040.9631.81cf  # clears stats for client radio with specified mac address
-ap#clear dot11 client MAC  # deauthenticate radio client from mac address
-ap#clear dot11 client 0040.9645.2196
-ap#clear dot11 statistics interface|mac-address  # reset int stat for int or mac addr
-ap(config)#interface dot11radio INT  # enter dot11radio interface mode
-ap(config)#interface bvi1  # enter bridge virtual interface mode, for use to connect to GUI
-ap(config-if)#ssid line SSID  # declare ssid character name
-ap(config-if)#ssid SSID  # enter ssid interface
-ap(config-if-ssid)#authentication open  # allow open access of ssid for all devices in wlan
-ap(config-if)#station-role ROLE  # select role of interface
-ap(config-if)#station-role root  # configure access point for root operation
-ap(config-if)#power client VALUE  # set max power level of client radio tranmissions
-ap(config-if)#power local VALUE  # set max power level of access point transmissions
-ap(config-if)#channel number|frequency  # set channel and frequency of interface
-ap(config-if)#world-mode
-	antenna receive left|right|center
-	antenna transmit diversity|left|right
-	port-protected
-	beacon period VALUE
-	rts thershold VALUE
-	rts retries VALUE
-	packet retries VALUE
-	fragment-threshold VALUE
-ap(config-if)#ip address IP-NETWORK MASK
-ap(config-if)#ip address dhcp  # enable dhcp client
-
-
 # ROUTER
 show ip host  # USER, print ip info
 show hosts  # USER, print host ip name map
@@ -580,55 +551,6 @@ router(config-router)#area AREA authentication  # enable authentication area wid
 router(config-if)#ip ospf message-digest-key 1 md5 cisco
 router(config-router)#area 0 authentication message-digest
 
-## Frame Relay
->> DCE - Data Communication Equipment
-FR_Switch#show frame-relay route  # print routes of frame relay protocol
-FR_Switch#show frame-relay pvc  # print virtual circuit status of listed frame relay interfaces
-FR_Switch#show frame-relay map  # print info on static and dynamic ip mappings to dlci(s)
-FR_Switch(config)#frame-relay switching  # define device frame relay switch
-
-FR_Switch(config)#int s0/2/0
-FR_Switch(config-if)#encapsulation frame-relay
-FR_Switch(config-if)#frame-relay intf-type dce  # can match different physical interface types
-FR_Switch(config-if)#clockrate 64000
-FR_Switch(config-if)#frame-relay route 102 interface s0/2/1 201  # forward traffic from route 102 to serial route 201
-FR_Switch(config-if)#no shut
-
->> DTE - Data Terminal Equipment
-router#show frame-relay map  # print frame relay addressing info
-router#show frame-relay pvc  # print pvc stats
-router#show frame-relay lmi  # print lmi stats
-router# |no debug frame-relay lmi  # enable|disable debug, lmi packets
-router#clear frame-relay inverse-arp  # clears dynamically learned frame relay ip mapping
-
->> DLCI - Data Link Connection Identifier, CIR - Committed Information Rate
-router(config-if)#encapsulation frame-relay cisco|ietf  # define frame relay encapsulation type (DTE-to-DTE)
-router(config-if)#frame-relay lmi-type cisco|ansi|q933a  # define lmi encapsulation type (DTE-to-DCE)
-router(config-if)#no frame-relay inverse-arp  # disable inverse arp; does not allow dynamic learning of pvc circuits
-router(config-if)#ip address IP MASK  # assign ip address to local int
-router(config-if)#frame-relay map ip IP DLCI broadcast  # map remote ip to relevant dlci
-router(config-if)#frame-relay map ip 10.1.1.2 102 broadcast  # allows ip broadcasts to transit link
-router(config-if)#no shut
-
->> DTE - sub-interfaces
-router(config)#int INT
-router(config-if)#encapsulation TYPE
-router(config-if)#int INT-SUB TYPE
-router(config-subif)#ip address IP MASK
-router(config-subif)#frame-relay interface-dlci DLCI cisco|ietf  # can have different encap type per subint
-
-router(config)#int fa0/1
-router(config-if)#no shut
-router(config-if)encapsulation frame-relay
-router(config-if)int fa0/1.1 point-to-point
-router(config-subif)#ip address 140.1.1.1 255.255.255.0
-router(config-subif)#frame-relay interface-dlci 501 ietf
-
-router(config-subif)#int fa0/1.2 multipoint
-router(config-subif)#ip address 140.1.2.1 255.255.255.0
-router(config-subif)#frame-relay interface-dlci 502
-router(config-subif)#frame-relay interface-dlci 503
-
 ## DHCP
 router>show ip dhcp binding  # print list of all host ip address to mac address bindings
 router>show ip dhcp pool  # print dhcp pool info
@@ -704,10 +626,10 @@ router(config-if)#int s0/1/0
 router(config-if)#ip nat outside
 
 ## ACLs - apply to vty lines 
-DEV(config)#access-list 101 permit ip 10.2.2.0 0.0.0.3 any
-DEV(config)#access-list 101 permit ip 192.168.30.0 0.0.0.255 any
-DEV(config)#line vty 0 15
-DEV(config-line)#access-class 101 in  # enable acl on inbound int
+Dev(config)#access-list 101 permit ip 10.2.2.0 0.0.0.3 any
+Dev(config)#access-list 101 permit ip 192.168.30.0 0.0.0.255 any
+Dev(config)#line vty 0 15
+Dev(config-line)#access-class 101 in  # enable acl on inbound int
 
 ## ACL - numbered | named, implicit "deny all"
 router#show int INT  # print interfaces w/ ACLs
@@ -881,21 +803,3 @@ router(config-router)# |no auto-summary  # enable|diable auto summary - ripv2, e
 router(config-router)#passive-interface default  # set all local ints to passive mode
 router(config-router)#passive-interface INT-TYPE  # disallow routing updates for int, passive still advertised
 router(config-router)#passive-interface fa0/1  # no router updates sent out fa0/1 interface
-
-> Rom Monitor mode
-rommon>dir flash:  # print flash contents
-rommon>boot flash:IOS-FILE  # boot specified ios file, no space
-rommon>show version  # print registry number, boot sequence
-rommon>show start
-rommon>confreg  # edit terminal settings e.g. baud rate
-rommon>confreg (0x)2102  # boot from nvram
-rommon>confreg (0x)2142  # reset password settings
-rommon>reset|reload|boot  # reboot router
-rommon>xmodem_-c IOS-FILE  # download ios filename to flash
-rommon>set  # print rom monitor variables for tftp download session
-rommon>IP_ADDRESS=IP  # assign ip addr
-rommon>IP_SUBNET_MASK=MASK
-rommon>DEFAULT_GATEWAY=IP
-rommon>TFTP_SERVER=IP
-rommon>TFTP_FILE=IOS-FILE
-rommon>tftpdnld  # enable tftp dl

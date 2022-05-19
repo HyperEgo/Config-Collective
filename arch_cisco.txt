@@ -1,0 +1,123 @@
+Cisco IOS Achive - Router, Switch
+
+## CDP - Cisco Discovery Protocol
+Dev>show cdp  # print update timer, hold timer, global config status
+Dev>show cdp traffic
+Dev>show cdp interface INT
+Dev>show cdp neighbors
+Dev>show cdp neighbors detail
+Dev>show cdp entry NAME
+Dev>show cdp int  # print all cdp interfaces
+Dev>show cdp int INT  # print info of specified cdp interface
+Dev>enable
+Dev#clear cdp counters  # reset local cdp traffic counters
+Dev#clear cdp table  # empty contents of local cdp table
+Dev#config t
+Dev(config)#cdp run  # enable cdp advertisements
+
+# Frame Relay
+>> DCE - Data Communication Equipment
+SW#show frame-relay route  # print routes of frame relay protocol
+SW#show frame-relay pvc  # print virtual circuit status of listed frame relay interfaces
+SW#show frame-relay map  # print info on static and dynamic ip mappings to dlci(s)
+SW(config)#frame-relay switching  # define device frame relay switch
+
+SW(config)#int s0/2/0
+SW(config-if)#encapsulation frame-relay
+SW(config-if)#frame-relay intf-type dce  # can match different physical interface types
+SW(config-if)#clockrate 64000
+SW(config-if)#frame-relay route 102 interface s0/2/1 201  # forward traffic from route 102 to serial route 201
+SW(config-if)#no shut
+
+>> DTE - Data Terminal Equipment
+router#show frame-relay map  # print frame relay addressing info
+router#show frame-relay pvc  # print pvc stats
+router#show frame-relay lmi  # print lmi stats
+router# |no debug frame-relay lmi  # enable|disable debug, lmi packets
+router#clear frame-relay inverse-arp  # clears dynamically learned frame relay ip mapping
+
+>> DLCI - Data Link Connection Identifier, CIR - Committed Information Rate
+router(config-if)#encapsulation frame-relay cisco|ietf  # define frame relay encapsulation type (DTE-to-DTE)
+router(config-if)#frame-relay lmi-type cisco|ansi|q933a  # define lmi encapsulation type (DTE-to-DCE)
+router(config-if)#no frame-relay inverse-arp  # disable inverse arp; does not allow dynamic learning of pvc circuits
+router(config-if)#ip address IP MASK  # assign ip address to local int
+router(config-if)#frame-relay map ip IP DLCI broadcast  # map remote ip to relevant dlci
+router(config-if)#frame-relay map ip 10.1.1.2 102 broadcast  # allows ip broadcasts to transit link
+router(config-if)#no shut
+
+>> DTE - sub-interfaces
+router(config)#int INT
+router(config-if)#encapsulation TYPE
+router(config-if)#int INT-SUB TYPE
+router(config-subif)#ip address IP MASK
+router(config-subif)#frame-relay interface-dlci DLCI cisco|ietf  # can have different encap type per subint
+
+router(config)#int fa0/1
+router(config-if)#no shut
+router(config-if)encapsulation frame-relay
+router(config-if)int fa0/1.1 point-to-point
+router(config-subif)#ip address 140.1.1.1 255.255.255.0
+router(config-subif)#frame-relay interface-dlci 501 ietf
+
+router(config-subif)#int fa0/1.2 multipoint
+router(config-subif)#ip address 140.1.2.1 255.255.255.0
+router(config-subif)#frame-relay interface-dlci 502
+router(config-subif)#frame-relay interface-dlci 503
+
+
+# ACCESS Point
+BVI = bridge virtual interface  # access GUI
+	1)establish console connection  
+	2)assign ip address to BVI, no shut  
+	3)connect fast ethernet straight-through cable from host pc to AP (DO NOT assign an ip address to fast ethernet interface!)
+	4)statically assign ip address for host pc in same network as BVI  
+	5)connect to AP through BVI by entering BVI address in to http address field of host pc internet browser
+ap#show dot11 network-map  # print network map
+ap#show dot11 adjacent-ap  # print adjacent access point list
+ap#show interface dot11radio0 summary
+ap#show dot11 associations client|all-client  # print radio and statistic associations table
+ap#show dot11 associations statistics  # print stats for dot11 radio interfaces
+ap#clear dot11 statistics dot11radio0  # clears stats for dot11radio 0
+ap#clear dot11 statistics 0040.9631.81cf  # clears stats for client radio with specified mac address
+ap#clear dot11 client MAC  # deauthenticate radio client from mac address
+ap#clear dot11 client 0040.9645.2196
+ap#clear dot11 statistics interface|mac-address  # reset int stat for int or mac addr
+ap(config)#interface dot11radio INT  # enter dot11radio interface mode
+ap(config)#interface bvi1  # enter bridge virtual interface mode, for use to connect to GUI
+ap(config-if)#ssid line SSID  # declare ssid character name
+ap(config-if)#ssid SSID  # enter ssid interface
+ap(config-if-ssid)#authentication open  # allow open access of ssid for all devices in wlan
+ap(config-if)#station-role ROLE  # select role of interface
+ap(config-if)#station-role root  # configure access point for root operation
+ap(config-if)#power client VALUE  # set max power level of client radio tranmissions
+ap(config-if)#power local VALUE  # set max power level of access point transmissions
+ap(config-if)#channel number|frequency  # set channel and frequency of interface
+ap(config-if)#world-mode
+	antenna receive left|right|center
+	antenna transmit diversity|left|right
+	port-protected
+	beacon period VALUE
+	rts thershold VALUE
+	rts retries VALUE
+	packet retries VALUE
+	fragment-threshold VALUE
+ap(config-if)#ip address IP-NETWORK MASK
+ap(config-if)#ip address dhcp  # enable dhcp client
+
+# Rom Monitor mode
+Rom>dir flash:  # print flash contents
+Rom>boot flash:IOS-FILE  # boot specified ios file, no space
+Rom>show version  # print registry number, boot sequence
+Rom>show start
+Rom>confreg  # edit terminal settings e.g. baud rate
+Rom>confreg (0x)2102  # boot from nvram
+Rom>confreg (0x)2142  # reset password settings
+Rom>reset|reload|boot  # reboot router
+Rom>xmodem_-c IOS-FILE  # download ios filename to flash
+Rom>set  # print rom monitor variables for tftp download session
+Rom>IP_ADDRESS=IP  # assign ip addr
+Rom>IP_SUBNET_MASK=MASK
+Rom>DEFAULT_GATEWAY=IP
+Rom>TFTP_SERVER=IP
+Rom>TFTP_FILE=IOS-FILE
+Rom>tftpdnld  # enable tftp dl

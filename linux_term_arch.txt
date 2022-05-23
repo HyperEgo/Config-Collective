@@ -1,4 +1,4 @@
-# archived linux terminal cmd
+# linux term - archived 
 
 # SVN
 A  # Added
@@ -17,7 +17,6 @@ svn co -rREV URL  # svn check out revision
 svn cp SOURCE TARGET  # svn copy branch
 
 ## Merge
-pwd
 /home/user/project-trunk  # curr trunk dir
 svn up
 svn merge --dry-run /project/directory/branches/branch_1

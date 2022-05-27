@@ -130,6 +130,11 @@ show int INT switchport  # print interface per vlan: tags, allowed, native
 show int statistics  # print int stats, counters
 show int trunk  # print trunking interfaces
 show int vlan VLAN  # print vlan metric via interfaces
+show vlan  # print vlan, int summary
+show vlan brief  # print vlan info, no mtu, RingNo, BridgeNo, mode, etc.
+show vlan id VLAN  # print VLAN metrics
+show vlan name VLAN-NAME  # print VLAN-NAME metric
+show vtp status|counters|password  # print VTP domain status, counters, password 
 
 show mac address-table |dynamic  # print table, dynamice
 show mac address-table dynamic address MAC  # print mac addr dynamic metrics
@@ -147,12 +152,6 @@ show spanning-tree detail  # print stp path cost
 show spanning-tree vlan VLAN  # print stp vlan stats
 |no debug spanning-tree events  # enable|disable stp debug
 clear spanning-tree detected-protocols  # restart stp proto migration process
-
-show vlan brief|summary  # print vlan int assignments, configured vlans
-show vlan id VLAN  # print VLAN metrics
-show vlan name VLAN-NAME  # print VLAN-NAME metric
-
-show vtp status|counters|password  # print VTP domain status, counters, password 
 
 ## remote access config
 sw(config)# ip default-gateway IP  # define default gateway
@@ -189,7 +188,7 @@ sw(config-if)# switchport trunk allowed vlan 10
 sw(config-if)# switchport trunk allowed vlan add 20, 30  
 
 ## vlan trunk - mode, native interface
-sw(config)# int range fa0/1-24
+sw(config)# interface range fa0/1-5
 sw(config-if-range)# switchport mode trunk
 sw(config-if-range)# switchport trunk native vlan 99  # define vlan 99 native trunk
 sw(config-if-range)# no shut
@@ -203,14 +202,14 @@ sw(config-if)# switchport nonegoiate  # stop DTP advertise
 ## vlan mgmnt - interface config, range, type
 sw(config)# vlan VLAN 
 sw(config-vlan)# name VLAN-NAME
-sw(config)# int range VLAN-RANGE
+sw(config)# int range RANGE
 sw(config-if-range)# switchport mode access  # type access only, no trunking
 sw(config-if-range)# switchport access vlan VLAN  # assign curr int to access vlan
 sw(config-if-range)# no shut
 e.g.>
 sw(config)# vlan 10
 sw(config-vlan)# name faculty
-sw(config)# int range fa0/1-15
+sw(config)# int range fa0/1-5  # ports must physicall exist! e.g. no fa0/0
 sw(config-if-range)# switchport mode access
 sw(config-if-range)# switchport access vlan 10
 sw(config-if-range)# description faculty usage

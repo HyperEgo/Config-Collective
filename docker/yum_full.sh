@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# yum install script, Fedora distros - test CentOS7
+# yum install - partial complete, full blown - Fedora distros
 
 function printGraphic() {
 	local gfx=""

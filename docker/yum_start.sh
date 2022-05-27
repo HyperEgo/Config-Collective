@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# start-up tools for docker container, sudo
+# yum install - partial, quick test - Fedora distros
 
 #yum -y update && yum -y upgrade
 yum -y update  # 'update' only, no 'upgrade'

@@ -1,6 +1,6 @@
-Cisco IOS Achive - Router, Switch
+# Cisco IOS - Router, Switch - archive
 
-## CDP - Cisco Discovery Protocol
+# CDP - Cisco Discovery Protocol
 show cdp  # print update timer, hold timer, global config status
 show cdp int  # print all cdp int stats
 show cdp int INT  # print cdp int stats
@@ -13,7 +13,7 @@ clear cdp counters  # reset local cdp traffic counters
 clear cdp table  # empty contents of local cdp table
 |no cdp run  # enable|disable cdp advertisements
 
-# ACCESS Point
+# Access Point
 BVI = bridge virtual interface  # access GUI
 	1)establish console connection  
 	2)assign ip address to BVI, no shut  
@@ -54,7 +54,7 @@ ap(config-if)# world-mode
 ap(config-if)# ip address IP-NET MASK
 ap(config-if)# ip address dhcp  # enable dhcp client
 
-# Rom Monitor mode
+# Rom Monitor
 rm>dir flash:  # print flash contents
 rm>boot flash:IOS-FILE  # boot specified ios file, no space
 rm>show version  # print registry number, boot sequence
@@ -72,8 +72,8 @@ rm>TFTP_SERVER=IP
 rm>TFTP_FILE=IOS-FILE
 rm>tftpdnld  # enable tftp dl
 
-# SWITCH
-# Frame Relay
+# Switch
+## Frame Relay
 >> DCE - Data Communication Equipment
 show frame-relay route  # print routes of frame relay protocol
 show frame-relay pvc  # print virtual circuit status of listed frame relay interfaces

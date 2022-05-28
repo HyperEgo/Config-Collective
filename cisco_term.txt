@@ -24,7 +24,7 @@ SPACE  # move 1 page down
 
 USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE  # CLI modes
 
-# Universal cmd
+# Universal
 end|ctrl+z  # move to ENABLE mode
 exit  #  move backward one user mode
 logout  # log out of terminal session
@@ -120,7 +120,7 @@ config-register HEX-REG  # boot reg setting; 2100 (rom monitor), 2101 (rom memor
 ???????????????????????????  Huh, wtf  ????????????????????????????
 ???????????????????????????????????????????????????????????????????
 
-# SWITCH
+# Switch
 show dhcp lease  # print dhcp ip address for mngmt vlan
 show etherchannel CHAN summary  # print etherchannel stats for channel number
 
@@ -258,7 +258,7 @@ sw1(config-if-range)# channel-group 1 mode desirable
 sw2(config)# int range fa0/9
 sw2(config-if-range)# channel-group 1 mode auto
 
-# ROUTER
+# Router
 boot system  # define boot sequence (use cmd in succession)
 debug ip routing  # start ip routing proto debug
 debug ip PROTOCOL  # debug routing protocol
@@ -469,14 +469,14 @@ rtr(config-keychain-key)# key-string cisco
 rtr(config-if)# ip rip authentication mode md5
 rtr(config-if)# ip rip authentication key-chain RIP_KEY
 
-## EIGRP
+## EIGRP auth
 rtr(config)# key chain EIGRP_KEY
 rtr(config-keychain)# key 1
 rtr(config-keychain-key)# key-string cisco
 rtr(config-if)# ip authentication mode eigrp 1 md5
 rtr(config-if)# ip authentication key-chain eigrp 1 EIGRP_KEY
 
-## OSPF
+## OSPF auth
 rtr(config-if)# ip ospf authentication-key PASS  # set ospf router auth password
 rtr(config-if)# ip ospf message-digest key KEY md5 PASS  # encrypt router pd auth
 rtr(config-router)# area AREA authentication  # enable area wide auth

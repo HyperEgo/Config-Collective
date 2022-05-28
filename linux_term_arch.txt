@@ -1,4 +1,4 @@
-# linux term - archived 
+# Linux terminal - archived 
 
 # SVN
 A  # Added

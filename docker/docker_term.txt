@@ -1,18 +1,19 @@
-# Docker
+# Docker terminal
 
-## keystrokes
+# keystrokes
 ctrl+p, ctrl+q  # detach from running container
 
-## tag convention e.g. registry.example.com:port/organization/image-name:version-tag
+# Tag convention e.g. registry.example.com:port/organization/image-name:version-tag
 docker tag SRC_IMG[:TAG] TARGET_IMG[:TAG]  # tag image
 docker image tag SRC-IMG:TAG TARGET-IMG:TAG
 
-## add $USER to docker group
+# Add $USER to docker group
 sudo groupadd docker  # create docker group (may already exist)
 sudo gpasswd -a $USER docker  # append docker group to $USER
 newgrp docker  # avoid logout|in to affect group change
 docker run hello-world  # test, no sudo
 
+# Basic container exec
 man dockerfile
 man docker build
 
@@ -83,7 +84,7 @@ docker port echo-server
 ~> 45678/tcp -> 0.0.0.0:32770  # image port 45678 open to any ip at port 32770
 ~> 45679/tcp -> 0.0.0.0:32769
 
-## PORTS - connect containers - part 1
+# Ports - connect containers p.1
 docker run --rm -ti -p OUT:IN
 e.g.>
 docker run --rm -ti -p 45678:45678 -p 45679:45679 --name echo-server ubuntu:14.04 bash  # start, open ports 
@@ -92,16 +93,16 @@ pc1> nc localhost 45678
 pc1> nc localhost 45679
 curl localhost:45678  # test port number
 
-## PORTS - connect containers - part 2
+# Ports - connect containers p.2
 docker run --rm -ti ubuntu:14.04 bash
 CNTR# nc 10.35.3.24 45678  # netcat listen ip, port
 CNTR# nc 10.35.3.24 45679
 
-## DIRECT - connect containers
+# Direct - connect containers
 docker run --rm -ti --name server ubuntu:14.04 bash  # first container
 docker run --rm -ti --link server --name client ubuntu:14.04 bash  # second container, link
 
-## PRVT Networks - connect containers
+# Private Networks - connect containers
 docker network CMD  # e.g. docker network connect|create|disconnect|inspect|prune
 docker network create faux-net
 docker run --rm -ti --net=faux-net --name server ubuntu:14.04 bash
@@ -109,19 +110,19 @@ CNTR1# nc -lp 1234
 docker run --rm -ti --link server --net=faux-net --name client ubuntu:14.04 bash
 CNTR2# nc server 1234
 
-## SHARED volumes w/ host
+# Shared volumes w/ host
 docker run -ti -v path/to/volume:path/to/share/dir IMG CMD
 e.g.>
 docker run -ti -v /usr/daveg/example:/shared-folder ubuntu bash
 docker run -ti -p 8080 -v /home/ninjaboy/shared-volume:/home -w /home ubuntu:14.04 bash
 
-## SHARED volumes btwn containers
+# Shared volumes w/ containers
 docker run -ti --name NAME -v /shared-volume ubuntu bash
 CNTR1# echo "hello" >> /shared-volume/data-file.txt
 docker run -ti --volumes-from NAME ubuntu bash
 CNTR2# ...
 
-## COMPOSE - yaml|.yml
+# Compose YAML .yml
 apt install docker-compose
 docker-compose up | down -d # exec yaml, [d]aemon bkgrnd
 docker-compose scale confluence-test=6

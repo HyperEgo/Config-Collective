@@ -1,4 +1,4 @@
-# linux terminal 
+# Linux terminal 
 
 #!/usr/bin/env bash|python3  # env find executable
 /boot/grub2/grub.cfg  # boot loader gen grub-mkconfig

@@ -38,7 +38,7 @@ chmod 755 $LOGPV
 chmod 755 $REPO
 chmod 755 $LOGAF
 
-printBanner "LOG previous"
+printBanner "LOG Previous"
 yum list installed >> $LOGPV
 echo -e "\n$TSTAMP\n\n" >> $LOGPV
 echo -e "\nLOG Previous: "$LOGPV"\n\n"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# install docker
+# docker install
 
 sudo apt-get install \
     ca-certificates \

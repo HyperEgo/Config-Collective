@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# yum install - partial complete, full blown - Fedora distros
+# yum install - complete, full blown - Fedora distros
 
+# functions
 function printGraphic() {
 	local gfx=""
 	for i in $( seq $1 $2 )
@@ -20,53 +21,55 @@ function printBanner() {
 	echo -e "\n"
 }
 
-# file creation and declares
+# vars
 TSTAMP="$(date +%F_%R)"
-LOG_PREV="/tmp/APPLOG_BEFORE.$TSTAMP.log"
-REPO_LIST="/tmp/repo_list.$TSTAMP.log"
-LOG_AFTER="/tmp/APPLOG_AFTER.$TSTAMP.log"
+LOGH=$HOME/tmp
+mkdir -p $LOGH
+LOGPV="$LOGH/LOG_prev.$TSTAMP.log"
+REPO="r$LOGH/REPO_list.$TSTAMP.log"
+LOGAF="$LOGH/LOG_after.$TSTAMP.log"
 
-touch $LOG_PREV
-touch $REPO_LIST
-touch $LOG_AFTER
+# file create, set
+touch $LOGPV
+touch $REPO
+touch $LOGAF
 
-chmod 666 $LOG_PREV
-chmod 666 $REPO_LIST
-chmod 666 $LOG_AFTER
+chmod 755 $LOGPV
+chmod 755 $REPO
+chmod 755 $LOGAF
 
-printBanner "Create APPLOG - BEFORE"
-yum list installed >> $LOG_PREV
-echo -e "\n$TSTAMP\n\n" >> $LOG_PREV
-echo -e "\nAPPLOG - BEFORE: "$LOG_PREV"\n\n"
+printBanner "LOG previous"
+yum list installed >> $LOGPV
+echo -e "\n$TSTAMP\n\n" >> $LOGPV
+echo -e "\nLOG Previous: "$LOGPV"\n\n"
 
-printBanner "Upgrade OS"
+printBanner "OS Upgrade"
 yum update && yum upgrade
 
-printBanner "Install Network Utils"
-#yum moo  # cow ascii art
-yum install -y iputils-ping  # ping, tracert utilities
-yum install -y cifs-utils  # SMB client for mounting
-yum install -y netcat  # network analysis; e.g. nc -l <port number>
-yum install -y nmap  # network scanner; e.g. nmap -v <dns | ip addr>
-yum install -y wget  #  retrieve http, ftp files
+printBanner "Net Utils - install"
+yum install -y iputils-ping
+yum install -y cifs-utils  # SMB client, mounting
+yum install -y netcat  # net analysis e.g. nc -l PORT
+yum install -y nmap  # net scanner e.g. nmap -v DNS|IP
+yum install -y wget  #  http, ftp files
 yum install -y openssh-server
 yum install -y nginx  # web server, reverse proxy, load balance, mail proxy, HTTP cache
 
-printBanner "Install Text Editors, Picture Viewers"
+printBanner "Editors Viewers - install"
 yum install -y vim
-yum install -y imagemagick  # image viewer, editor
+yum install -y imagemagick
 yum install -y nano
 yum install -y gedit
 yum install -y eog  # image viewer
 
-printBanner "Install xRDP"
+printBanner "xRDP - install"
 yum install -y xrdp
 #yum install -y xfce4
 #echo -e xfce4-session > ~/.xsession
 #echo -e "start xfce4" >> /etc/xrdp/startwm.sh
 #cat /etc/xrdp/startwm.sh
 
-printBanner "Install Browsers"
+printBanner "Web Browser - install"
 yum install -y firefox
 
 # opera
@@ -80,13 +83,12 @@ yum install -y firefox
 #yum install -y -f; sudo dpkg -i google-chrome*.deb
 #rm -rvf ./google-chrome*.deb  # remove archive file
 
-printBanner "Create Repo Log"
-grep . /etc/yum.repos.d/*.repo | grep 'http://' | sed 's/^.*\(http.*\).*$/\1/' >> $REPO_LIST
-echo -e "\n$TSTAMP\n\n" >> $REPO_LIST
-echo -e "\nRepo Log: "$REPO_LIST"\n\n"
+printBanner "LOG Repo"
+grep . /etc/yum.repos.d/*.repo | grep 'http://' | sed 's/^.*\(http.*\).*$/\1/' >> $REPO
+echo -e "\n$TSTAMP\n\n" >> $REPO
+echo -e "\nRepo Log: "$REPO"\n\n"
 
-printBanner "Create Install Log - AFTER"
-yum list installed > $LOG_AFTER
-echo -e "\n$TSTAMP\n\n" >> $LOG_AFTER
-echo -e "\nApp Log - AFTER: "$LOG_AFTER"\n\n"
-
+printBanner "LOG After"
+yum list installed > $LOGAF
+echo -e "\n$TSTAMP\n\n" >> $LOGAF
+echo -e "\nApp Log - AFTER: "$LOGAF"\n\n"

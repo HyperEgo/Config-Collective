@@ -494,7 +494,7 @@ mvn compile
 mvn compile clean
 mvn -p  # print maven commands, must be in build.xml dir
 
-# Python
+# Python3
 pydoc modules  # print python local installed modules
 python3  # start python interpreter
 >>> import vlc
@@ -505,26 +505,11 @@ python3  # start python interpreter
 >>> help("modules")  	 # print local modules installed, get help info
 >>> help("_struct")
 
-## PIP - plugin manager
-yum update -y && yum upgrade -y
-yum install -y python3
+## pip3 - plugin manager
+yum install -y python36
 pip3 install --upgrade pip
 pip3 download -d . "pywinrm>=0.3.0"  # dl python3 pywinrm plugin installer
-
-## Docker - test plugin dependences
-docker inspect CNTR  # view container configurations, e.g. id, state metrics, network stats
-docker network disconnect bridge CNTR  # disable network connection
 pip3 install --no-index --find-links *  # install plugin w/ deps local, offline mode
-
-# C++ compiler - test
-vim foo.c
-#include<stdio.h>
-int main(void){
-	printf("Hello World!\n");
-	return 0;
-}
-cc foo.c -o foo
-./foo
 
 # RAID config
 RAID 0 = stripe, no parity, no disk failures (max performance)
@@ -534,7 +519,7 @@ RAID 5 = stripe, parity across all disks, max one disk failure
 RAID 6 = stripe, double parity across all disks, max two disk failures
 RAID 10 = (1 + 0) mirroring + striping
 
-## Create partition
+## Partition - create
 gdisk /dev/sdX  # g|fdisk
 > n # new partition
 > Partition number = (default)
@@ -548,18 +533,18 @@ gdisk /dev/sdX  # g|fdisk
 mdadm --create RAID-DEV --level=LEVEL --raid-devices=NUM DEV{1,2,..}  # create RAID partition at LEVEL for NUMber of DEVs
 mdadm --create /dev/md1 --level=0 --raid-devices=2 /dev/sdb /dev/sdc  # create RAID /dev/md1, RAID 0, 2 devices at /dev/{sdb, sdc}
 
-## Create filesystem, mount partition
+## Filesystem, mount partition
 mkfs -t ext4 /dev/md1
 mkdir /raid_root
 chown -R USER /raid_root
 chgrp -R GRP /raid_root
 mount /dev/md1 /raid_root
 
-## Edit fstab
+## fstab - edit
 vim /etc/fstab
 /dev/md1  /raid_root  ext4  defaults  0  0
 
-## Mount, test, start mdmonitor service
+## mdmonitor service - mount, start, test
 mount -a  # auto-mount fstab entries, sudo
 cat /proc/mdstat  # show RAID personality overview
 mdadm --detail /dev/md1  # show RAID part details: sz, dev, state
@@ -568,3 +553,13 @@ systemctl start mdmonitor  # auto start service at boot
 
 # Sudoers file - visudo
 student01 ALL=(ALL) NOPASSWD:ALL  # student01 acc exec all sudo cmds w/o switch 'su -' & no pd
+
+# C++ compiler (e.g. gcc, g++) - test
+vim foo.c
+#include<stdio.h>
+int main(void){
+	printf("Hello World!\n");
+	return 0;
+}
+cc foo.c -o foo
+./foo

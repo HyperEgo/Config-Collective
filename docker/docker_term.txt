@@ -25,6 +25,15 @@ e.g.>
 docker search --filter "stars=80" --filter "is-official=true" ubuntu  # filter ubuntu img w/ 80+ stars
 docker search --limit=25 ubuntu  # limit search results
 
+# Container start - prompt working dir
+docker run -p 8080 -ti -w /home ubuntu:14.04 bash
+
+# Container start - share volume, prompt working dir
+docker run -p 8080 -ti -v /share/docker-share:/home -w /home ubuntu:14.04 bash
+
+# Network disable - running container
+docker network disconnect bridge CONTAINER NAME|ID
+
 docker inspect OPTION NAME|ID  # inspect image
 docker rmi IMAGE-ID  # remove image
 docker images  # print images
@@ -84,7 +93,7 @@ docker port echo-server
 ~> 45678/tcp -> 0.0.0.0:32770  # image port 45678 open to any ip at port 32770
 ~> 45679/tcp -> 0.0.0.0:32769
 
-# Ports - connect containers p.1
+# Connect containers - ports, p.1
 docker run --rm -ti -p OUT:IN
 e.g.>
 docker run --rm -ti -p 45678:45678 -p 45679:45679 --name echo-server ubuntu:14.04 bash  # start, open ports 
@@ -93,16 +102,16 @@ pc1> nc localhost 45678
 pc1> nc localhost 45679
 curl localhost:45678  # test port number
 
-# Ports - connect containers p.2
+# Connect containers - ports, p.2
 docker run --rm -ti ubuntu:14.04 bash
 CNTR# nc 10.35.3.24 45678  # netcat listen ip, port
 CNTR# nc 10.35.3.24 45679
 
-# Direct - connect containers
+# Connect containers - direct
 docker run --rm -ti --name server ubuntu:14.04 bash  # first container
 docker run --rm -ti --link server --name client ubuntu:14.04 bash  # second container, link
 
-# Private Networks - connect containers
+# Connect containers - pvt network
 docker network CMD  # e.g. docker network connect|create|disconnect|inspect|prune
 docker network create faux-net
 docker run --rm -ti --net=faux-net --name server ubuntu:14.04 bash

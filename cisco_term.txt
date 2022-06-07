@@ -163,7 +163,7 @@ sw(config-if)# no shut
 sw(config-if)# duplex half|full|auto  # define int speed
 sw(config-if)# speed VALUE  # value in mbps
 
-## vlan mngmt - remote access config
+## Remote access
 sw(config)# ip default-gateway IP  # no mask, define default gateway for mngmt vlan
 sw(config)# int vlan VLAN  # define vlan as int vlan for mngmt
 sw(config-if)# ip address IP-NETWORK MASK  # assign ip address to mngmt vlan
@@ -177,7 +177,22 @@ sw(config-if)# ip address 192.168.1.1 255.255.255.0
 sw(config-if)# description management interface
 sw(config-if)# no shut
 
-## vlan trunk - interface config
+## vlan int config
+sw(config)# vlan VLAN 
+sw(config-vlan)# name VLAN-NAME
+
+sw(config)# int range RANGE
+sw(config-if-range)# switchport mode access  # type access only, no trunking
+sw(config-if-range)# switchport access vlan VLAN  # assign curr int to access vlan
+sw(config-if-range)# no shut
+e.g.>
+sw(config)# int range fa0/1-5  # ports must physicall exist! e.g. no fa0/0
+sw(config-if-range)# switchport mode access
+sw(config-if-range)# switchport access vlan 10
+sw(config-if-range)# description faculty usage
+sw(config-if-range)# no shut
+
+## vlan trunk
 sw(config-if)# switchport trunk native vlan VLAN  # define interface native vlan
 sw(config-if)# switchport trunk allowed vlan VLAN  # define prim vlan interface
 sw(config-if)# switchport trunk allowed vlan add VLAD-ID  # add vlan(s) to trunk
@@ -187,32 +202,9 @@ sw(config-if)# switchport trunk native vlan 1
 sw(config-if)# switchport trunk allowed vlan 10
 sw(config-if)# switchport trunk allowed vlan add 20, 30  
 
-## vlan trunk - mode, native interface
-sw(config)# interface range fa0/1-5
+sw(config)# interface range fa0/1-5  # config int range
 sw(config-if-range)# switchport mode trunk
 sw(config-if-range)# switchport trunk native vlan 99  # define vlan 99 native trunk
-sw(config-if-range)# no shut
-
-## vlan trunk - link type; DTP = dynamic trunking protocol
-sw(config-if)# switchport mode trunk|access
-sw(config-if)# switchport mode dynamic auto|desirable  # auto negoiate status
-sw(config-if)# switchport trunk encapsulation dot1q|isl|negoiate  # define encap
-sw(config-if)# switchport nonegoiate  # stop DTP advertise
-
-## vlan mgmnt - interface config, range, type
-sw(config)# vlan VLAN 
-sw(config-vlan)# name VLAN-NAME
-sw(config)# int range RANGE
-sw(config-if-range)# switchport mode access  # type access only, no trunking
-sw(config-if-range)# switchport access vlan VLAN  # assign curr int to access vlan
-sw(config-if-range)# no shut
-e.g.>
-sw(config)# vlan 10
-sw(config-vlan)# name faculty
-sw(config)# int range fa0/1-5  # ports must physicall exist! e.g. no fa0/0
-sw(config-if-range)# switchport mode access
-sw(config-if-range)# switchport access vlan 10
-sw(config-if-range)# description faculty usage
 sw(config-if-range)# no shut
 
 ## port-security
@@ -222,6 +214,12 @@ sw(config-if)# switchport port-security maximum NUM  # define mac addr max numbe
 sw(config-if)# switchport port-security mac-address MAC  # define port sec via mac addr
 sw(config-if)# switchport port-security mac-address sticky  # enable 'sticky' learning
 sw(config-if)# switchport port-security violation protect|restrict|shutdown  # define action for non-port-sec ports
+
+## DTP = dynamic trunking protocol
+sw(config-if)# switchport mode trunk|access
+sw(config-if)# switchport mode dynamic auto|desirable  # auto negoiate status
+sw(config-if)# switchport trunk encapsulation dot1q|isl|negoiate  # define encap
+sw(config-if)# switchport nonegoiate  # stop DTP advertise
 
 ## VTP - vlan trunking protocol
 sw(config)# vtp mode server|client|transparent  # define vtp mode

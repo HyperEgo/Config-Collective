@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# ubuntu version
 echo -e "\n################### Debian VERSION ###################"
 cat /etc/lsb-release
 cat /etc/os-release 

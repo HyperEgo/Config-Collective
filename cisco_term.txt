@@ -1,11 +1,11 @@
 # Cisco IOS - Router, Switch
 
 # keystrokes
-?  # print all commands for curr mode
-cmd?  # print cmd word complete options
-cmd ?  # print cmd parameter options
-cmd PARM?  # print cmd PARM word complete options
-cmd PARM1 ?  # print cmd PARM next parameter options
+?  # print CMD for curr mode
+CMD?  # print CMD complete options
+CMD ?  # print CMD complete options for args
+CMD ARG?  # print CMD complete options ARG---
+CMD ARG ?  # print CMD complete options ARG ---
 tab  # autocomplete
 ctrl+Break  # send interrupt
 ctrl+Shift+6, x  #  suspend curr telent|ssh
@@ -24,7 +24,7 @@ SPACE  # move 1 page down
 
 USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE  # CLI modes
 
-# Universal
+# common CMD
 end|ctrl+z  # move to ENABLE mode
 exit  #  move backward one user mode
 logout  # log out of terminal session
@@ -86,61 +86,27 @@ dev(config-line)# exec-timeout VALUE  # set terminal time-out value, minutes-sec
 dev(config-line)# exec-timeout 3  # enable time-out - 3 minutes
 dev(config-line)# service tcp-keepalives-in  # enable keepalives
 
-???????????????????????????????????????????????????????????????????
-???????????????????????????  Huh, wtf  ????????????????????????????
-???????????????????????????????????????????????????????????????????
-# hostname, banner config - ?
-hostname HOSTNAME  # assign a host name
-enable password PASS  # set unencrypted enable password
-enable secret PASS  # set encrypted enable password
-service password-encryption  # encode all passwords except enable secret password
-service timestamps  # enable device to generate time stamps on log messages (especially debug messages!)
-banner motd_#MESSAGE#  # set motd banner MESSAGE
-banner login_#MESSAGE#  # set login MESSAGE, print after motd message
-banner exec_#MESSAGE#  # set executive MESSAGE, print after login process
-
-# telnet|ssh - ?
-show sessions  # print telnet/ssh sessions w/ conn numbers
-show users  # print user log-in list
-telnet|ssh IP
-resume CON-NUM
-resume 1
-disconnect CON-NUM
-disconnect 1
-
-# Switch Interface Configuration mode - ?
-sw(config-if)# mdix auto  # media dependent interface with crossover; enable auto detect, can sense pin-out settings on both ends of link
-sw(config-if)# mac-address MAC  # assign static mac address to interface
-sw(config-if)# mls qos trust cos  # identifies voice traffic as priority
-sw(config-if-range)# switchport voice vlan VLAN  # assign ints to voice vlan
-
-# Router Global Configuration mode - ?
-config-register HEX-REG  # boot reg setting; 2100 (rom monitor), 2101 (rom memory/flash), 2102 (nvram), 2142(password recovery/reset)
-???????????????????????????????????????????????????????????????????
-???????????????????????????  Huh, wtf  ????????????????????????????
-???????????????????????????????????????????????????????????????????
-
 # Switch
-show dhcp lease  # print dhcp ip address for mngmt vlan
-show etherchannel CHAN summary  # print etherchannel stats for channel number
-
-show int status|description  # print int list metrics, protocol, line status
-show int INT  # print INT detailed info
-show int INT switchport  # print interface per vlan: tags, allowed, native
-show int statistics  # print int stats, counters
-show int trunk  # print trunking interfaces
-show int vlan VLAN  # print vlan metric via interfaces
-show vlan  # print vlan, int summary
-show vlan brief  # print vlan info, no mtu, RingNo, BridgeNo, mode, etc.
-show vlan id VLAN  # print VLAN metrics
-show vlan name VLAN-NAME  # print VLAN-NAME metric
-show vtp status|counters|password  # print VTP domain status, counters, password 
-
 show mac address-table |dynamic  # print table, dynamice
 show mac address-table dynamic address MAC  # print mac addr dynamic metrics
 show mac address-table dynamic interface INT  # print table interfaces, dynamic
 show mac address-table count|aging-time  # print counter, aging
 clear mac address-table dynamic |vlan VLAN|int INT|address MAC # empty category 
+
+show int status|description  # print int list metrics, protocol, line status
+show int statistics  # print int stats, counters
+
+show int INT  # print INT detailed info
+show int INT switchport  # print modes: admin, operate; trunk encap, native vlan, voice
+show int trunk  # print trunk mode, vlan allowed: active, span tree fwd state - no prune
+
+show int vlan VLAN
+show vlan  # print vlan, int summary
+show vlan brief  # print vlan info, no mtu, RingNo, BridgeNo, mode, etc.
+show vlan id VLAN  # print VLAN metrics
+show vlan name VLAN-NAME  # print VLAN-NAME metric
+
+show vtp status|counters|password  # print VTP domain status, counters, password 
 
 show port-security  # print int port sec enabled
 show port-security int INT  # print int port sec status
@@ -153,7 +119,12 @@ show spanning-tree vlan VLAN  # print stp vlan stats
 |no debug spanning-tree events  # enable|disable stp debug
 clear spanning-tree detected-protocols  # restart stp proto migration process
 
-## remote access config
+show dhcp lease  # print dhcp ip address for mngmt vlan
+show etherchannel CHAN summary  # print etherchannel stats for channel number
+
+do sh run int INT  # print show-run config segment
+
+## Remote access - config
 sw(config)# ip default-gateway IP  # define default gateway
 sw(config)# |no ip domain-lookup  # enable|disable dns lookup
 sw(config)# ip domain-name NAME  # declare domain name
@@ -163,7 +134,7 @@ sw(config-if)# no shut
 sw(config-if)# duplex half|full|auto  # define int speed
 sw(config-if)# speed VALUE  # value in mbps
 
-## Remote access
+## Remote access - go
 sw(config)# ip default-gateway IP  # no mask, define default gateway for mngmt vlan
 sw(config)# int vlan VLAN  # define vlan as int vlan for mngmt
 sw(config-if)# ip address IP-NETWORK MASK  # assign ip address to mngmt vlan
@@ -177,35 +148,48 @@ sw(config-if)# ip address 192.168.1.1 255.255.255.0
 sw(config-if)# description management interface
 sw(config-if)# no shut
 
-## vlan int config
+## vlan config
 sw(config)# vlan VLAN 
-sw(config-vlan)# name VLAN-NAME
-
+sw(config-vlan)# name VLAN-NAME  # optional
 sw(config)# int range RANGE
-sw(config-if-range)# switchport mode access  # type access only, no trunking
-sw(config-if-range)# switchport access vlan VLAN  # assign curr int to access vlan
+sw(config-if-range)# switchport access vlan VLAN  # assign int to vlan
+sw(config-if-range)# switchport mode access  # specify port type (e.g. access|trunk)
+sw(config-if-range)# description STRING  # optional
 sw(config-if-range)# no shut
 e.g.>
-sw(config)# int range fa0/1-5  # ports must physicall exist! e.g. no fa0/0
-sw(config-if-range)# switchport mode access
+sw(config)# int range fa0/1-5  # ports must exist e.g. no fa0/0!
 sw(config-if-range)# switchport access vlan 10
-sw(config-if-range)# description faculty usage
+sw(config-if-range)# switchport mode access
 sw(config-if-range)# no shut
 
-## vlan trunk
-sw(config-if)# switchport trunk native vlan VLAN  # define interface native vlan
-sw(config-if)# switchport trunk allowed vlan VLAN  # define prim vlan interface
-sw(config-if)# switchport trunk allowed vlan add VLAD-ID  # add vlan(s) to trunk
+## vlan trunk - native vlan
+sw(config-if)# switchport mode trunk
+sw(config-if)# switchport trunk native vlan 100
+
+## vlan trunk - allow vlan
+sw(config-if)# switchport trunk allowed vlan VLAN
+sw(config-if)# switchport trunk allowed vlan add VLAN
 sw(config-if)# switchport trunk allowed vlan add|remove|all|except  # select funct
 e.g.>
-sw(config-if)# switchport trunk native vlan 1
 sw(config-if)# switchport trunk allowed vlan 10
 sw(config-if)# switchport trunk allowed vlan add 20, 30  
 
-sw(config)# interface range fa0/1-5  # config int range
-sw(config-if-range)# switchport mode trunk
-sw(config-if-range)# switchport trunk native vlan 99  # define vlan 99 native trunk
-sw(config-if-range)# no shut
+## VTP - vlan trunking protocol
+sw(config)# vtp mode transparent|off  # disable vtp
+
+## DTP - dynamic trunking protocol (ieee 802.1q, isl)
+sw(config-if)# switchport trunk encapsulation dot1q|isl|negoiate
+sw(config-if)# switchport mode access  # disable DTP, access link
+sw(config-if)# switchport nonegotiate  # disable DTP, trunk link
+sw(config-if)# switchport mode dynamic [auto|desirable]  # auto=passive, desirable=trunk
+
+## Voice vlan 
+sw(config)# vlan 10
+sw(config-vlan)# vlan 11  # create data, voice vlan
+sw(config-vlan)# int range fa0/1-4
+sw(config-if)# switchport mode access
+sw(config-if)# switchport access vlan 10
+sw(config-if)# switchport voice vlan 11
 
 ## port-security
 sw(config-if)# switchport mode access  # define int type 
@@ -214,19 +198,6 @@ sw(config-if)# switchport port-security maximum NUM  # define mac addr max numbe
 sw(config-if)# switchport port-security mac-address MAC  # define port sec via mac addr
 sw(config-if)# switchport port-security mac-address sticky  # enable 'sticky' learning
 sw(config-if)# switchport port-security violation protect|restrict|shutdown  # define action for non-port-sec ports
-
-## DTP = dynamic trunking protocol
-sw(config-if)# switchport mode trunk|access
-sw(config-if)# switchport mode dynamic auto|desirable  # auto negoiate status
-sw(config-if)# switchport trunk encapsulation dot1q|isl|negoiate  # define encap
-sw(config-if)# switchport nonegoiate  # stop DTP advertise
-
-## VTP - vlan trunking protocol
-sw(config)# vtp mode server|client|transparent  # define vtp mode
-sw(config)# vtp domain DOMAIN  # assign vtp domain name
-sw(config)# vtp password PASS  # configure vtp domain password
-sw(config)# vtp version VER  # assign vtp version number
-sw(config)# vtp pruning  # enable vtp pruning
 
 ## STP - spanning tree protocol, auto enable
 sw(config)# spanning-tree mode MODE  # define stp mode

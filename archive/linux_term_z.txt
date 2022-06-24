@@ -1,15 +1,15 @@
 # Linux terminal - archive 
 
 # SVN
-A  # Added
-C  # Conflicted
-D  # Deleted
-I  # Ignored
-M  # Modified
-R  # Replaced
-X  # Unrevisioned directory created by externals definition
-?  # Not tracked by version control
-!  # Missing (removed by non-SVN command)
+ A Added
+ C Conflicted
+ D Deleted
+ I Ignored
+ M Modified
+ R Replaced
+ X Unrevisioned directory created by externals definition
+ ? Not tracked by version control
+ ! Missing (removed by non-SVN command)
 
 svn ls /project/directory/branches -v  # list branches
 svn log -q -l5 URL  # print logs [q]uiet, [l]ine numbers

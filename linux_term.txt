@@ -123,7 +123,7 @@ chmod +t DIR  # set sticky bit, disable deletion by non-owners
 CMD /bin/kill  # send CMD to kill container, testing
 CMD > /dev/null 2>&1  # send CMD to /dev/null, stdout, stderr 
 cp -air /src/dir/* /dest/dir  # copy source CONTENTS to dest
-cp -air /src/dir /dest/dir  # copy source DIR to dest
+cp -R /src/dir /dest/dir  # copy source DIR to dest
 crontab -lu USER  # print [u]ser cron job [l]ist
 curl -f URL  # download URL [f]ail silently
 date --date "+60 days"  # curr time + 60 days

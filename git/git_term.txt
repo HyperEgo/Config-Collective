@@ -9,6 +9,21 @@ tracked files = repo
 /etc/gitconfig  # global config, enterprise
 ~/.gitconfig  # local config
 
+--diff-filter=[ACDMRTUXB*]
+ A Added
+ C Copied
+ D Deleted
+ M Modified
+ R Renamed
+ T have their type (mode) changed
+ U Unmerged
+ X Unknown
+ B have had their pairing Broken
+ * All-or-none
+
+git diff --name-only --diff-filter=U --relative  # print file conflicts, pre-merge
+git diff |--staged|--color-words  # compare to repo: working, staged, use color words
+
 git config --global CMD  # config global git parms e.g. ~/.gitconfig
 git config --global --unset CMD  # remove cmd
 git config --list  # print global creds
@@ -21,13 +36,12 @@ git log BRCH  # print BRCH logs
 git branch BRCH  # create branch, stay on current
 git branch -m BRCH NEW_BRCH  # rena[m]e branch
 git branch |a|d|r|--merged  # print curr branch, [a]ll, [d]el, [r]emote
+git branch -d|D BRANCH  # delete local branch
 
 git checkout BRCH  # switch to branch
 git checkout -b BRCH  # create [b]ranch, check it out
-git checkout -b SUB_BRCH BRCH  # checkout subordinate branch from "main" branch
-git checkout HEAD -- FILE  # checkout FILE from HEAD (e.g. master) to working dir
-
-git diff |--staged|--color-words  # compare to repo: working, staged, use color words
+git checkout -b SUBBRCH BRCH  # checkout subordinate branch from "main" branch
+git checkout HEAD -- FILE  # checkout FILE from HEAD, overwrite working dir
 
 git add FILE  # add file
 git rm FILE  # remove file from staged to working dir (e.g. after commit, before push)
@@ -41,7 +55,7 @@ git commit -e  # commit files to curr branch, open [e]ditor
 git commit -am MSG  # commit all modified files, no new or deleted files
 git commit --amend -m MSG  # amend to most recent commit
 
-git merge BRCH  # merge branch to current (**dangerous, verify curr branch BEFORE executing)
+git merge BRCH  # merge branch to curr (**danger, verify curr branch BEFORE executing)
 git merge --no-ff BRCH  # execute merge, no fast forward
 git merge --ff-only BRCH  # execute merge, only fast forward merge, abort otherwise
 git merge --abort  # abort merge
@@ -52,6 +66,7 @@ git remote rm ALIAS  # remove remote ALIAS
 git remote add REMOTE URL # add REMOTE w/ URL
 e.g.> git remote add origin URL
 
+git push -d REMOTE BRANCH  # delete remote branch on server
 git push ALIAS --delete REMOTE  # keep local alias, delete remote
 git push -u REMOTE BRCH  # push BRCH to REMOTE, [u]pstream tracking
 e.g.> git push -u origin master

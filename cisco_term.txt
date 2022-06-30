@@ -93,22 +93,22 @@ show mac address-table dynamic interface INT  # print table interfaces, dynamic
 show mac address-table count|aging-time  # print counter, aging
 clear mac address-table dynamic |vlan VLAN|int INT|address MAC # empty category 
 
-show int status|description  # print int list metrics, protocol, line status
+show int status  # print int, name, status, vlan, duplex, speed, type
+show int description  # print int, status, protocol, description
 show int statistics  # print int stats, counters
 
-show int INT  # print INT detailed info
 show int INT switchport  # print modes: admin, operate; trunk encap, native vlan, voice
-show int trunk  # print trunk mode, vlan allowed: active, span tree fwd state - no prune
+show int trunk  # print port, mode, encap, status
+show int INT trunk
 
-show int vlan VLAN
-show vlan  # print vlan, int summary
-show vlan brief  # print vlan info, no mtu, RingNo, BridgeNo, mode, etc.
-show vlan id VLAN  # print VLAN metrics
-show vlan name VLAN-NAME  # print VLAN-NAME metric
+show int vlan VLAN  # print input queue, strategy, packets, broadcast, multicast, runts, buffer
+show vlan brief  # print vlan id, name, status, ports 
 
-show vtp status|counters|password  # print VTP domain status, counters, password 
+show vtp status  # print version, config revision, max vlan supported, number of existing vlan, domain name
+show vtp counters 
+show vtp password
 
-show port-security  # print int port sec enabled
+show port-security  # print int port security enabled
 show port-security int INT  # print int port sec status
 
 show spanning-tree  # print span tree proto, path cost, int roles, states
@@ -122,7 +122,7 @@ clear spanning-tree detected-protocols  # restart stp proto migration process
 show dhcp lease  # print dhcp ip address for mngmt vlan
 show etherchannel CHAN summary  # print etherchannel stats for channel number
 
-do sh run int INT  # print show-run config segment
+do sh run int INT  # print run-config segment
 
 ## Remote access - config
 sw(config)# ip default-gateway IP  # define default gateway
@@ -139,7 +139,7 @@ sw(config)# ip default-gateway IP  # no mask, define default gateway for mngmt v
 sw(config)# int vlan VLAN  # define vlan as int vlan for mngmt
 sw(config-if)# ip address IP-NETWORK MASK  # assign ip address to mngmt vlan
 sw(config-if)# ip address dhcp  # assign dynamic ip add
-sw(config-if)# description DESCR
+sw(config-if)# description STRING
 sw(config-if)# no shut
 e.g.>
 sw(config)# vlan 99

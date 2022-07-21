@@ -151,10 +151,12 @@ echo -n "value" | openssl md5 -hmac "key"  # gen md5 hash from data input
 ethtool DEV  # print net driver and hd setting for DEV
 env  # print user environment variables
 fdisk -l DEV  # edit, [l]ist part table, e.g. fdisk -l /dev/random
-for file in *; do mv "$file" `echo $file | tr ' ' '_'` ; done  # replace filenames SPACE w/ UNDER-SCORE
+for file in *; do mv $file `echo $file | tr ' ' '_'` ; done  # for filename(s), replace SPACE for UNDER-SCORE
+for file in *; do echo “this is a test file” >> $file; done  # append string to file
 find . -type d -iname "KEY"  # find [d]irectory 'KEY'
 find . -type f -iname "*.log"  # find file by extension 
 find . -type f -iname "*.bin" -exec mv -t ./dumpbin {} \;  # move files to dir
+find . -type f -iname "*.txt" -exec rsync {} DIR \;  # find file(s) for pattern, copy|rsync to DIR
 find . -iname ".svn" -exec rm -rvf {} \;  # delete .svn directories and file recursively
 find . -inum INODE -exec rm -i {} \;  # delete file by INODE number
 find /var/log -type f -size +100k  # find [f]iles in /var/log greater than 100 KB

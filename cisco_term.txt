@@ -67,7 +67,7 @@ dev(config-line)# password hope
 dev(config-line)# login
 
 # password + username config - advanced e.g. ssh
-dev(config)# username USER secret|password PASS
+dev(config)# username USER secret|password KEY
 dev(config)# line vty 0 15
 dev(config-line)# login local  # enable username, password auth
 
@@ -80,13 +80,13 @@ dev(config)# ip ssh time-out SECONDS  # set ssh time value
 dev(config)# ip ssh authentication-retries VALUE
 
 # line config
-dev(config)#line console 0 | vty 0 15 | aux 0  # console, virtual term, auxiliary
+dev(config)#line console 0|vty 0 15|aux 0  # console, virtual term, auxiliary
 dev(config-line)# logging synchronous  
 dev(config-line)# exec-timeout VALUE  # set terminal time-out value, minutes-seconds
-dev(config-line)# exec-timeout 3  # enable time-out - 3 minutes
 dev(config-line)# service tcp-keepalives-in  # enable keepalives
 
-# Switch
+
+# SWITCH
 show mac address-table |dynamic  # print table, dynamice
 show mac address-table dynamic address MAC  # print mac addr dynamic metrics
 show mac address-table dynamic interface INT  # print table interfaces, dynamic
@@ -115,40 +115,40 @@ show spanning-tree  # print span tree proto, path cost, int roles, states
 show spanning-tree root  # print root  bridge id ea vlan
 show spanning-tree active  # print stp stats, active int only
 show spanning-tree detail  # print stp path cost
-show spanning-tree vlan VLAN  # print stp vlan stats
+show spanning-tree vlan VLAN  # print [r]stp protocol, root|bridge id priority, cost, port, hello time
 |no debug spanning-tree events  # enable|disable stp debug
 clear spanning-tree detected-protocols  # restart stp proto migration process
+spanning-tree mode  # print modes
+spanning-tree vlan 1 priority ?  # print priority values
 
 show dhcp lease  # print dhcp ip address for mngmt vlan
-show etherchannel CHAN summary  # print etherchannel stats for channel number
+show etherchannel {CH} summary  # print name, port state, protocol, port sec, ports inclusive
+show etherchannel load-balance  # print balance algorithm
 
 do sh run int INT  # print run-config segment
 
-## Remote access - config
+## Remote access - config 
 sw(config)# ip default-gateway IP  # define default gateway
 sw(config)# |no ip domain-lookup  # enable|disable dns lookup
 sw(config)# ip domain-name NAME  # declare domain name
-sw(config)# interface vlan 1  # management vlan
+sw(config)# int vlan 1  # config default vlan
 sw(config-if)# ip address IP MASK
-sw(config-if)# no shut
 sw(config-if)# duplex half|full|auto  # define int speed
 sw(config-if)# speed VALUE  # value in mbps
+sw(config-if)# no shut
 
-## Remote access - go
-sw(config)# ip default-gateway IP  # no mask, define default gateway for mngmt vlan
-sw(config)# int vlan VLAN  # define vlan as int vlan for mngmt
+## Remote access - alternate
+sw(config)# int vlan VLAN
 sw(config-if)# ip address IP-NETWORK MASK  # assign ip address to mngmt vlan
 sw(config-if)# ip address dhcp  # assign dynamic ip add
 sw(config-if)# description STRING
 sw(config-if)# no shut
 e.g.>
-sw(config)# vlan 99
 sw(config)# int vlan 99
 sw(config-if)# ip address 192.168.1.1 255.255.255.0
 sw(config-if)# description management interface
-sw(config-if)# no shut
 
-## vlan config
+## VLAN - config
 sw(config)# vlan VLAN 
 sw(config-vlan)# name VLAN-NAME  # optional
 sw(config)# int range RANGE
@@ -160,19 +160,26 @@ e.g.>
 sw(config)# int range fa0/1-5  # ports must exist e.g. no fa0/0!
 sw(config-if-range)# switchport access vlan 10
 sw(config-if-range)# switchport mode access
-sw(config-if-range)# no shut
 
-## vlan trunk - native vlan
+## VLAN - trunk native vlan
 sw(config-if)# switchport mode trunk
 sw(config-if)# switchport trunk native vlan 100
 
-## vlan trunk - allow vlan
+## VLAN - trunk allowed vlan
 sw(config-if)# switchport trunk allowed vlan VLAN
 sw(config-if)# switchport trunk allowed vlan add VLAN
 sw(config-if)# switchport trunk allowed vlan add|remove|all|except  # select funct
 e.g.>
 sw(config-if)# switchport trunk allowed vlan 10
 sw(config-if)# switchport trunk allowed vlan add 20, 30  
+
+## VLAN - voice
+sw(config)# vlan 10
+sw(config-vlan)# vlan 11  # create data, voice vlan
+sw(config-vlan)# int range fa0/1-4
+sw(config-if)# switchport mode access
+sw(config-if)# switchport access vlan 10
+sw(config-if)# switchport voice vlan 11
 
 ## VTP - vlan trunking protocol
 sw(config)# vtp mode transparent|off  # disable vtp
@@ -181,15 +188,29 @@ sw(config)# vtp mode transparent|off  # disable vtp
 sw(config-if)# switchport trunk encapsulation dot1q|isl|negoiate
 sw(config-if)# switchport mode access  # disable DTP, access link
 sw(config-if)# switchport nonegotiate  # disable DTP, trunk link
-sw(config-if)# switchport mode dynamic [auto|desirable]  # auto=passive, desirable=trunk
+sw(config-if)# switchport mode dynamic auto|desirable  # auto=wait passive, desirable=start trunk
 
-## Voice vlan 
-sw(config)# vlan 10
-sw(config-vlan)# vlan 11  # create data, voice vlan
-sw(config-vlan)# int range fa0/1-4
-sw(config-if)# switchport mode access
-sw(config-if)# switchport access vlan 10
-sw(config-if)# switchport voice vlan 11
+## [R]STP - spanning tree protocol
+sw(config)# spanning-tree mode ?  # print [R]STP modes: mst, pvst, rapid-pvst
+sw(config)# spanning-tree vlan VLAN root primary|secondary  # assign root switch role
+sw(config)# spanning-tree vlan VLAN root primary diameter VALUE  # assign net diameter for root bridge
+sw(config)# spanning-tree vlan VLAN priority VALUE  # assign priority value
+sw(config-if)# spanning-tree link type LINK  # define inteface link type
+sw(config-if)# spanning-tree vlan VLAN cost COST  # define inteface vlan port cost
+sw(config-if)# spanning-tree port-priority VALUE  # configure port priority value
+e.g.>
+sw(config)# spanning-tree vlan 1 root primary diameter 5  # set switch network diameter to 5
+sw(config-if)# spanning-tree link type point-to-point  # port role point-to-point
+sw(config-if)# spanning-tree vlan 1 cost 2
+sw(config-if)# spanning-tree port-priority 105
+sw(config-if)# spanning-tree portfast  # configure portfast, access ports only
+sw(config-if)# spanning-tree bpduguard enable  # enable bpdu guar
+
+## etherchannel - both end points must match
+sw(config-if)# channel-group GRP mode on|auto|desirable  # turn [on], auto, desirable
+sw(config-if)# channel-group 1 mode on
+sw# test etherchannel load-balance interface pol mac MAC1 MAC2  # test load-balance behavior
+sw(config)# port-channel load-balance ?  # print load-balance options
 
 ## port-security
 sw(config-if)# switchport mode access  # define int type 
@@ -199,35 +220,8 @@ sw(config-if)# switchport port-security mac-address MAC  # define port sec via m
 sw(config-if)# switchport port-security mac-address sticky  # enable 'sticky' learning
 sw(config-if)# switchport port-security violation protect|restrict|shutdown  # define action for non-port-sec ports
 
-## STP - spanning tree protocol, auto enable
-sw(config)# spanning-tree mode MODE  # define stp mode
-sw(config)# spanning-tree mode rapid-pvst  # enable rstp, pvrst
-sw(config)# spanning-tree vlan VLAN root primary|secondary  # assign prim, second root bridge contender
-sw(config)# spanning-tree vlan VLAN root primary diameter VALUE  # assign net diameter for root bridge
-e.g.>
-sw(config)# spanning-tree vlan 1 root primary diameter 5  # set switch network diameter to 5
-sw(config)# spanning-tree vlan VLAN priority VALUE  # assign priority value
-sw(config-if)# spanning-tree link type LINK  # define inteface link type
-e.g.>
-sw(config-if)# spanning-tree link type point-to-point  # port role point-to-point
-sw(config-if)# spanning-tree vlan VLAN cost COST  # define inteface vlan port cost
-e.g.>
-sw(config-if)# spanning-tree vlan 1 cost 2
-sw(config-if)# spanning-tree port-priority VALUE  # configure port priority value
-e.g.>
-sw(config-if)# spanning-tree port-priority 105
-sw(config-if)# spanning-tree portfast  # configure portfast, access ports (end user nodes)
-sw(config-if)# spanning-tree bpduguard enable  # enable bpdu guar
 
-## etherchannel config - STP auto enable
-sw(config-if)# channel-group GROUP mode on|auto|desirable  # etherChannel int/ports config
-e.g.>
-sw1(config)# int range fa0/1-15
-sw1(config-if-range)# channel-group 1 mode desirable
-sw2(config)# int range fa0/9
-sw2(config-if-range)# channel-group 1 mode auto
-
-# Router
+# ROUTER
 boot system  # define boot sequence (use cmd in succession)
 debug ip routing  # start ip routing proto debug
 debug ip PROTOCOL  # debug routing protocol
@@ -332,7 +326,7 @@ undebug all  # disable debug
 
 ## SDM - Security Device Manager
 rtr(config)# ip http server|secure server|authentication local
-rtr(config)# username USER privilege NUM secret PASS
+rtr(config)# username USER privilege NUM secret KEY
 rtr(config)# line vty 0 15
 rtr(config-line)# privilege level NUM
 rtr(config-line)# login local
@@ -373,7 +367,7 @@ rtr(config)# interface lo0  # loopback 0 int
 rtr(config-if)# ip address 10.0.0.1 255.0.0.0  # use full 32-bit mask, loopback int
 
 ## ppp - Point-to-Point protocol
-rtr(config)# username NAME password PASS  # define ppp metrics, pap|chap auth
+rtr(config)# username NAME password KEY  # define ppp metrics, pap|chap auth
 rtr(config-if)# encapsulation ppp  # define ppp encap
 rtr(config-if)# ppp authentication chap|pap  # enable chap|pap
 rtr(config-if)# compress predictor|static  # enable ppp compress proto
@@ -446,8 +440,8 @@ rtr(config-if)# ip authentication mode eigrp 1 md5
 rtr(config-if)# ip authentication key-chain eigrp 1 EIGRP_KEY
 
 ## OSPF auth
-rtr(config-if)# ip ospf authentication-key PASS  # set ospf router auth password
-rtr(config-if)# ip ospf message-digest key KEY md5 PASS  # encrypt router pd auth
+rtr(config-if)# ip ospf authentication-key KEY  # set ospf router auth password
+rtr(config-if)# ip ospf message-digest key KEY md5 KEY  # encrypt router pd auth
 rtr(config-router)# area AREA authentication  # enable area wide auth
 e.g.>
 rtr(config-if)# ip ospf message-digest-key 1 md5 cisco

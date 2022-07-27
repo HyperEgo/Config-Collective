@@ -1,5 +1,7 @@
 # Cisco IOS - Router, Switch
 
+USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE  # CLI modes
+
 # keystrokes
 ?  # print CMD for curr mode
 CMD?  # print CMD complete options
@@ -22,9 +24,7 @@ esc+b  # move backward one word
 esc+f  # move foward one word
 SPACE  # move 1 page down
 
-USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE  # CLI modes
-
-# common CMD
+# Device CMD
 end|ctrl+z  # move to ENABLE mode
 exit  #  move backward one user mode
 logout  # log out of terminal session
@@ -85,7 +85,6 @@ dev(config-line)# logging synchronous
 dev(config-line)# exec-timeout VALUE  # set terminal time-out value, minutes-seconds
 dev(config-line)# service tcp-keepalives-in  # enable keepalives
 
-
 # SWITCH
 show mac address-table |dynamic  # print table, dynamice
 show mac address-table dynamic address MAC  # print mac addr dynamic metrics
@@ -127,7 +126,7 @@ show etherchannel load-balance  # print balance algorithm
 
 do sh run int INT  # print run-config segment
 
-## Remote access - config 
+## VLAN - default, remote access 
 sw(config)# ip default-gateway IP  # define default gateway
 sw(config)# |no ip domain-lookup  # enable|disable dns lookup
 sw(config)# ip domain-name NAME  # declare domain name
@@ -137,7 +136,7 @@ sw(config-if)# duplex half|full|auto  # define int speed
 sw(config-if)# speed VALUE  # value in mbps
 sw(config-if)# no shut
 
-## Remote access - alternate
+## VLAN - default, remote access, alternate
 sw(config)# int vlan VLAN
 sw(config-if)# ip address IP-NETWORK MASK  # assign ip address to mngmt vlan
 sw(config-if)# ip address dhcp  # assign dynamic ip add
@@ -148,9 +147,9 @@ sw(config)# int vlan 99
 sw(config-if)# ip address 192.168.1.1 255.255.255.0
 sw(config-if)# description management interface
 
-## VLAN - config
+## VLAN - basic config
 sw(config)# vlan VLAN 
-sw(config-vlan)# name VLAN-NAME  # optional
+sw(config-vlan)# name NAME  # optional
 sw(config)# int range RANGE
 sw(config-if-range)# switchport access vlan VLAN  # assign int to vlan
 sw(config-if-range)# switchport mode access  # specify port type (e.g. access|trunk)
@@ -203,14 +202,14 @@ sw(config)# spanning-tree vlan 1 root primary diameter 5  # set switch network d
 sw(config-if)# spanning-tree link type point-to-point  # port role point-to-point
 sw(config-if)# spanning-tree vlan 1 cost 2
 sw(config-if)# spanning-tree port-priority 105
-sw(config-if)# spanning-tree portfast  # configure portfast, access ports only
-sw(config-if)# spanning-tree bpduguard enable  # enable bpdu guar
+sw(config-if)# spanning-tree portfast  # enable portfast, access ports only
+sw(config-if)# spanning-tree bpduguard enable  # enable bpdu guard
 
-## etherchannel - both end points must match
+## etherchannel - match end points
+sw# test etherchannel load-balance interface pol mac MAC1 MAC2  # test load-balance behavior
+sw(config)# port-channel load-balance ?  # print load-balance config options
 sw(config-if)# channel-group GRP mode on|auto|desirable  # turn [on], auto, desirable
 sw(config-if)# channel-group 1 mode on
-sw# test etherchannel load-balance interface pol mac MAC1 MAC2  # test load-balance behavior
-sw(config)# port-channel load-balance ?  # print load-balance options
 
 ## port-security
 sw(config-if)# switchport mode access  # define int type 
@@ -219,7 +218,6 @@ sw(config-if)# switchport port-security maximum NUM  # define mac addr max numbe
 sw(config-if)# switchport port-security mac-address MAC  # define port sec via mac addr
 sw(config-if)# switchport port-security mac-address sticky  # enable 'sticky' learning
 sw(config-if)# switchport port-security violation protect|restrict|shutdown  # define action for non-port-sec ports
-
 
 # ROUTER
 boot system  # define boot sequence (use cmd in succession)

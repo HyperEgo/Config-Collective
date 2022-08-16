@@ -65,24 +65,6 @@
 export HISTTIMEFORMAT="%Y-%m-%d %T "  # time-date format for cmd history
 export HISTCONTROL=ignoreboth  # ignore first space on writes to cmd history
 
-# Ports
-20 tcp|udp ftp  # file transfer protocol, data
-21 tcp|udp ftp  # file transfer protocol, control
-22 tcp ssh  # secure shell
-23 tcp|udp telnet  # remote unencrypted text-based comms
-25 tcp smtp  # simple mail transfer protocol
-53 tcp|udp dns  # domain name server
-69 udp tftp  # trivial file transfer protocol
-123 udp ntp  # network time protocol
-161 upd snmp  # simple network mngmt protocol
-389 tcp|udp ldap  # light weight directory access protocol
-631 tcp cups  # common Unix printing system
-636 tcp ldaps  # light weight directory access protocol secure
-1194 tcp|udp openvpn  # virtual private network server
-3128 tcp squid  # proxy server
-3306 tcp sql  # MS proprietary relational db manager
-5900 tcp|udp vnc  # virtual network computing
-
 # keystrokes
 CMD +SPACE +TABx2  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
 F11  # terminal full screen toggle
@@ -170,7 +152,7 @@ setfacl -R -m g:GRP:r DIR  # grant read-only perms to GRP for DIR
 getsebool -a  # SELinux print boolean list
 gpg --gen-key|send-key  # generate key pair, send to server
 grep --exclude-dir=.svn 'DEPRECATED_'  # search keyword, exclude dir
-grep -niR '*.sh' DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive
+grep -niR '.sh' DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive, no asterisk!
 grep '^(str)' .  # search curr dir, begin str
 grep -v '^(str)' .  # search curr dir, exclude matches
 grep -w 'test' .  # search curr dir, match whole word only
@@ -191,6 +173,9 @@ ip route  # print local route table entry
 iptable -nL  # print ip table rules [L]ist, [n]umeric output addr port
 iptables-save  # save config file, IPv4/6 packet filtering, NAT admin tool
 iwconfig  # print wireless devices
+jar -tf JAR  # print file list
+jar -xf JAR FILE  # extract FILE from jar
+jar -tf | grep FILE
 jobs  # print curr jobs
 journalctl --disk-usage  # print journal filesystem usage
 journalctl -u SRVC  # print journal entries for SRVC
@@ -566,3 +551,22 @@ int main(void){
 }
 cc foo.c -o foo
 ./foo
+
+
+# Ports
+20 tcp|udp ftp  # file transfer protocol, data
+21 tcp|udp ftp  # file transfer protocol, control
+22 tcp ssh  # secure shell
+23 tcp|udp telnet  # remote unencrypted text-based comms
+25 tcp smtp  # simple mail transfer protocol
+53 tcp|udp dns  # domain name server
+69 udp tftp  # trivial file transfer protocol
+123 udp ntp  # network time protocol
+161 upd snmp  # simple network mngmt protocol
+389 tcp|udp ldap  # light weight directory access protocol
+631 tcp cups  # common Unix printing system
+636 tcp ldaps  # light weight directory access protocol secure
+1194 tcp|udp openvpn  # virtual private network server
+3128 tcp squid  # proxy server
+3306 tcp sql  # MS proprietary relational db manager
+5900 tcp|udp vnc  # virtual network computing

@@ -9,7 +9,6 @@ tracked files = repo
 /etc/gitconfig  # global config, enterprise
 ~/.gitconfig  # local config
 
---diff-filter=[ACDMRTUXB*]
  A Added
  C Copied
  D Deleted
@@ -20,6 +19,11 @@ tracked files = repo
  X Unknown
  B have had their pairing Broken
  * All-or-none
+--diff-filter=[ACDMRTUXB*]
+
+git show --pretty --name-only SHA  # print commit files
+git show BCH|SHA  # print commit details
+git show REV:path/to/FILE  # print FILE from REV
 
 git diff --name-only --diff-filter=U --relative  # print file conflicts, pre-merge
 git diff |--staged|--color-words  # compare to repo: working, staged, use color words
@@ -31,33 +35,30 @@ git config --get remote.origin.url  # display upstream url for remote named 'ori
 git config http.sslVerify "false"
 git config credential.helper cache
 
-git log BRCH  # print BRCH logs
+git log BCH  # print BCH logs
 
-git branch BRCH  # create branch, stay on current
-git branch -m BRCH NEW_BRCH  # rena[m]e branch
+git branch BCH  # create branch, stay on current
+git branch -m BCH NEW_BCH  # rena[m]e branch
 git branch |a|d|r|--merged  # print curr branch, [a]ll, [d]el, [r]emote
-git branch -d|D BRANCH  # delete local branch
+git branch -d|D BCH  # delete local branch
 
-git checkout BRCH  # switch to branch
-git checkout -b BRCH  # create [b]ranch, check it out
-git checkout -b SUBBRCH BRCH  # checkout subordinate branch from "main" branch
+git checkout BCH  # switch to branch
+git checkout -b BCH  # create [b]ranch, check it out
+git checkout -b SUB BCH  # checkout subordinate branch from "main" branch
 git checkout HEAD -- FILE  # checkout FILE from HEAD, overwrite working dir
 
 git add FILE  # add file
 git rm FILE  # remove file from staged to working dir (e.g. after commit, before push)
 git clean -f  # remove [f]iles from working dir
 
-git show BRCH|SHA  # print commit details
-git show REV:path/to/FILE  # print FILE from REV
-
 git commit -m MSG  # commit files to curr branch w/ [m]essage
 git commit -e  # commit files to curr branch, open [e]ditor
 git commit -am MSG  # commit all modified files, no new or deleted files
 git commit --amend -m MSG  # amend to most recent commit
 
-git merge BRCH  # merge branch to curr (**danger, verify curr branch BEFORE executing)
-git merge --no-ff BRCH  # execute merge, no fast forward
-git merge --ff-only BRCH  # execute merge, only fast forward merge, abort otherwise
+git merge BCH  # merge branch to curr (**danger, verify curr branch BEFORE executing)
+git merge --no-ff BCH  # execute merge, no fast forward
+git merge --ff-only BCH  # execute merge, only fast forward merge, abort otherwise
 git merge --abort  # abort merge
 
 git remote -v  # print remotes, curr branch
@@ -66,15 +67,15 @@ git remote rm ALIAS  # remove remote ALIAS
 git remote add REMOTE URL # add REMOTE w/ URL
 e.g.> git remote add origin URL
 
-git push -d REMOTE BRANCH  # delete remote branch on server
+git push -d RMT BCH  # delete remote branch on server
 git push ALIAS --delete REMOTE  # keep local alias, delete remote
-git push -u REMOTE BRCH  # push BRCH to REMOTE, [u]pstream tracking
+git push -u RMT BCH  # push BCH to REMOTE, [u]pstream tracking
 e.g.> git push -u origin master
 e.g.> git push --set-upstream origin master  # set upstream remote named 'origin' for 'master' branch
 
 git clone URL  # clone repo, assume MASTER branch
-git clone -b BRCH URL DIR  # clone repo to directory
-git clone -b BRCH --single-branch URL  # clone specific branch
+git clone -b BCH URL DIR  # clone repo to directory
+git clone -b BCH --single-branch URL  # clone specific branch
 
 git fetch ALIAS  # sync with remote to "origin/master" NOT master
 git pull = git fetch + git merge

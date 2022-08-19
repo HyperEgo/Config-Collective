@@ -72,13 +72,14 @@ ctrl+l  # clear screen
 ctrl+a  # cursor line begin
 ctrl+e  # cursor line end
 ctrl+u  # delete line
-ctrl+r, INPUT  # reverse search, ctrl+r - cycle, <enter> - execute
+ctrl+r  # cycle CLI cmd; ctrl+r - cycle; <enter> - execute
 ctrl+SHIFT+t  # open terminal tab
 ctrl+SHIFT+w  # close curr tab
 ctrl+page-up  # cycle tab left
 ctrl+page-down  # cycle tab right
 shift+ctrl+page-up  # cycle tab most left
 shift+ctrl+page-down  # cycle tab most right
+alt+<.>  # cycle CLI input arg; alt+<.> - cycle; <enter> - execute
 
 # CLI
 for i in {1..100}; do sudo cp -R /etc /backup/sys; done &  # e.g. 'for loop', copy, exec in background

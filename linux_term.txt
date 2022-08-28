@@ -82,7 +82,6 @@ shift+ctrl+page-down  # cycle tab most right
 alt+<.>  # cycle CLI input arg; alt+<.> - cycle; <enter> - execute
 
 # CLI
-for i in {1..100}; do sudo cp -R /etc /backup/sys; done &  # e.g. 'for loop', copy, exec in background
 apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 apt-cache search REGEX  # query the APT cache, search available package lists
 apt-get update  # Debian update package cache
@@ -93,7 +92,6 @@ atrm JOB  # remove job
 blkid -g  # purge cache, [g]arbage collect remove old devices
 brctl  # ethernet bridge admin
 bzip2  # compress, decompress block-sorting, e.g. .bz, .bz2, .tbz, .tbz2
-cat FILE | sort | uniq -d|u # print [d]uplicates, [u]nique names
 chage -l USER  # print account age info
 chattr +i FILE  # edit file attributes, [R]ecursive, [i]mmutable
 lsattr FILE  # print FILE attribs e.g. [i]mmutable, [a]ppend only
@@ -133,7 +131,11 @@ echo $UID  # print user id
 echo -n "value" | openssl md5 -hmac "key"  # gen md5 hash from data input
 ethtool DEV  # print net driver and hd setting for DEV
 env  # print user environment variables
-fdisk -l DEV  # edit, [l]ist part table, e.g. fdisk -l /dev/random
+g|parted  # partition editor
+[f|g]disk -l DEV  # manage device partitions, e.g. fdisk -l DEV ; fdisk < gdisk < parted < gparted
+mke2fs -t  # create filesystem, e.g. ext3, ext4
+mkfs.ext4 -F DEV  # format DEV to ext4 [F]orce
+for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # e.g. 'for loop', copy, exec in background
 for file in *; do mv $file `echo $file | tr ' ' '_'` ; done  # for filename(s), replace SPACE for UNDER-SCORE
 for file in *; do echo “this is a test file” >> $file; done  # append string to file
 find . -type d -iname "KEY"  # find [d]irectory 'KEY'
@@ -174,9 +176,6 @@ ip route  # print local route table entry
 iptable -nL  # print ip table rules [L]ist, [n]umeric output addr port
 iptables-save  # save config file, IPv4/6 packet filtering, NAT admin tool
 iwconfig  # print wireless devices
-jar -tf JAR  # print file list
-jar -xf JAR FILE  # extract FILE from jar
-jar -tf | grep FILE
 jobs  # print curr jobs
 journalctl --disk-usage  # print journal filesystem usage
 journalctl -u SRVC  # print journal entries for SRVC
@@ -206,7 +205,6 @@ lspci -nn|v|vv|vvv  # list PCI devices, vendor codes, numbers, names, [v]erbose
 lsusb -tv  # list USB devices, [t]ype, [v]erbose
 md5sum FILE  # print MD5 message digest
 sha256sum  # print SHA256 message digest
-mke2fs -t  # create filesystem, e.g. ext3, ext4
 modinfo DEV.ko.xz  # print kernel module info e.g. modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
 more FILE  # print contents, forward only
 mount -a  # mount [a]ll filesystems in fstab
@@ -223,7 +221,6 @@ nmtui  # text UI for Net Manager
 nslookup SERVER  # print name SERVER ip addr
 od -vAn -N1 -td1 < /dev/urandom  # write 1 byte signed decimal integer
 od -vAn -N2 -tu2 < /dev/urandom  # write 2 byte unsigned decimal integer
-parted  # partition editor
 pgrep SRVC-NAME  # return service process id
 pidof PROG  # print process id of running program, e.g. firefox
 ping -c NUM  # execute ping NUM times
@@ -234,12 +231,6 @@ ps -elf | grep -i "EXPR"  # print process for EXPR
 readonly  # print shell read-only variables
 renice  # alter priority of running processes
 rmmod -f ARG  # [f]orce kernel mod ARG remove
-rpm -ivh PKG|*  # Fedora local rpm [i]nstall, [v]erbose, [h]ash marks
-rpm -qa PKG  # query PKG installer name e.g. rpm -qa python*
-rpm -qi PKG  # query PKG installer info
-rpm -ql PKG  # query PKG installer files
-rpm -ql <<< rpm -qa ksh | sort > FILE  # print to file PKG installer files from common name
-rpm -e PKG  # [e]rase or uninstall package
 rsync -havz SRC DEST  # remote copy, sync files [h]uman readable, [a]rchive, [v]erbose, [z]compression
 runlevel  # print previous and current System V Init runlevel
 sar -u  # print performance info e.g. 'sar 2 6' - 2 sec interval, 6 queries total
@@ -248,6 +239,7 @@ setsebool -P  # SELinux write curr values to disc at reboot
 shutdown -c  # cmd [sudo], interrupt stop reboot sequence
 snap info PKG  # Linux cross distribution, dependency app installer
 sort -k COLUMN
+sort FILE | uniq  # remove duplicates
 ss -p | grep EXPR  # print sockets w/ PIDs
 su -l|c  # substitute user, [l]ogin, issue [c]ommand to shell
 swapon  # print swap file metrics
@@ -264,10 +256,13 @@ systemd-analyze |blame | dump  # print startup process times, longest decending,
 tail -f FILE  # print file appends
 tail -n10 FILE  # print FILE last 10 lines
 tail -n+500 FILE  # print FILE line 500->EOF
-tar OPTIONS --exclude=PATTERN | --remove-files  # exclude file glob pattern, remove files after archiving
-tar -zcvf ARCH.tar.gz CONTENTS  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
-tar -tvf ARCH.tar.gz  # print archive file list, [t]list
-tar -zxvf ARCH.tar.gz -C DIR  # e[x]tract archive to DIR
+tar PARM --exclude=GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
+tar -zcvf TAR DIR|FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
+tar -tvf TAR  # print archive file list, [t]list
+tar -zxvf TAR -C DIR  # e[x]tract archive to DIR
+jar -tf JAR  # print file list
+jar -xf JAR FILE  # extract FILE from jar
+jar -tf | grep FILE
 tcpdump -i DEV  # dump [i]nterface DEV traffic e.g. sudo tcpdump -i ens32
 telinit CMD  # edit System V Init runlevel
 top  # M - organize by memory, P - cpu usage, r - renice, reprioritizer PID
@@ -295,20 +290,31 @@ whois FQDN  # query whois db for network node
 who  # print users logged in
 w  # print users logged in, session info
 wc -l  # print word count, [l]ines e.g. ls DIR | wc -l = file count
-xkill {PROC}  # kill windowed service by name | mouse
+xkill WINDOWED-SERVICE  # kill windowed service by name | mouse
 xrdp PARMS  # MS remote desktop tool, start xrdp daemon, edit firewall exceptions
-xz -k CONTENTS  # compress CONTENTS [k]eep original .xz, .lzma
+xz -k DIR|FILE  # compress CONTENTS [k]eep original .xz, .lzma
 lpr FILE.txt  # CUPS, convert text FILE to pdf, def dest /home/$USER/Desktop
 lpq  # list printer queue
-zip -r ARCH.zip CONTENTS  # compress CONTENTS [r]ecursive
+zip -r ZIP DIR|FILE  # compress CONTENTS [r]ecursive
 
 # dir mngmt
 dirs  # print dir stack
 popd  # pop stack
 pushd DIR  # push to stack
 
-# tools, gfx
-cmatrix  # terminal 'matrix' animation
+# SED
+cat FILE | sed REGEX ; sed REGEX << cat IN-FILE | sed REGEX ...  # exec patterns
+sed 's/ss//g'  	# remove string 'ss' all occurrences on line, [g]lobal
+ 's/ */_/g'  # replace <space> with <under_score> 
+ '/^$/d'  	# delete empty lines
+ 's/:/\n/g' <<< $PATH | sort  # print PATH content vertically
+ '/.*delete-line/d'  # delete line containg REGEX
+ 's/.*delete-up-to-char-sequence//'  # delete up to REGEX, inclusive
+ 's/delete-after-char-sequence.*//' # delete after REGEX, inclusive 
+ 's/^/prefix/'  # add prefix to all lines
+
+# CLI Tools
+cmatrix  # 'matrix' animation
 
 tmux  # terminal multiplexer
  ctrl+b  # prefix
@@ -339,18 +345,11 @@ lvextend -L{SIZE} LV-DEV  # extend logical volume to SIZE e.g. sudo lvextend -L5
 lvreduce -L{SIZE} LV-DEV  # reduce logical volume to SZIE e.g. sudo lvreduce -L1GB /dev/backup/logbk
 mkfs.ext4 LV-DEV  # create logical volume filesystem
 mount LV-DEV MOUNTDIR  # mount logical volume e.g. sudo mount /dev/backup/sysbk /backup/sys
-umount MOUNTDIR  # unmount previous mounted device
-LVDEVCE MOUNTDIR FSTYPE defaults 0 0  # edit entries to /etc/fstab for auto mount on reboot
+umount DIR  # unmount previous mounted device
+LVDEVCE DIR TYPE defaults 0 0  # edit entries to /etc/fstab for auto mount on reboot
 e.g.> /dev/backup/sysbk /backup/sys xfs defaults 0 0  # fstab example
 
-# SED parsing
-sed 's/ss//g'  	# remove ss string for all occurrences on the line [g]lobal
-sed 's/ */_/g'  # sub underscore for any number of spaces occurring on line
-sed '/^$/d'  	# delete empty lines
-sed 's/:/\n/g' <<< $PATH | sort  # print PATH content vertically
-sed '/.*XML-element-delete-line/d' <<< cat INFILE | sed 's/.*XML-element-delete-up-to-char-sequence//' | sed 's/XML-element-delete-after-char-sequence.*//' | sort > OUTFILE  # parse XML elements from input file, print results to output file
-
-# YUM 
+# YUM, RPM - Fedora | Red Hat package managers
 yum list installed | sort  # print yum local rpm packages installed
 yum -v repolist  # print connected repos [v]erbose: base url, last updated, etc.
 yum list "python*"  # print packages, default exclusive
@@ -362,8 +361,14 @@ yum info PKG  # Fedora query PKG info
 yum install -y epel-release cups-pdf
 yum provides CFG  # print config file package association e.g. yum provides /etc/vsftpd/vsftpd.conf
 yum remove -y PKG  # remove PKG
+rpm -ivh PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
+rpm -qa PKG  # query PKG installer name e.g. rpm -qa python*
+rpm -qi PKG  # query PKG installer info
+rpm -ql PKG  # query PKG installer files
+rpm -ql <<< rpm -qa ksh | sort > FILE  # print to file PKG installer files from common name
+rpm -e PKG  # [e]rase or uninstall package
 
-## Create local repo
+## YUM - local repo
 find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
 cd /local/rpms/customrepo.repo  # browse to rpm local dir
 createrepo .
@@ -373,7 +378,7 @@ yum makecache
 yum install PKG | --nogpgcheck  # install PKG, no gpg-key check, unofficial RHELx
 rpm -ivh PKG --nodeps  # install PKG, ignore dependencies, official RHELx
 
-# Filesystem - create mount
+# FS - create mount
 lsblk  # print connected devices w/ mounts
 mkdir -p /mnt/dd1 /mnt/dd2  # create directories for device
 parted /dev/sdX print  # print device info
@@ -386,21 +391,21 @@ e2label DEV LABEL
 e2label /dev/sdX NEW_MOUNT
 
 cp -air /etc/fstab /etc/fstab.bak  # backup fstab
-vim /etc/fstab  # edit fstab, use UUID or label
+vim /etc/fstab  # edit fstab  w/ UUID, label
 # UUID="ALPHA-NUMERIC" | LABEL  MOUNT  FS-TYPE  OPTIONS  DUMP PASS
-# UUID="b58ce781-4a45-496a-8cd3-ab28d3cef783"  /mnt/dd1  ext4  defaults  1  2
+# UUID="b58ce781-4a45-496a-8cd3-ab28d3cef783"  /mnt/dd1  ext4  defaults  1 2
 # LABEL=NEW_MOUNT  /mnt/dd1  ext4  nofail  1 2
 mount -L LABEL MOUNT  # mount using label
 mount -a  # test mounts, sudo
 
-# ssh key setup
+# SSH Key config
 ssh-keygen  # creates public, pvt key pair
- /default/.ssh/id_rsa  # pvt key
- /default/.ssh/id_rsa.pub  # public key
- /default/.ssh/authorized_keys  # connecting device pub key file
-ssh-copy-id SERVER  # copy pub key to SERVER
+ ~/.ssh/id_rsa  # pvt key
+ ~/.ssh/id_rsa.pub  # public key
+ ~/.ssh/authorized_keys  # connecting device pub key file
+ssh-copy-id SRV  # copy pub key to server
 
-# crypto
+# CRYPTO config
 shred FILE  # overwrite FILE contents, secure wipe
 cryptsetup OPTIONS ACTION ACTION-ARG  # manage volume encryption
 cryptsetup -v --verify-passphrase luksFormat VOLUME  # prompts for UPPER case 'YES'
@@ -452,7 +457,7 @@ SHIFT+g  # FILE bottom
 :%s/Line/NewLine/  # copy replace 'Line' with 'NewLine'
 :%s/Line/NewLine/g  # copy replace 'Line' with 'NewLine' all instances 
 
-## tabs
+## VIM - tabs
 vim -p FILE1, FILE2  # open in tabs
 :tab help
 :help tab-page-intro
@@ -468,7 +473,7 @@ vim -p FILE1, FILE2  # open in tabs
 :qa  # quit all tabs
 :wqa  # save quit all tabs
 
-imap, t <Esc>:tabnew<CR>  # map 't' -> :tabnew
+imap, t <Esc>:tabnew<CR>  # map 't' -> 'tab new', ~/.vimrc
 
 # Ant, Maven
 nohup ant &  # run ant background process, log to nohup.out
@@ -483,7 +488,7 @@ mvn compile
 mvn compile clean
 mvn -p  # print maven commands, must be in build.xml dir
 
-# Python3
+# Python3 - CLI Interrupter
 pydoc modules  # print python local installed modules
 python3  # start python interpreter
 >>> import vlc
@@ -494,7 +499,7 @@ python3  # start python interpreter
 >>> help("modules")  	 # print local modules installed, get help info
 >>> help("_struct")
 
-## pip3 - plugin manager
+## Python3 - pip3, plugin manager
 yum install -y python36
 pip3 install --upgrade pip
 pip3 download -d . "pywinrm>=0.3.0"  # dl python3 pywinrm plugin installer
@@ -508,7 +513,7 @@ RAID 5 = stripe, parity across all disks, max one disk failure
 RAID 6 = stripe, double parity across all disks, max two disk failures
 RAID 10 = (1 + 0) mirroring + striping
 
-## Partition - create
+## RAID - gdisk
 gdisk /dev/sdX  # g|fdisk
 > n # new partition
 > Partition number = (default)
@@ -519,21 +524,21 @@ gdisk /dev/sdX  # g|fdisk
 > p  # print partition
 > w  # write to disk
 
+## RAID - mdadm
 mdadm --create RAID-DEV --level=LEVEL --raid-devices=NUM DEV{1,2,..}  # create RAID partition at LEVEL for NUMber of DEVs
 mdadm --create /dev/md1 --level=0 --raid-devices=2 /dev/sdb /dev/sdc  # create RAID /dev/md1, RAID 0, 2 devices at /dev/{sdb, sdc}
 
-## Filesystem, mount partition
+## RAID - mount partition
 mkfs -t ext4 /dev/md1
 mkdir /raid_root
 chown -R USER /raid_root
 chgrp -R GRP /raid_root
 mount /dev/md1 /raid_root
 
-## fstab - edit
-vim /etc/fstab
+vim /etc/fstab  # edit file system table
 /dev/md1  /raid_root  ext4  defaults  0  0
 
-## mdmonitor service - mount, start, test
+## RAID - mdmonitor service - mount, start, test
 mount -a  # auto-mount fstab entries, sudo
 cat /proc/mdstat  # show RAID personality overview
 mdadm --detail /dev/md1  # show RAID part details: sz, dev, state
@@ -543,7 +548,7 @@ systemctl start mdmonitor  # auto start service at boot
 # Sudoers file - visudo
 student01 ALL=(ALL) NOPASSWD:ALL  # student01 acc exec all sudo cmds w/o switch 'su -' & no pd
 
-# C++ compiler (e.g. gcc, g++) - test
+# C++ compiler - example, test (g++, gcc)
 vim foo.c
 #include<stdio.h>
 int main(void){
@@ -552,7 +557,6 @@ int main(void){
 }
 cc foo.c -o foo
 ./foo
-
 
 # Ports
 20 tcp|udp ftp  # file transfer protocol, data

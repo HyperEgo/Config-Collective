@@ -457,7 +457,7 @@ SHIFT+g  # FILE bottom
 :%s/Line/NewLine/  # copy replace 'Line' with 'NewLine'
 :%s/Line/NewLine/g  # copy replace 'Line' with 'NewLine' all instances 
 
-## VIM - tabs
+## tabs
 vim -p FILE1, FILE2  # open in tabs
 :tab help
 :help tab-page-intro
@@ -469,11 +469,18 @@ vim -p FILE1, FILE2  # open in tabs
 :tablast  # go to last tab
 :tab 3  # go to tab 3
 :tabm N  # move tab to N pos
-:tabdo %s/foo/bar/g  # funct for all tabs
-:qa  # quit all tabs
-:wqa  # save quit all tabs
+:tabdo REGEX  # apply REGEX to all tabs
 
-imap, t <Esc>:tabnew<CR>  # map 't' -> 'tab new', ~/.vimrc
+## split
+vim -o FILE1 FILE2  # horiz split => :split
+vim -O FILE1 FILE2  # vert split => :vsplit
+ctrl+w, j|k|l|i  # switch to adjacent window
+ctrl+w, left-arrow, right-arrow
+
+:qa  # [q]uit [a]ll
+:wqa  # [w]rite [q]uit [a]ll
+
+imap, t <Esc>:tabnew<CR>  # e.g.>  map 't' -> 'tab new', ~/.vimrc
 
 # Ant, Maven
 nohup ant &  # run ant background process, log to nohup.out

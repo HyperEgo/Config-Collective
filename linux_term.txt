@@ -454,8 +454,11 @@ SHIFT+g  # FILE bottom
 :set number
 :set nonumber
 
-:%s/Line/NewLine/  # copy replace 'Line' with 'NewLine'
-:%s/Line/NewLine/g  # copy replace 'Line' with 'NewLine' all instances 
+/\<foo\>  # exclusive search 'foo'
+
+:%s/\<foo\>/bar/g  # exclusive search, copy replace 'foo' w/ 'bar' [g]lobal
+:%s/Line/NewLine/  # copy replace 'Line' w/ 'NewLine'
+:%s/Line/NewLine/g  # copy replace 'Line' w/ 'NewLine' [g]lobal
 
 ## tabs
 vim -p FILE1, FILE2  # open in tabs

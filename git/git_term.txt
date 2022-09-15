@@ -51,8 +51,8 @@ git add FILE  # add file
 git rm FILE  # remove file from staged to working dir (e.g. after commit, before push)
 git clean -f  # remove [f]iles from working dir
 
+git commit [no arg]  # open editor, use after 'git merge --squash BCH', prune commit comments
 git commit -m MSG  # commit files to curr branch w/ [m]essage
-git commit -e  # commit files to curr branch, open [e]ditor
 git commit -am MSG  # commit all modified files, no new or deleted files
 git commit --amend -m MSG  # amend to most recent commit
 
@@ -60,6 +60,7 @@ git merge BCH  # merge branch to curr (**danger, verify curr branch BEFORE execu
 git merge --no-ff BCH  # execute merge, no fast forward
 git merge --ff-only BCH  # execute merge, only fast forward merge, abort otherwise
 git merge --abort  # abort merge
+git merge --squash BCH  # add but no commit changes, prelim to 'git commit' [no arg]
 
 git remote -v  # print remotes, curr branch
 git remote add ALIAS REMOTE  # add ALIAS for REMOTE

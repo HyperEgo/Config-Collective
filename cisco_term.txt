@@ -24,7 +24,7 @@ esc+b  # move backward one word
 esc+f  # move foward one word
 SPACE  # move 1 page down
 
-# Device CMD
+# common CLI
 end|ctrl+z  # move to ENABLE mode
 exit  #  move backward one user mode
 logout  # log out of terminal session
@@ -306,6 +306,9 @@ terminal monitor  # enable log, debug, alert msg print to screen
 ip host NAME IP  # IP host to NAME map
 ip default-network IP-NET  # assign net add, df gw
 service timestamps log|debug  # enable time stamps, logging, debugging msg
+duplex full|half|auto
+speed 10|100|1000
+description TEXT
 
 no router PROTOCOL  # disable routing protocol
 

@@ -85,6 +85,7 @@ dev(config-line)# logging synchronous
 dev(config-line)# exec-timeout VALUE  # set terminal time-out value, minutes-seconds
 dev(config-line)# service tcp-keepalives-in  # enable keepalives
 
+
 # SWITCH
 show mac address-table |dynamic  # print table, dynamice
 show mac address-table dynamic address MAC  # print mac addr dynamic metrics
@@ -140,7 +141,7 @@ sw(config-if)# no shut
 sw(config)# int vlan VLAN
 sw(config-if)# ip address IP-NETWORK MASK  # assign ip address to mngmt vlan
 sw(config-if)# ip address dhcp  # assign dynamic ip add
-sw(config-if)# description STRING
+sw(config-if)# description TEXT
 sw(config-if)# no shut
 e.g.>
 sw(config)# int vlan 99
@@ -153,7 +154,7 @@ sw(config-vlan)# name NAME  # optional
 sw(config)# int range RANGE
 sw(config-if-range)# switchport access vlan VLAN  # assign int to vlan
 sw(config-if-range)# switchport mode access  # specify port type (e.g. access|trunk)
-sw(config-if-range)# description STRING  # optional
+sw(config-if-range)# description TEXT  # optional
 sw(config-if-range)# no shut
 e.g.>
 sw(config)# int range fa0/1-5  # ports must exist e.g. no fa0/0!
@@ -219,30 +220,60 @@ sw(config-if)# switchport port-security mac-address MAC  # define port sec via m
 sw(config-if)# switchport port-security mac-address sticky  # enable 'sticky' learning
 sw(config-if)# switchport port-security violation protect|restrict|shutdown  # define action for non-port-sec ports
 
+
 # ROUTER
 boot system  # define boot sequence (use cmd in succession)
-debug ip routing  # start ip routing proto debug
-debug ip PROTOCOL  # debug routing protocol
-debug ppp  # enable ppp debug
-debug ppp packet|authentication  # print send, receive packets, link debug stats
+reload  # reboot
+setup  # enter setup mode
+auto secure  # enable security features, disable inactive services
 
-clear ip route*  # delete dynamically learned routing table entries
-clear ip route IP  # delete ip route from routing table
+show file system  # print file systems, memory allocated to each file
+show protocols  # print interface protocol status
+show version  # print IOS version, hd, dev info
+show process  # print physical mem allocation
+show flash  # print flash mem allocation 
+pwd  # present working directory, use to verify presence current directory
+dir  # directory listing
+cd nvram:  # change directory to nvram
+debug  # start debug, not recommended
+undebug all  # disable debug
+dir flash:  # print flash mem file list
 
-show access-lists  # print access list(s) contents
-show ip access-lists  # print ip access list(s) contents
-
-show clock  # print dev time
+show clock  # print device time
 show clock_rate  # print clock rate for DCE connections
 show controllers INT  # print DCE capability, clockrate info
 
-show hosts  # print host ip name map
+ping  # define ping execution
+ping IP-ADD  # send ping to specified address
+ping ip IP-ADD # extended ping, ping target addr from source 
+traceroute  # use extended version to specify destination and source
+traceroute IP-ADD  # trace route of input IP address
+terminal ip netmask-format decimal  # print network masks, dotted decimal format
+terminal monitor  # enable log, debug, alert msg print to screen
+
 show int INT  # print int stats, including acl
-show ip host  # print ip stats
 show ip int brief  # print short ip assignments 
+
+show hosts  # print host ip name map
+show ip host  # print ip stats
+ip host NAME IP-ADD  # IP host to NAME map
+ip def-network IP-NET  # assign net add, df gw
+ip address IP-ADD MASK  # assign IPv4 addr + mask
+inteface TYPE NUMBER.subint  # global config cmd, go to sub interface mode
+|no ip routing  # enable|disable IPv4 routing protocol
+no router PROTO  # disable routing protocol
+ip route IP-NET MASK [IP-ADD|INT-TYPE|INT-NUM|DIST] |permanent  # config IPv4 static routes
+debug ip routing  # start ip routing proto debug
+debug ip PROTO  # debug routing protocol
+
 show ip protocols  # print proto network advertise 
-show ip route  # print routing table
-show ip route IP-NET  # print network addr routing stats
+show ip route  # print full route table
+show ip route [connected|static|ospf]  # print route table metrics
+show ip route IP-ADD  # print detailed route info, e.g. next hop
+show |ip arp  # print router ARP cache
+clear ip arp |IP-ADD  # delete dynamic ARP cache, per IPv4 addr
+clear ip route*  # delete dynamically learned routing table entries
+clear ip route IP  # delete ip route from routing table
 
 show ip rip database  # print rip database
 |no debug ip rip  # enable|disable debug
@@ -270,11 +301,11 @@ show ip dhcp conflict  # print addr conflicts
 show dhcp server  # print dhcp server ip, lease agreements, counters
 debug ip dhcp server events|packets|linkage  # print addr assignments, db updates stats 
 
-show ipv6 route |IP|MASK  # print route contents
+show ipv6 route |IP-ADD|MASK  # print route contents
 show ipv6 int |INT
 show ipv6 int brief
 show ipv6 route |summary  # print routing table - summary
-show ipv6 static |IP|INT  # print installed static routes
+show ipv6 static |IP-ADD|INT  # print installed static routes
 show ipv6 static detail  # print static route detail
 show ipv6 protocols  # print routing protocol
 show ipv6 rip
@@ -283,47 +314,19 @@ show ipv6 routers  # print advertisements
 show ipv6 traffic  # print traffic stats
 clear ipv6 rip  # delete rip routing table
 clear ipv6 route*  # delete all routing table routes
-clear ipv6 route IP  # delete specific route
+clear ipv6 route IP-ADD  # delete specific route
 clear ipv6 traffic  # reset traffic counters
 debug ipv6 rip  # print debug msg
 debug ipv6 packet  # print debug msg
 debug ipv6 routing  # print debug msg, cache updates
 
-show process  # print physical mem allocation
-show protocols  # print int proto status
-show version  # print IOS version, hd, dev info
-show flash  # print flash mem allocation 
-dir flash:  # print flash mem file list
-
-ping  # define ping execution
-ping IP  # send ping to specified address
-ping ip IP # extended ping, ping target addr from source 
-traceroute  # use extended version to specify destination and source
-traceroute IP  # trace route of input IP address
-terminal ip netmask-format decimal  # print network masks, dotted decimal format
-terminal monitor  # enable log, debug, alert msg print to screen
-
-ip host NAME IP  # IP host to NAME map
-ip default-network IP-NET  # assign net add, df gw
 service timestamps log|debug  # enable time stamps, logging, debugging msg
 duplex full|half|auto
 speed 10|100|1000
 description TEXT
 
-no router PROTOCOL  # disable routing protocol
-
-## boot mgmnt
-reload  # reboot
-setup  # enter setup mode
-auto secure  # enable security features, disable inactive services
-
-## file mgmnt
-show file system  # print file systems, memory allocated to each file
-pwd  # present working directory, use to verify presence current directory
-dir  # directory listing
-cd nvram:  # change directory to nvram
-debug  # start debug, not recommended
-undebug all  # disable debug
+show access-lists  # print access list(s) contents
+show ip access-lists  # print ip access list(s) contents
 
 ## SDM - Security Device Manager
 rtr(config)# ip http server|secure server|authentication local
@@ -340,7 +343,7 @@ rtr# copy tftp flash  # copy tftp file to flash mem
 rtr# copy flash tftp  # copy flash file to tftp server
 
 ## default, static routes
-rtr(config)# ip route IP-NET MASK IP-HOP INT ADMIN  # assign admin dist for route
+rtr(config)# ip route IP-NET MASK IP-ADD INT ADMIN  # assign admin distance for next hop
 e.g.>
 rtr(config)# ip route 10.1.3.0 255.255.255.0 10.1.130.253 210
 rtr(config)# ip route 0.0.0.0 0.0.0.0 s0/0  # assign default route to serial 0/0
@@ -368,6 +371,8 @@ rtr(config)# interface lo0  # loopback 0 int
 rtr(config-if)# ip address 10.0.0.1 255.0.0.0  # use full 32-bit mask, loopback int
 
 ## ppp - Point-to-Point protocol
+rtr# debug ppp  # enable ppp debug
+rtr# debug ppp packet|authentication  # print send, receive packets, link debug stats
 rtr(config)# username NAME password KEY  # define ppp metrics, pap|chap auth
 rtr(config-if)# encapsulation ppp  # define ppp encap
 rtr(config-if)# ppp authentication chap|pap  # enable chap|pap
@@ -423,8 +428,8 @@ rtr(config-if)# ip ospf dead-interval VALUE  # dead interval is 4 times hello in
 ## OSPF NMBA = non-broadcast multiple access
 rtr(config-if)# ip ospf priority 0-255  # assign ospf int priority value
 rtr(config-if)# ip ospf network point-to-multipoint  # enable net type
-rtr(config-router)# router-id IP  # assign ip address to router id
-rtr(config-router)# neighbor IP  # no mask, identify neighbor router, no multicast
+rtr(config-router)# router-id IP-ADD  # assign ip address to router id
+rtr(config-router)# neighbor IP-ADD  # no mask, identify neighbor router, no multicast
 
 ## RIP auth
 rtr(config)# key chain RIP_KEY
@@ -451,17 +456,17 @@ rtr(config-router)# area 0 authentication message-digest
 ## DHCP
 rtr(config)# |no service dhcp  # enable|disable dhcp server
 rtr(config-if)# ip address dhcp  # enable client
-rtr(config-if)# ip helper-address IP  # send broadcasts, default router
-rtr(config-if)# ip forward-protocol IP  # define forward port(s)
+rtr(config-if)# ip helper-address IP-ADD  # send broadcasts, default router
+rtr(config-if)# ip forward-protocol IP-ADD  # define forward port(s)
 
 rtr(config-dhcp)# network IP-NET MASK  # define pool net addr
-rtr(config-dhcp)# default-router IP # define default router
+rtr(config-dhcp)# default-router IP-ADD # define default router
 rtr(config-dhcp)# lease days|hours|minutes|infinite  # define lease period
-rtr(config)# ip dhcp excluded-address IP-START IP-END  # define exclude range
+rtr(config)# ip dhcp excluded-address IP-ADDR1 IP-ADDR2  # define exclude ipv4 range
 rtr(config)# ip dhcp pool NAME # define pool NAME
-rtr(dhcp-config)# network IP MASK
-rtr(dhcp-config)# dns-server IP MASK
-rtr(dhcp-config)# default-router IP MASK
+rtr(dhcp-config)# network IP-ADD MASK
+rtr(dhcp-config)# dns-server IP-ADD MASK
+rtr(dhcp-config)# default-router IP-ADD MASK
 e.g.>
 rtr(config)# ip dhcp excluded-address 192.168.10.1 192.168.10.10
 rtr(config)# ip dhcp pool R1Fa0
@@ -479,11 +484,11 @@ rtr# debug ip nat detailed
 rtr(config)# ip nat translation time VALUE  # define timeout, seconds
 
 ### static
-rtr(config)# ip nat inside source list static IP-INSIDE IP-OUTSIDE  # define static map
+rtr(config)# ip nat inside source list static IP-ADD1 IP-ADD2  # define IPv4 static mapping
 rtr(config)# ip nat inside source list static 192.168.20.254 209.165.200.254
 
 ### dynamic
-rtr(config)# ip nat pool NAME IP-START IP-END netmask MASK  # define translate  pool
+rtr(config)# ip nat pool NAME IP-ADD1 IP-ADD2 netmask MASK  # define translate pool range
 rtr(config)# ip nat inside source list ACL-NAME pool POOL-NAME  # define acl translate
 
 ### NAT w/ ACL
@@ -523,7 +528,7 @@ rtr(config)# access-list NUM permit|deny IP WILDCARD  # define acl numbered
 rtr(config)# access-list 10 permit 192.168.30.0 0.0.0.255
 rtr(config-if) #access-group 10 in
 
-rtr(config)# access-list NUM permit|deny PROTOCOL IP-SRC IP-DEST eq PORT
+rtr(config)# access-list NUM permit|deny PROTOCOL IP-SRC IP-DST eq PORT
 rtr(config)# access-list 101 permit tcp 192.168.30.0 0.0.0.255 any ep 80
 rtr(config-if)# access-group 101 in  # apply to inbound int
 
@@ -534,7 +539,7 @@ rtr(config-line)# access-class 101 in  # apply to inbound telnet lines
 
 rtr(config)# ip access-list standard NAME  # define acl named
 rtr(config)# ip access-list standard ACLNAME
-rtr(config-std-nacl)# deny IP WILDCARD log  # deny, print log message
+rtr(config-std-nacl)# deny IP-ADD WCARD log  # deny, use mask wildcard, print to log
 rtr(config-if)# ip access-group ACLNAME in  # apply to inbound int
 
 rtr(config-std-nacl)# deny 192.168.11.0 0.0.0.255 log
@@ -542,7 +547,7 @@ rtr(config-std-nacl)# permit any  # deny source then permit any
 rtr(config-if)# ip access-group ACLNAME in
 
 rtr(config)# ip access-list extended ACLNAME  # define acl extended named
-rtr(config-ext-nacl)# deny IP WILDCARD host IP  # deny src to host, no host mask
+rtr(config-ext-nacl)# deny IP WCARD host IP  # deny src to host, no host mask
 rtr(config-if)# ip access group NAME out  # apply to outbound int
 
 rtr(config)# ip access-list extended ACLNAME
@@ -628,14 +633,14 @@ rtr(config-ext-nacl)# permit ip any any
 rtr(config)# ipv6 unicast-routing  # enable forwarding
 rtr(config)# ipv6 router rip NAME
 rtr(config-if)# ipv6 rip NAME enable  # enable rip proto
-rtr(config-if)# ipv6 address IP PREFIX eui-64  # define ip eui format
+rtr(config-if)# ipv6 address IP-ADD PFIX eui-64  # define ip eui format
 
-rtr(config-if)# ipv6 address IP MASK  # enable ipv6
-rtr(config-if)# ip address IP MASK secondary  # enable secondary ipv4 addr
+rtr(config-if)# ipv6 address IP-ADD MASK  # enable ipv6
+rtr(config-if)# ip address IP-ADD MASK secondary  # enable secondary ipv4 addr
 rtr(config-if)# ip address 10.1.7.252 255.255.255.0 secondary
 
 rtr(config-if)# clock rate VALUE
-rtr(config-if)# description DESCR
+rtr(config-if)# description TEXT
 rtr(config-if)# mac-address MAC  # define mac addr
 
 rtr(config-if)# |no keepalive VALUE  # enable|disable keep-alive, equal link ends

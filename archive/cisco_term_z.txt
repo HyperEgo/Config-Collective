@@ -1,4 +1,4 @@
-# Cisco IOS - Router, Switch - archive
+# Cisco IOS - Router, Switch, Access Point
 
 # CDP - Cisco Discovery Protocol
 show cdp  # print update timer, hold timer, global config status
@@ -129,50 +129,61 @@ rtr(config-subif)# ip address 140.1.2.1 255.255.255.0
 rtr(config-subif)# frame-relay interface-dlci 502
 rtr(config-subif)# frame-relay interface-dlci 503
 
-## router-on-a-stick - inter-vlan routing, sub-interfaces
-rtr(config)# int INT  # print interface status, trunk
-rtr(config-if)# no shut  # enable trunk int
-rtr(config)# int main int.sub INT  # define sub interface
-rtr(config-subif)# encapsulation dot1q VLAN # enable trunking w/ vlan tag
-rtr(config-subif)# ip address IP-NET MASK  # assign sub int network ip
 
-## router-on-a-stick - default native vlan, trunk interface gw ip
-sw(config)# ip default-gateway 172.16.32.1
-sw(config)# int gi1/1
-sw(config-if)# switchport mode trunk
-sw(config-if)# switchport allowed vlan 1
-sw(config-if)# switchport allowed vlan add 20, 30  # allowed vlans
+# ROUTER
+show ip rip database  # print rip database
+|no debug ip rip  # enable|disable debug
 
-rtr(config)# int gi1/0
-rtr(config-if)# no shut
-rtr(config-if)# ip address 172.16.32.1 255.255.255.0  # native vlan gw ip
-rtr(config-if)# int gi1/0.10
-rtr(config-subif)# encapsulation dot1q 1
-rtr(config-subif)# ip address 172.16.33.1 255.255.255.0
-rtr(config-subif)# int gi1/0.20
-rtr(config-subif)# encapsulation dot1q 20
-rtr(config-subif)# ip address 172.16.34.1 255.255.255.0
-rtr(config-subif)# int gi1/0.30
-rtr(config-subif)# encapsulation dot1q 30
-rtr(config-subif)# ip address 172.16.35.1 255.255.255.0
+show ip eigrp int  # print eigrp ints
+show ip eigrp neighbors  # print eigrp neighbors, successors
+show ip eigrp topology  # print successors,f easible successors
+show ip eigrp topology IP-NET  # print network addr status + ext route info
+show ip eigrp topology all-links  # print all links
+show ip eigrp traffic  # print traffic stats
+|no debug eigrp fsm|packet  # enable|disable debug
 
-## router-on-a-stick - configure native vlan; no trunk interface gw ip
-sw(config)# ip default-gateway 172.16.32.99  # native vlan gw ip
-sw(config)# int gi1/1
-sw(config-if)# switchport trunk allowed vlan 99
-sw(config-if)# switchport trunk allowed vlan add 20, 30  # add vlan manual + allowed
+## RIP2
+rtr(config)# router rip
+rtr(config-router)# version 2  # enable rip version 2
+rtr(config-router)# no auto-summary  # disable auto summary
+rtr(config-router)#network IP-NET  # no mask
 
-rtr(config)# int gi1/0
-rtr(config-if)# no shut
-rtr(config-if)# int gi1/0.1
-rtr(config-subif)# encapsulation dot1q 99 native  # native vlan gw ip
-rtr(config-subif)# ip address 172.16.32.99 255.255.255.0
-rtr(config)# int gi1/0.20
-rtr(config-subif)# encapsulaion dot1q 20
-rtr(config-subif)# ip address 172.16.33.20 255.255.255.0
+## EIGRP
+rtr(config)# router eigrp AS-VAL  # assign eigrp Autonomous System number
+rtr(config-router)# network IP-NET MASK  # define routed network ips
+rtr(config-router)# maximum-paths  # define equal load cost balancing paths
+rtr(config-router)# metric weights tos  # define bandwith delay metrics
+rtr(config-if)# |no bandwith VALUE # enable|disable bandwith value, kbps
+rtr(config-if)# delay VALUE  # set delay value, tens of microseconds
+rtr(config-if)# ip summary-address eigrp AS-VAL IP-NET MASK  # summarize nets per int
+rtr(config-if)# ip summary-address eigrp 1 192.168.0.0 0.0.255.255
+
+rtr(config-if)# |no ip bandwidth-percent eigrp AS-VAL  # set update bandwidth pct
+rtr(config-if)# ip bandwidth-percent eigrp 1 50  # set update  bandwidth limit 50 pct
+
+rtr(config-if)# ip hello-interval eigrp AS-VAL  # define hello packet interval, sec
+rtr(config-if)# ip hello-interval eigrp 1 60
+
+rtr(config-if)# ip hold-time eigrp AS-VAL  # define hold-time, sec
+rtr(config-if)# ip hold-time eigrp 1 180
+
+## RIP - authenticate
+rtr(config)# key chain RIP_KEY
+rtr(config-keychain)# key 1
+rtr(config-keychain-key)# key-string cisco
+rtr(config-if)# ip rip authentication mode md5
+rtr(config-if)# ip rip authentication key-chain RIP_KEY
+
+## EIGRP - authenticate
+rtr(config)# key chain EIGRP_KEY
+rtr(config-keychain)# key 1
+rtr(config-keychain-key)# key-string cisco
+rtr(config-if)# ip authentication mode eigrp 1 md5
+rtr(config-if)# ip authentication key-chain eigrp 1 EIGRP_KEY
+
 
 ???????????????????????????????????????????????????????????????????
-???????????????????????????  Huh, wtf  ????????????????????????????
+??????????????????????????? WTF, bro  ?????????????????????????????
 ???????????????????????????????????????????????????????????????????
 # hostname, banner config - ?
 hostname HOSTNAME  # assign a host name
@@ -201,6 +212,3 @@ sw(config-if-range)# switchport voice vlan VLAN  # assign ints to voice vlan
 
 # Router Global Configuration mode - ?
 config-register HEX-REG  # boot reg setting; 2100 (rom monitor), 2101 (rom memory/flash), 2102 (nvram), 2142(password recovery/reset)
-???????????????????????????????????????????????????????????????????
-???????????????????????????  Huh, wtf  ????????????????????????????
-???????????????????????????????????????????????????????????????????

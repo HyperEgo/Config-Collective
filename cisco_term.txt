@@ -1,7 +1,5 @@
 # Cisco IOS - Router, Switch
 
-USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE  # CLI modes
-
 # keystrokes
 ?  # print CMD for curr mode
 CMD?  # print CMD complete options
@@ -24,13 +22,14 @@ esc+b  # move backward one word
 esc+f  # move foward one word
 SPACE  # move 1 page down
 
-# common CLI
+# CLI - common
+USER -> ENABLE -> GLOBAL Config -> INTERFACE|VLAN|LINE
+
 end|ctrl+z  # move to ENABLE mode
 exit  #  move backward one user mode
 logout  # log out of terminal session
 reload  # reboot device
 enable|disable  # enter|exit enable mode
-disable  # go to USER mode
 shut|no shut  # enable|disable interface
 copy run start  # copy running-config to startup-config
 copy start run  # copy startup-config to running-config
@@ -41,13 +40,13 @@ show ip ssh  # print ssh version, auth timeout, retries
 show ssh  # print info ea connected ssh client
 transport input [all|none|telnet|ssh]  # declare service to support
 
-# erase start configuration
+## erase start configuration
 erase startup-config
 write erase
 erase start
 erase nvram:
 
-# set dev to default
+## set dev to default
 erase start
 delete vlan.dat
 reload
@@ -57,7 +56,8 @@ delete flash:vlan.dat  # delete vlan dat - flash mem system restored to default
 reload  # reboot switch
 terminal monitor  # print console msg varied output
 
-# password only config - basic
+# Device config - common
+> password only 
 dev(config)# line console 0
 dev(config-line)# password faith
 dev(config-line)# login
@@ -66,12 +66,12 @@ dev(config)# line vty 0 15
 dev(config-line)# password hope
 dev(config-line)# login
 
-# password + username config - advanced e.g. ssh
+> password + username 
 dev(config)# username USER secret|password KEY
 dev(config)# line vty 0 15
 dev(config-line)# login local  # enable username, password auth
 
-# ssh config
+> ssh
 dev# show crypto key NAME rsa  # print key configurations
 dev(config)# hostname HOST
 dev(config)# ip domain-name NAME
@@ -79,7 +79,7 @@ dev(config)# crypto key generate rsa  # create pub, pvt keys
 dev(config)# ip ssh time-out SECONDS  # set ssh time value
 dev(config)# ip ssh authentication-retries VALUE
 
-# line config
+> line 
 dev(config)#line console 0|vty 0 15|aux 0  # console, virtual term, auxiliary
 dev(config-line)# logging synchronous  
 dev(config-line)# exec-timeout VALUE  # set terminal time-out value, minutes-seconds
@@ -190,7 +190,7 @@ sw(config-if)# switchport mode access  # disable DTP, access link
 sw(config-if)# switchport nonegotiate  # disable DTP, trunk link
 sw(config-if)# switchport mode dynamic auto|desirable  # auto=wait passive, desirable=start trunk
 
-## [R]STP - spanning tree protocol
+## [R]STP - [rapid] spanning tree protocol
 sw(config)# spanning-tree mode ?  # print [R]STP modes: mst, pvst, rapid-pvst
 sw(config)# spanning-tree vlan VLAN root primary|secondary  # assign root switch role
 sw(config)# spanning-tree vlan VLAN root primary diameter VALUE  # assign net diameter for root bridge
@@ -206,12 +206,6 @@ sw(config-if)# spanning-tree port-priority 105
 sw(config-if)# spanning-tree portfast  # enable portfast, access ports only
 sw(config-if)# spanning-tree bpduguard enable  # enable bpdu guard
 
-## etherchannel - match end points
-sw# test etherchannel load-balance interface pol mac MAC1 MAC2  # test load-balance behavior
-sw(config)# port-channel load-balance ?  # print load-balance config options
-sw(config-if)# channel-group GRP mode on|auto|desirable  # turn [on], auto, desirable
-sw(config-if)# channel-group 1 mode on
-
 ## port-security
 sw(config-if)# switchport mode access  # define int type 
 sw(config-if)# switchport port-security  # enable port security 
@@ -219,6 +213,15 @@ sw(config-if)# switchport port-security maximum NUM  # define mac addr max numbe
 sw(config-if)# switchport port-security mac-address MAC  # define port sec via mac addr
 sw(config-if)# switchport port-security mac-address sticky  # enable 'sticky' learning
 sw(config-if)# switchport port-security violation protect|restrict|shutdown  # define action for non-port-sec ports
+
+## Etherchannel L2 - aggregate layer 2 physical links
+> end point metrics must match!
+sw# test etherchannel load-balance interface pol mac MAC1 MAC2  # test load-balance behavior
+sw(config)# port-channel load-balance ?  # print load-balance config options
+sw(config-if)# channel-group GRP mode on|auto|desirable  # turn [on], auto, desirable
+sw(config-if)# channel-group 1 mode on
+
+## Etherchannel L3 - aggregate layer 3 ip routing functions
 
 
 # ROUTER
@@ -274,17 +277,6 @@ show |ip arp  # print router ARP cache
 clear ip arp |IP-ADD  # delete dynamic ARP cache, per IPv4 addr
 clear ip route*  # delete dynamically learned routing table entries
 clear ip route IP  # delete ip route from routing table
-
-show ip rip database  # print rip database
-|no debug ip rip  # enable|disable debug
-
-show ip eigrp int  # print eigrp ints
-show ip eigrp neighbors  # print eigrp neighbors, successors
-show ip eigrp topology  # print successors,f easible successors
-show ip eigrp topology IP-NET  # print network addr status + ext route info
-show ip eigrp topology all-links  # print all links
-show ip eigrp traffic  # print traffic stats
-|no debug eigrp fsm|packet  # enable|disable debug
 
 show ip ospf  # print algorithm execution metric, link state interval status
 show ip ospf interface brief
@@ -354,7 +346,6 @@ rtr(config-router)# redistribute static  # advertise static routes to neighbors
 
 ## bit bucket config
 rtr(config)# ip route IP-NET MASK Null0  # send traffic to bit bucket 
-e.g.>
 rtr(config)# ip route 192.168.1.0 255.255.255.0 Null0
 
 ## boot sequence config
@@ -363,58 +354,78 @@ rtr(config)# boot system flash FILE  # boot specific ios file
 rtr(config)# boot system tftp FILE IP  # boot ios file from tftp server
 rtr(config)# boot system rom  # boot rom monitor mode
 
-## loopback int config
+## loopback interface config
 rtr(config)# int INT-LOOP  # define loopback int
 rtr(config-if)# ip address IP-NET MASK  # assign ip address to loopback int
 e.g.>
 rtr(config)# interface lo0  # loopback 0 int
 rtr(config-if)# ip address 10.0.0.1 255.0.0.0  # use full 32-bit mask, loopback int
 
-## ppp - Point-to-Point protocol
+## PPP - Point-to-Point protocol
 rtr# debug ppp  # enable ppp debug
 rtr# debug ppp packet|authentication  # print send, receive packets, link debug stats
 rtr(config)# username NAME password KEY  # define ppp metrics, pap|chap auth
 rtr(config-if)# encapsulation ppp  # define ppp encap
 rtr(config-if)# ppp authentication chap|pap  # enable chap|pap
 rtr(config-if)# compress predictor|static  # enable ppp compress proto
-rtr(config-if)# ppp mulitlink  # enable multi-link load balance 
+rtr(config-if)# ppp multilink  # enable multi-link load balance 
 rtr(config-if)# ppp quality VALUE  # define link quality
-e.g.>
 rtr(config-if)# ppp quality 80  # monitor link, packet drop exceed 20% shutdown link 
 
 ## HDLC - High-Level Data Link Control
 rtr(config-if)# encapsulation hdlc  # enable HDLC link encap 
 
-## RIP2
-rtr(config)# router rip
-rtr(config-router)# version 2  # enable rip version 2
-rtr(config-router)# no auto-summary  # disable auto summary
-rtr(config-router)#network IP-NET  # no mask
+## ROAS (router-on-a-stick)
+rtr# show ip route connected
+rtr# show ip interface brief | include 0/0  # ints w/ 0/0's
+rtr# show vlans
 
-## EIGRP
-rtr(config)# router eigrp AS-VAL  # assign eigrp Autonomous System number
-rtr(config-router)# network IP-NET MASK  # define routed network ips
-rtr(config-router)# maximum-paths  # define equal load cost balancing paths
-rtr(config-router)# metric weights tos  # define bandwith delay metrics
-rtr(config-if)# |no bandwith VALUE # enable|disable bandwith value, kbps
-rtr(config-if)# delay VALUE  # set delay value, tens of microseconds
-rtr(config-if)# ip summary-address eigrp AS-VAL IP-NET MASK  # summarize nets per int
-e.g.>
-rtr(config-if)# ip summary-address eigrp 1 192.168.0.0 0.0.255.255
+rtr(config)# int INT | SUB-INT  # define sub interface
+rtr(config-subif)# encapsulation dot1q VLAN # enable trunking w/ vlan tag
+rtr(config-subif)# ip address IP-NET MASK  # assign sub int network ip
 
-rtr(config-if)# |no ip bandwidth-percent eigrp AS-VAL  # set update bandwidth pct
-e.g.>
-rtr(config-if)# ip bandwidth-percent eigrp 1 50  # set update  bandwidth limit 50 pct
+## ROAS - native vlan config
+> Layer 2 switch config, include 'no shut' all interfaces
+sw_l2(config)# ip default-gateway 172.16.32.1
+sw_l2(config)# int gi1/1
+sw_l2(config-if)# switchport mode trunk
+sw_l2(config-if)# switchport trunk native vlan 10
+sw_l2(config-if)# switchport allowed vlan 10
+sw_l2(config-if)# switchport allowed vlan add 20, 30
 
-rtr(config-if)# ip hello-interval eigrp AS-VAL  # define hello packet interval, sec
-e.g.> 
-rtr(config-if)# ip hello-interval eigrp 1 60
+> router config
+>> OPTION #1; cfg native vlan - cfg ip-addr on physical link, no encapsulation
+rtr(config)# int gi1/0 
+rtr(config-if)# ip address 10.1.10.1 255.255.255.0 
 
-rtr(config-if)# ip hold-time eigrp AS-VAL  # define hold-time, sec
-e.g.> 
-rtr(config-if)# ip hold-time eigrp 1 180
+>> OPTION #2; cfg native vlan - cfg sub-int as native vlan
+rtr(config-if)# int gi1/0.10
+rtr(config-subif)# encapsulation dot1q 10 native
+rtr(config-subif)# ip address 10.1.10.1 255.255.255.0
 
-## OSPF protocol - wildcard masking
+rtr(config-subif)# int gi1/0.20
+rtr(config-subif)# encapsulation dot1q 20
+rtr(config-subif)# ip address 10.1.20.1 255.255.255.0
+rtr(config-subif)# int gi1/0.30
+rtr(config-subif)# encapsulation dot1q 30
+rtr(config-subif)# ip address 10.1.30.1 255.255.255.0
+
+## SVIs - switched virtual interfaces - layer 3 switch
+show ip route
+show interface status
+
+sw_l3(config)# sdm prefer lanbase-routing  # change forwarding ASCI to accept IPv4 routes
+sw_l3# reload  # reboot to recognize to ASCI IPv4 directive
+sw_l3(config)# ip routing  # enable IPv4 routing
+
+sw_l3(config)# interface vlan VLAN  # create VLAN interface for routing logic
+sw_l3(config-if)# ip address IP-ADD MASK  # VLAN interface cfg mode, assign ip addr w/ mask
+sw_l3(config-if)# no shut
+
+## Routed Ports - layer 3 switch
+...
+
+## OSPF - wildcard masking
 rtr(config)# router ospf PROC-ID  # set local process id
 rtr(config-router)# network [network address_wild card mask_area id]  # advertise network through ospf
 rtr(config)# router ospf 1 
@@ -425,27 +436,13 @@ rtr(config-if)# ip ospf cost VALUE  # modify cost value per interface
 rtr(config-if)# ip ospf hello-interval VALUE  # modify hello interval in seconds
 rtr(config-if)# ip ospf dead-interval VALUE  # dead interval is 4 times hello interval, usually no need for modification
 
-## OSPF NMBA = non-broadcast multiple access
+## OSPF NMBA (non-broadcast multiple access)
 rtr(config-if)# ip ospf priority 0-255  # assign ospf int priority value
 rtr(config-if)# ip ospf network point-to-multipoint  # enable net type
 rtr(config-router)# router-id IP-ADD  # assign ip address to router id
 rtr(config-router)# neighbor IP-ADD  # no mask, identify neighbor router, no multicast
 
-## RIP auth
-rtr(config)# key chain RIP_KEY
-rtr(config-keychain)# key 1
-rtr(config-keychain-key)# key-string cisco
-rtr(config-if)# ip rip authentication mode md5
-rtr(config-if)# ip rip authentication key-chain RIP_KEY
-
-## EIGRP auth
-rtr(config)# key chain EIGRP_KEY
-rtr(config-keychain)# key 1
-rtr(config-keychain-key)# key-string cisco
-rtr(config-if)# ip authentication mode eigrp 1 md5
-rtr(config-if)# ip authentication key-chain eigrp 1 EIGRP_KEY
-
-## OSPF auth
+## OSPF - authenticate
 rtr(config-if)# ip ospf authentication-key KEY  # set ospf router auth password
 rtr(config-if)# ip ospf message-digest key KEY md5 KEY  # encrypt router pd auth
 rtr(config-router)# area AREA authentication  # enable area wide auth

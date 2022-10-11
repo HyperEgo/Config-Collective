@@ -1,4 +1,4 @@
-# Cisco IOS - Router, Switch
+ Cisco IOS - Router, Switch
 
 # keystrokes
 ?  # print CMD for curr mode
@@ -122,7 +122,7 @@ spanning-tree mode  # print modes
 spanning-tree vlan 1 priority ?  # print priority values
 
 show dhcp lease  # print dhcp ip address for mngmt vlan
-show etherchannel {CH} summary  # print name, port state, protocol, port sec, ports inclusive
+show etherchannel CHAN summary  # print name, port state, protocol, port sec, ports inclusive
 show etherchannel load-balance  # print balance algorithm
 
 do sh run int INT  # print run-config segment
@@ -214,14 +214,27 @@ sw(config-if)# switchport port-security mac-address MAC  # define port sec via m
 sw(config-if)# switchport port-security mac-address sticky  # enable 'sticky' learning
 sw(config-if)# switchport port-security violation protect|restrict|shutdown  # define action for non-port-sec ports
 
-## Etherchannel L2 - aggregate layer 2 physical links
-> end point metrics must match!
+## Etherchannel L2 - aggregate layer 2 physical interfaces
+> end point metrics must match
 sw# test etherchannel load-balance interface pol mac MAC1 MAC2  # test load-balance behavior
 sw(config)# port-channel load-balance ?  # print load-balance config options
 sw(config-if)# channel-group GRP mode on|auto|desirable  # turn [on], auto, desirable
 sw(config-if)# channel-group 1 mode on
 
-## Etherchannel L3 - aggregate layer 3 ip routing functions
+## Etherchannel L3 - aggregate layer 3 ip routing interfaces
+show interfaces port-channel 12
+show intefaces status
+show ip route
+show etherchannel 12 summary
+
+sw_l3(config)# int INT
+sw_l3(config-if)# no switchport
+sw_l3(config-if)#no ip address
+sw_l3(config-if)# channel-group GRP mode on  # assign interface to port channel group
+
+sw_l3(config)# int Port-channel12  # config port channel interface
+sw_l3(config-if)# no switchport
+sw_l3(config-if)# ip address IP-ADD MASK
 
 
 # ROUTER
@@ -375,10 +388,11 @@ rtr(config-if)# ppp quality 80  # monitor link, packet drop exceed 20% shutdown 
 ## HDLC - High-Level Data Link Control
 rtr(config-if)# encapsulation hdlc  # enable HDLC link encap 
 
-## ROAS (router-on-a-stick)
-rtr# show ip route connected
-rtr# show ip interface brief | include 0/0  # ints w/ 0/0's
-rtr# show vlans
+## ROAS (router-on-a-stick) - layer 3 inter-vlan routing via router
+> small network, singular trunk link
+show ip route connected
+show ip interface brief | include 0/0  # ints w/ 0/0's
+show vlans
 
 rtr(config)# int INT | SUB-INT  # define sub interface
 rtr(config-subif)# encapsulation dot1q VLAN # enable trunking w/ vlan tag
@@ -410,9 +424,11 @@ rtr(config-subif)# int gi1/0.30
 rtr(config-subif)# encapsulation dot1q 30
 rtr(config-subif)# ip address 10.1.30.1 255.255.255.0
 
-## SVIs - switched virtual interfaces - layer 3 switch
+## SVIs - switched virtual interfaces - layer 3 inter-vlan routing via switch
+> medium-large network, multiple trunk links | interfaces
 show ip route
 show interface status
+show ip interface brief | include Vlan
 
 sw_l3(config)# sdm prefer lanbase-routing  # change forwarding ASCI to accept IPv4 routes
 sw_l3# reload  # reboot to recognize to ASCI IPv4 directive
@@ -422,8 +438,16 @@ sw_l3(config)# interface vlan VLAN  # create VLAN interface for routing logic
 sw_l3(config-if)# ip address IP-ADD MASK  # VLAN interface cfg mode, assign ip addr w/ mask
 sw_l3(config-if)# no shut
 
-## Routed Ports - layer 3 switch
-...
+## Routed Ports - layer 3 switch routing
+> small-medium network, layer must be enabled previous
+show interfaces INT
+show interfaces status
+show ip route
+show interfaces INT switchport
+
+sw_l3(config)# int INT
+sw_l3(config-if)# no switchport
+sw_l3(config-if)# ip address IP-ADD MASK
 
 ## OSPF - wildcard masking
 rtr(config)# router ospf PROC-ID  # set local process id

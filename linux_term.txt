@@ -82,10 +82,16 @@ shift+ctrl+page-down  # cycle tab most right
 alt+<.>  # cycle CLI input arg; alt+<.> - cycle; <enter> - execute
 
 # CLI
-apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 apt-cache search REGEX  # query the APT cache, search available package lists
 apt-get update  # Debian update package cache
 apt info PKG  # Debian query PKG info
+apt list  # print packages installed
+apt search "KEY"  # available package containing KEY
+lsb_release -a  # print Debian e.g. Ubuntu version | release
+[sudo] add-apt-repository universe | multiverse  # add Debian repos e.g. install tree
+[sudo] apt update
+
+apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 atq # manage jobs
 base64 /dev/random | head -c 10M > FILE.txt  # create FILE w/ base64 10MB random data
 atrm JOB  # remove job
@@ -303,7 +309,7 @@ popd  # pop stack
 pushd DIR  # push to stack
 
 # SED
-cat FILE | sed REGEX ; sed REGEX << cat IN-FILE | sed REGEX ...  # exec patterns
+echo $PATH | sed 's/:/\n/g'  # parse $PATH example
 sed 's/ss//g'  	# remove string 'ss' all occurrences on line, [g]lobal
  's/ */_/g'  # replace <space> with <under_score> 
  '/^$/d'  	# delete empty lines
@@ -312,6 +318,7 @@ sed 's/ss//g'  	# remove string 'ss' all occurrences on line, [g]lobal
  's/.*delete-up-to-char-sequence//'  # delete up to REGEX, inclusive
  's/delete-after-char-sequence.*//' # delete after REGEX, inclusive 
  's/^/prefix/'  # add prefix to all lines
+cat FILE | sed REGEX ; sed REGEX << cat IN-FILE | sed REGEX ...  # exec patterns
 
 # CLI Tools
 cmatrix  # 'matrix' animation

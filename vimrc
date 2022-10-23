@@ -53,7 +53,7 @@ if &t_Co > 2 || has("gui_running")
   "Revert with :syntax off
   syntax on
 
-  "background color schemes
+  " Background color schemes
   colorscheme elflord
   "colorscheme peachpuff
   "colorscheme evening
@@ -118,15 +118,25 @@ endif
 "
 " The matchit plugin makes the % command work better, but it is not backwards
 " compatible.
-packadd matchit
+"packadd matchit
 
-"line numbers
+" Line numbers
 set number 
 
-"set with smart case to turn on case insensitive if capital letters input
+" Set with smart case to turn on case insensitive if capital letters input
 set ignorecase
 set smartcase
 
-"disable word wrap
+" Disable word wrap
 set textwidth=0
 set wrapmargin=0
+
+" Set highlight + search
+set hlsearch
+set hls
+
+" Visualize break '$' or tab '^I'
+"set list
+
+" Highlight parentheses
+set showmatch

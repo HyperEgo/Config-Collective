@@ -1,4 +1,4 @@
-# bashrc template - ~/.bashrc
+# ~/.bashrc
 
 bind -s 'set completion-ignore on'  # ignore case, tab complete
 

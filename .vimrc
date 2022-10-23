@@ -1,3 +1,5 @@
+" ~/.vimrc
+
 " Example vimrc template
 "
 " Maintainer:	Bram Moolenaar <Bram@vim.org>

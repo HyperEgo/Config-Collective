@@ -2,17 +2,19 @@
 
 bind -s 'set completion-ignore-case on'  # ignore case, tab complete
 
-# Path - remove duplicates
-function removeDupPath() {
+# funct
+function removeDupPath() {  # remove duplicates in $PATH
 	local foo=$(sed 's/:/\n/g' <<< $PATH | sort | uniq -u)
 	local fum=$(sed 's/:/\n/g' <<< $PATH | sort | uniq -d)
 	local foo+=" $fum"
 	PATH=$(echo $foo | sed 's/ /:/g')
 }
 
-# Path
+# env
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export PATH
+export HISTTIMEFORMAT="%Y-%m-%d %T "  # time-date format for cmd history
+export HISTCONTROL=ignoreboth  # ignore first space on writes to cmd history
 
 # Prompt
 red=$(tput setaf 1)

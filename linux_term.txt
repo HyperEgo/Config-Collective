@@ -62,9 +62,6 @@
 /var/log/yum.log  # yum install log
 /var/spool/cron/crontabs  # user cron jobs
 
-export HISTTIMEFORMAT="%Y-%m-%d %T "  # time-date format for cmd history
-export HISTCONTROL=ignoreboth  # ignore first space on writes to cmd history
-
 # keystrokes
 CMD +SPACE +TABx2  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
 F11  # terminal full screen toggle

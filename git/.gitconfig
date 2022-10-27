@@ -1,16 +1,18 @@
 # Git config file
-## /etc/gitconfig  # global
-## ~/.gitconfig  # local $USER
-## /path/to/project/.git/config  # local project
+
+# /etc/gitconfig
+# ~/.gitconfig 
+# /path/to/project/.git/config
 
 [user]
 	email = $EMAIL
-	name = $USER
+	name = !bash -c '"echo \"$USER\";"'
 [core]
-	editor = vim
+	editor = vi
 [color]
 	ui = true
 [alias]
 	st = status
 	lgg = log --graph --oneline --decorate --abbrev-commit --all
 	ci = commit
+	test = !bash -c '"echo \"User =  $USER\";"'

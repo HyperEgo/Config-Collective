@@ -1,6 +1,6 @@
 # ~/.bashrc
 
-bind -s 'set completion-ignore on'  # ignore case, tab complete
+bind -s 'set completion-ignore-case on'  # ignore case, tab complete
 
 # Path - remove duplicates
 function removeDupPath() {
@@ -41,4 +41,5 @@ alias bb='cd -'
 
 # Git
 alias lgg='git log --graph --oneline --decorate --abbrev-commit --all'
+alias gsh='git show --pretty --name-only $1'
 alias gs='git status'

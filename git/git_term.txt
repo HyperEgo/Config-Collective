@@ -1,0 +1,123 @@
+# Git - terminal commands
+
+WORKING => STAGED => LOCAL => REMOTE
+create | edit -> add -> commit -> push
+
+untracked files ==> working dir
+tracked files ==> repo
+
+/etc/gitconfig  # global
+~/.gitconfig  # local
+
+git help CMD  # print CMD manual
+git help config|branch|merge
+
+## user cfg
+git config --global user.name $USER
+git config --global user.email $USER_EMAIL
+git config --global core.editor $EDITOR (e.g. vim)
+git config --global color.ui true
+
+## env
+git config --global alias.st "status"
+git config --global alias.lgg "log --graph --oneline --decorate --abbrev-commit --all"
+git config --global alias.ci "commit"
+git config --global --unset CMD   # remove git cmd alias
+git config --list  # print global creds
+git config --get remote.origin.url  # print upstream url remote 'origin'
+
+# repo management
+git status
+git log --oneline --graph --decorate --all  # print log output oneline, w/ curr tree graphics
+git log BR  # print branch logs
+
+git branch  # see current branch
+git branch BR  # create branch, stay on current
+git branch --merged  # print merged branches for current
+git branch -m OLD_BR NEW_BR  # rename branch
+git branch -D BR  # [d]elete branch, force
+git branch -r  # print [r]emote branches
+git branch -a|--all  # print [a]ll remote branches
+
+git checkout BR  # switch to branch
+git checkout -b BR  # create [b]ranch, check it out
+git checkout -b SUB_BR ORG_BR  # checkout subordinate branch from "main" branch
+git checkout -- FILE  # checkout | override file from repo in to working dir
+git checkout --theirs path/to/file  # merge conflict; accept | override incoming changes
+git checkout --theirs .
+
+git rebase BR  # resync HEAD local branch to incoming
+git rebase origin/master
+
+git diff  # compare working dir and repo
+git diff --staged  # compare staged area and repo
+git diff --color-words  # compare changes side-by-side, color contrast
+
+git add FILE  # add file
+git rm FILE  # remove file from staged to working dir (e.g. after commit, before push)
+git reset HEAD FILE  # remove file from STAGED to WORKING
+git clean -f  # remove [f]iles from working dir
+git show BR|SHA  # print commit details
+git show --pretty --name-only |SHA  # print commit file list
+
+git stash  # stash working changes
+git stash list  # print stash list entries
+git stash pop  # remove first single stash state from list, apply
+git stash apply  # apply first single stash state from list
+git stash clear
+
+git commit  # commit files, go to editor
+git commit -m "commit message"  # commit files to current branch w/ [m]essage
+git commit -am "add all modified files"  # commit all modified files, untracked not affected
+git commit --amend -m "add to previous commit"  # amend to most recent commit
+
+git merge |--squash BR  # merge branch in to curr, optional squash commit messages
+git merge --no-ff BR  # execute merge, no fast forward
+git merge --ff-only BR  # execute merge, only fast forward merge, abort otherwise
+git merge --abort  # abort merge
+
+git remote -v  # print remotes, current branch
+git remote add ALIAS REMOTE  # add alias for remote
+git remote add origin URL # add remote named 'origin' for URL
+git remote rm ALIAS  # remove remote
+
+git push -u ALIAS BR  # push branch changes to remote [u]pstream tracking
+git push -u origin master  # push changes to remote named 'origin' on 'master' branch
+git push ALIAS --delete REMOTE  # keep local alias, delete remote
+git push --set-upstream origin master  # set upstream remote named 'origin' for 'master' branch
+git push REMOTE --delete BR  #  remove remote feature branch
+
+git clone URL  # clone repo, assume MASTER branch
+git clone -b BR URL DIR  # clone repo to directory
+git clone -b BR --single-branch URL  # clone specific branch
+git clone --recurse-submodules URL  # clone branch w/ submods
+
+git pull = git fetch + git merge
+git fetch REMOTE --prune  # remove REMOTE refs
+
+git reset path/to/submodule  # resolve submod conflicts
+
+## re-initialize submodules
+git submodule deinit -f --all
+git submodule init
+git sync
+git update --remote
+
+## create local repo
+git init .
+git add -A .
+git commit -m "first commit"
+git push
+
+## create remote repo, local exclusive
+remote> git init --bare  # bare repo, no working dir
+local> git remote add origin URL  # add remote named 'origin' for remote URL
+local> git remote -v  # list 'pull', 'fetch' connected remotes
+local> git push origin master  # push changes to remote named 'origin' on 'master' branch
+
+## create remote repo, shared
+mkdir -p /share/devrepo.git
+sudo chgrp GRP /share/devrepo.git  # set directory group name
+sudo chmod g+s|g+ws /share/devrepo.git  # set file attrib inheritance
+cd /share/devrepo.git
+git init --bare --shared=group  # explicitly set repo to shared status - multiple user contributes

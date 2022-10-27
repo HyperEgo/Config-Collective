@@ -1,0 +1,397 @@
+---
+# Configure Fires Gateway Server - Windows Server 2016
+
+# target hostname: fires
+# host file: /etc/ansible/hosts
+
+# tags:
+# env = Environment
+# bak = Backup
+# cfg = Configuration
+# srv = Service
+# fdn = Firewall Down
+# fup = Firewall Up
+# reg = Registry
+
+# execute play:
+# /usr/bin/ansible-playbook-3 Fires_Gateway_config.yml
+
+# execute play w/ tags (inclusive):
+# /usr/bin/ansible-playbook-3 Fires_Gateway_config.yml --tags env,bak,cfg,srv
+
+# execute play w/ tags (exclusive):
+# /usr/bin/ansible-playbook-3 Fires_Gateway_config.yml --skip-tags fup,fdn,reg
+
+- name: Fires Gateway Configuration and Setup
+  hosts: fires
+  
+  vars:
+    ACTIVEMQ_BROKER_URI: failover:(ssl://127.0.0.1:61678)
+    AMDWS_AUDIT_URI: ssl://127.0.0.1:9999
+    AMDWS_SUITE: C:\Program Files\AMDWSSuite
+    AMDWS_CIB: C:\Program Files\AMDWSSuite\CIB\data
+    AMDWS_DB: D:\AppData\data\db
+    AMDWS_DTED: D:AppData\data\mapData\dted
+    APPDATA: D:\AppData\data
+    APPDATA_ARCHIVE: D:\AppData\data\DataArchive\Archives
+    CMP_HOME: C:\CCI\CMP
+    COMSPEC: C:\windows\system32\cmd.exe
+    CTRL_SHARE: /share/FIRES/Ansible_auto
+    DEFLOGDIR: C:\Program Files\McAfee\DesktopProtection
+    JAVA_HOME: C:\Program Files\java\jdk
+    JAVA8_HOME: C:\Program Files\java\jre8
+    MCAFEE_REG_PATH: HKLM:\SOFTWARE\WOW6432Node\McAfee\SystemCore\VSCore\On Access Scanner\McShield\Configuration\Default
+    MSPCCS: C:\Appdata\data\mapData\geotransdata
+    MTF_DIR: C:\Program Files\AMDWSSuite\MilitaryMessaging\MTFMessageProcessor\data
+    MTF_HOME: C:\Program Files\AMDWSSuite\MilitaryMessaging
+    MTF_REPLACE: '    <add key="AmdwsPublishQueueTimerInterval" value="5000"/>'
+    NDDS_HOME: C:\Program Files\rti_connext_dds-5.3.0
+    PLUGGABLE_BRIDGE: C:\Program Files\AMDWSSuite\PlugableBridge
+    REMOTE_DESKTOP: C:\Users\Public\Documents
+    WORLDWIND_DATA: D:\AppData\data\mapData
+    
+  tasks:
+    - name: Windows Environment Variables
+      tags: env
+      block:
+      - name: Set windows Environment Variables
+        debug:
+          msg: 'Set Windows environment variables.'
+          
+      - name: ACTIVEMQ_BROKER_URI
+        win_environment:
+        state: present
+        name: ACTIVEMQ_BROKER_URI
+        value: '{{ ACTIVEMQ_BROKER_URI }}'
+        level: machine
+        
+      - name: AMDWS_APP_DATA
+        win_environment:
+        state: present
+        name: AMDWS_APP_DATA
+        value: '{{ APPDATA }}'
+        level: machine
+        
+      - name: AMDWS_AUDIT_URI
+        win_environment:
+        state: present
+        value: '{{ AMDWS_AUDIT_URI }}'
+        level: machine
+        
+      - name: AMDWS_CIB
+        win_environment:
+        state: present
+        value: '{{ AMDWS_CIB }}'
+        level: machine
+        
+      - name: AMDWS_DATA_ARCHIVE_LOCATION
+        win_environment:
+        state: present
+        name: AMDWS_DATA_ARCHIVE_LOCATION
+        value: '{{ APPDATA_ARCHIVE }}'
+        level: machine
+        
+      - name: AMDWS_DB_HOME
+        win_environment:
+        state: present
+        name: AMDWS_DB_HOME
+        value: '{{ AMDWS_DB }}'
+        level: machine
+        
+      - name: AMDWS_DTED_DATA
+        win_environment:
+        state: present
+        name: AMDWS_DTED_DATA
+        value: '{{ AMDWS_DTED }}'
+        level: machine
+        
+      - name: BACKUP
+        win_environment:
+        state: present
+        name: BACKUP
+        value: '{{ PLUGGABLE_BRIDGE_BAK }}'
+        level: machine
+        
+      - name: CMP_HOME
+        win_environment:
+        state: present
+        name: CMP_HOME
+        value: '{{ CMP_HOME }}'
+        level: machine
+        
+      - name: ComSpec
+        win_environment:
+        state: present
+        name: ComSpec
+        value: '{{ COMSPEC }}'
+        level: machine
+        
+      - name: CONFIG_ADMIN
+        win_environment:
+        state: present
+        name: CONFIG_ADMIN
+        value: '{{ AMDWS_SUITE }}\FSRTools\ConfigurationAdminTool'
+        level: machine
+        
+      - name: CSHARPTHINSERVER
+        win_environment:
+        state: present
+        name: CSHARPTHINSERVER
+        value: '{{ AMDWS_SUITE }}\bootstrap'
+        level: machine
+        
+      - name: DEFLOGDIR
+        win_environment:
+        state: present
+        name: DEFLOGDIR
+        value: '{{ DEFLOGDIR }}'
+        level: machine
+        
+      - name: FIRES
+        win_environment:
+        state: present
+        name: Fires
+        value: '{{ AMDWS_SUITE }}'
+        level: machine
+        
+      - name: JAVA_HOME
+        win_environment:
+        state: present
+        name: JAVA_HOME
+        value: '{{ JAVA_HOME }}'
+        level: machine
+        
+      - name: JAVA8_HOME
+        win_environment:
+        state: present
+        name: JAVA8_HOME
+        value: '{{ JAVA8_HOME }}'
+        level: machine
+        
+      - name: JRE_HOME
+        win_environment:
+        state: present
+        name: JRE_HOME
+        value: '{{ JAVA_HOME }}'
+        level: machine
+        
+      - name: JRE8_HOME
+        win_environment:
+        state: present
+        name: JRE8_HOME
+        value: '{{ JAVA8_HOME }}'
+        level: machine
+        
+      - name: MSPCCS_DATA
+        win_environment:
+        state: present
+        name: MSPCCS_DATA
+        value: '{{ MSPCCS }}'
+        level: machine
+        
+      - name: MTF_HOME
+        win_environment:
+        state: present
+        name: MTF_HOME
+        value: '{{ MTF_HOME }}'
+        level: machine
+        
+      - name: NDDS_HOME
+        win_environment:
+        state: present
+        name: NDDSHOME
+        value: '{{ NDDS_HOME }}'
+        level: machine
+        
+      - name: PLUGGABLE_BRIDGE
+        win_environment:
+        state: present
+        name: PLUGGABLE_BRIDGE
+        value: '{{ PLUGGABLE_BRIDGE }}'
+        level: machine
+        
+      - name: VSEDEFLOGDIR
+        win_environment:
+        state: present
+        name: VSEDEFLOGDIR
+        value: '{{ DEFLOGDIR }}'
+        level: machine
+        
+      - name: WORLDWIND_DATA
+        win_environment:
+        state: present
+        name: WORLDWIND_DATA
+        value: '{{ WORLDWIND_DATA }}'
+        level: machine
+        
+        
+    - name: File Backup and Management
+      tags: bak
+      block:
+      - name: File Backup and Management
+        debug:
+          msg: 'Execute File Backup and Management functions.'
+          
+      - name: Create Pluggable Bridge Log Directory
+        win_file:
+          path: '{{ PLUGGABLE_BRIDGE }}\logs'
+          state: directory
+          
+      - name: Create Pluggable Bridge Lib Directory
+        win_file:
+          path: '{{ PLUGGABLE_BRIDGE }}\lib'
+          state: directory
+          
+      - name: Check MFT Config Tool
+        win_stat:
+          path: '{{ MTF_DIR }}\ConfigurationAdminTool.exe.config'
+        register: mtf_file
+        
+      - name: Check Pluggable Bridge Backup
+        win_stat:
+          path: '{{ PLUGGABLE_BRIDGE_BAK }}'
+        register: plug_bak
+        
+      - name: Check NDDS Java dll
+        win_stat:
+          path: '{{ PLUGGABLE_BRIDGE }}\lib\nddsjava.dll'
+        register: ndds_java
+        
+      - name: Copy MTF Config Admin Tool
+        win_copy:
+          src: '{{ MTF_DIR }}\ConfigurationAdminTool.exe.config'
+          dest: '{{ MTF_DIR }}\ConfigurationAdminTool.exe.config.bak'
+          remote_src: yes
+        when: mtf_file.stat.exists  # if original file exists, copy
+        
+      - name: Copy Pluggable Bridge
+        win_copy:
+          src: '{{ PLUGGABLE_BRIDGE }}'
+          dest: '{{ PLUGGABLE_BRIDGE_BAK }}'
+          remote_src: yes
+        when: not plug_bak.stat.exists  # if backup directory does not exist, copy
+        
+      - name: Copy NDDS Java dll
+        win_copy:
+          src: C:\Program Files\rti_connext_dds-5.3.0\lib\x64Win64VS2013\nddsjava.dll
+          dest: '{{ PLUGGABLE_BRIDGE }}\lib\nddsjava.dll'
+        when: not ndds_java.stat.exists  # if backup file does not exist, copy
+        
+        
+    - name: File Configuration
+      tags: cfg
+      block:
+        - name: File Configuration
+          debug:
+            msg: 'Unzip, install artifacts, delete temp directories'
+            
+        - name: Delete Eclipse Equinox App
+          win_file:
+            path: '{{ PLUGGABLE_BRIDGE }}\configuration\org.eclipse.equinox.app'
+            state: absent
+            
+        - name: Delete Eclipse Core Runtime
+          win_file:
+            path: '{{ PLUGGABLE_BRIDGE }}\configuration\org.eclipse.core.runtime'
+            state: absent
+            
+#        - name: Delete Eclipse OSGI
+#          win_file:
+#            path: '{{ PLUGGABLE_BRIDGE }}\configuration\org.eclipse.osgi'  # directory in use - Admin lock?
+#            state: absent
+            
+        - name: List zip files  # debug
+          debug: msg={{ lookup('fileglob', '*.zip') }}
+          
+        - name: Copy zip files to Remote
+          win_copy:
+            src: '{{ item }}'
+            dest: '{{ REMOTE_DESKTOP }}\'
+          with_fileglob:
+            - '{{ CTRL_SHARE }}/*.zip'
+            
+        - name: Find zip files on Remote
+          win_find:
+            paths: '{{ REMOTE_DESKTOP }}'
+            patterns: '*.zip'
+            recurse: no
+          register: zips
+          
+        - name: Unzip files on Remote
+          win_unzip:
+            src: '{{ item.path }}'
+            dest: '{{ REMOTE_DESKTOP }}\'
+            delete_archive: yes
+          with_items: '{{ zips.files }}'
+          
+          
+    - name: Start Services
+      tags: srv
+      block:
+      - name: Start Pluggable Bridge and AMDWS Services
+        debug:
+          msg: 'Start Pluggable Bridge and AMDWS Services'
+          
+      - name: Pluggable Bridge Service
+        win_service:
+          name: Pluggable Bridge
+          path: '{{ PLUGGABLE_BRIDGE }}\PlugableBridgeService.exe'  
+          # PlugableBridgeService.exe -vm "${JAVA_HOME}\bin" --launcher.appendVmargs -vmargs -DAMDWS_APP_DATA=${AMDWS_APP_DATA}
+          
+      - name: AMDWS Services
+        win_shell: 'Start-Service -Name AMDWS*'  # start all AMDWS services
+        
+        
+    - name: Disable Firewall
+      tags: fdn
+      block:
+        - name: Disable Windows Firewall
+          debug:
+            msg: 'Disable Windows Firewall.'  # agmadmin ?
+            
+        - name: Disable Windows Firewall
+          win_firewall:
+            state: disabled
+            profiles:
+            - Domain
+            - Public
+            - Private
+            
+            
+    - name: Enable Firewall
+      tags: fup
+      block:
+        - name: Enable Windows Firewall
+          debug:
+            msg: 'Enable Windows Firewall'  # agmadmin ?
+            
+        - name: Enable Windows Firewall
+          win_firewall:
+            state: enabled
+            profiles:
+            - Domain
+            - Public
+            - Private
+            
+            
+    - name: McAfee Exclusions
+      tags: reg
+      block:
+        - name: Set McAfee exclusions
+          debug:
+            msg: 'Set McAfee exclusions in Windows registry'  # McAfee gone, replaced by Windows Defender
+            
+        - name: Set McAfee Registry Edit exclusions
+          win_regedit:
+            path: '{{ MCAFEE_REG_PATH }}'
+            name: 'ExcludedItem_{{ item.number }}'
+            data: '{{ item.directory }}'
+            type: string
+          loop:
+            - { number: '001', directory: 'C:\Program Files\AMDWSSuite' }
+            - { number: '002', directory: 'C:\Program Files\java' }
+            - { number: '003', directory: 'C:\Program Files\Microsoft SQL Server' }
+            - { number: '004', directory: 'C:\Program Files\rti_connext_dds-5.3.0' }
+            - { number: '005', directory: 'C:\FIRESDesktop' }
+            - { number: '006', directory: 'C:\CCI' }
+            - { number: '007', directory: 'D:\AppData' }

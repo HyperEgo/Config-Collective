@@ -2,7 +2,7 @@
 
 # support script for terminal emulator - MobaXterm, Windows
 
-# git clone cmd w/ integrated ssl
+# git clone w/ ssl
 git -c http.sslVerify=false clone $1
 
 #git config http.sslVerify false  # disable ssl

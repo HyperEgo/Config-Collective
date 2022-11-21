@@ -79,15 +79,17 @@ shift+ctrl+page-down  # cycle tab most right
 alt+<.>  # cycle CLI input arg; alt+<.> - cycle; <enter> - execute
 
 # CLI
+aptitude install PKG  # use aptitude package manager
+apt|apt-get install PKG  # use apt package manager
 apt-cache search REGEX  # query the APT cache, search available package lists
 apt-get update  # Debian update package cache
 apt info PKG  # Debian query PKG info
 apt list  # print packages installed
 apt search "KEY"  # available package containing KEY
 lsb_release -a  # print Debian e.g. Ubuntu version | release
-[sudo] add-apt-repository universe | multiverse  # add Debian repos e.g. install tree
-[sudo] apt update
-
+add-apt-repository universe | multiverse  # add Debian repos e.g. install tree
+apt update  # update package list to latest
+apt upgrade  # install latest package versions
 apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 atq # manage jobs
 base64 /dev/random | head -c 10M > FILE.txt  # create FILE w/ base64 10MB random data
@@ -135,7 +137,7 @@ echo -n "value" | openssl md5 -hmac "key"  # gen md5 hash from data input
 ethtool DEV  # print net driver and hd setting for DEV
 env  # print user environment variables
 g|parted  # partition editor
-[f|g]disk -l DEV  # manage device partitions, e.g. fdisk -l DEV ; fdisk < gdisk < parted < gparted
+f|gdisk -l DEV  # manage device partitions, e.g. fdisk -l DEV ; fdisk < gdisk < parted < gparted
 mke2fs -t  # create filesystem, e.g. ext3, ext4
 mkfs.ext4 -F DEV  # format DEV to ext4 [F]orce
 for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # e.g. 'for loop', copy, exec in background
@@ -201,6 +203,7 @@ localectl list-keymaps  # print keyboard mappings
 lshw  # pring hardware metrics
 ls -li  # print dir inode numbers
 ls -Z FILE  # print SELinux security context for FILE
+ln -s path/to/dir |TEXT  # create 'soft' link; DO NOT append '/'
 lsmod | sort | less  # print currently loaded kernel modules
 lsof -i  # list open files w/ process, [i]nternet
 lsof -u USER  # list open files by USER

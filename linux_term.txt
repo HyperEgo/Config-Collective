@@ -108,6 +108,7 @@ chmod g+s DIR  # set SGID bit to enforce group association for child entities
 chmod +t DIR  # set sticky bit, disable deletion by non-owners
 CMD /bin/kill  # send CMD to kill container, testing
 CMD > /dev/null 2>&1  # send CMD to /dev/null, stdout, stderr 
+
 cp -air /src/dir/* /dest/dir  # copy source CONTENTS to dest
 cp -R /src/dir /dest/dir  # copy source DIR to dest
 crontab -lu USER  # print [u]ser cron job [l]ist
@@ -138,20 +139,26 @@ ethtool DEV  # print net driver and hd setting for DEV
 env  # print user environment variables
 g|parted  # partition editor
 f|gdisk -l DEV  # manage device partitions, e.g. fdisk -l DEV ; fdisk < gdisk < parted < gparted
-mke2fs -t  # create filesystem, e.g. ext3, ext4
 mkfs.ext4 -F DEV  # format DEV to ext4 [F]orce
-for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # e.g. 'for loop', copy, exec in background
-for file in *; do mv $file `echo $file | tr ' ' '_'` ; done  # for filename(s), replace SPACE for UNDER-SCORE
+mke2fs -t ext2|3|4  # create filesystem
+
+for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy DIR, exec in background
+for file in *; do mv $file `echo $file | tr ' ' '_'` ; done  # for filename(s), replace SPACE for UNDER_SCORE
 for file in *; do echo “this is a test file” >> $file; done  # append string to file
+
+find /var/log -type f -size +100k  # find [f]iles in /var/log greater than 100 KB
+find . -type f -mmin -30  # find files updated in last 30 minutes 
+find . -type f -size 0 -or -size +100k -mmin -30  # find files empty or +100 KB and updated last 30 mins
+
 find . -type d -iname "KEY"  # find [d]irectory 'KEY'
 find . -type f -iname "*.log"  # find file by extension 
 find . -type f -iname "*.bin" -exec mv -t ./dumpbin {} \;  # move files to dir
 find . -type f -iname "*.txt" -exec rsync {} DIR \;  # find file(s) for pattern, copy|rsync to DIR
 find . -iname ".svn" -exec rm -rvf {} \;  # delete .svn directories and file recursively
 find . -inum INODE -exec rm -i {} \;  # delete file by INODE number
-find /var/log -type f -size +100k  # find [f]iles in /var/log greater than 100 KB
-find /var/log -type f -mmin -30  # find files updated in last 30 minutes 
-find /var/log -type f -size 0 -or -size +100k -mmin -30  # find files empty or +100 KB and updated last 30 mins
+find . -type f -exec sed -i 's/original-text/replace/g' {} \;  # find text in files, edit in-place
+find . -type f -iname "*.txt" -exec mv {} {}_append_txt \;  # append ext to filename
+
 fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 getent group GRP  # print group membership list
 getent hosts  # print hosts db
@@ -159,11 +166,13 @@ getfacl DIR  # print ACL attribs for DIR
 setfacl -R -m g:GRP:r DIR  # grant read-only perms to GRP for DIR
 getsebool -a  # SELinux print boolean list
 gpg --gen-key|send-key  # generate key pair, send to server
+
 grep --exclude-dir=.svn 'DEPRECATED_'  # search keyword, exclude dir
 grep -niR '.sh' DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive, no asterisk!
 grep '^(str)' .  # search curr dir, begin str
 grep -v '^(str)' .  # search curr dir, exclude matches
 grep -w 'test' .  # search curr dir, match whole word only
+
 groupmod -n OLD NEW  # edit group [n]ame from OLD to NEW
 groups USER  # print USER groups
 head -30 /dev/urandom > FILE  # write begin 30 lines from input to FILE
@@ -201,9 +210,9 @@ localectl  # print keyboard and layout settings e.g. localectl status
 localectl list-locales  # print locales
 localectl list-keymaps  # print keyboard mappings
 lshw  # pring hardware metrics
+ln -s path/to/dir |TEXT  # create 'soft' link; DO NOT append '/'
 ls -li  # print dir inode numbers
 ls -Z FILE  # print SELinux security context for FILE
-ln -s path/to/dir |TEXT  # create 'soft' link; DO NOT append '/'
 lsmod | sort | less  # print currently loaded kernel modules
 lsof -i  # list open files w/ process, [i]nternet
 lsof -u USER  # list open files by USER
@@ -236,6 +245,7 @@ printenv  # print user environment variables
 ps -elf | grep -i "EXPR"  # print process for EXPR
 readonly  # print shell read-only variables
 renice  # alter priority of running processes
+rename -- .old-ext .new-ext *.old-ext  # rename file extensions
 rmmod -f ARG  # [f]orce kernel mod ARG remove
 rsync -havz SRC DEST  # remote copy, sync files [h]uman readable, [a]rchive, [v]erbose, [z]compression
 runlevel  # print previous and current System V Init runlevel
@@ -249,6 +259,7 @@ sort FILE | uniq  # remove duplicates
 ss -p | grep EXPR  # print sockets w/ PIDs
 su -l|c  # substitute user, [l]ogin, issue [c]ommand to shell
 swapon  # print swap file metrics
+
 systemctl daemon-reload  # reload the systemd manager configuration
 systemctl isolate graphical.target | multi-user.target  # launch UI | cli
 systemctl set-default TARGET  # set default target at boot
@@ -259,6 +270,7 @@ systemctl --type=service|target  # print system services | targets
 systemctl list-units |grep -i "service | target | mount"  # print curr loaded modules
 systemctl start | stop | | restart |enable | disable SRVC  # manage SRVC
 systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
+
 tail -f FILE  # print file appends
 tail -n10 FILE  # print FILE last 10 lines
 tail -n+500 FILE  # print FILE line 500->EOF
@@ -269,6 +281,7 @@ tar -zxvf TAR -C DIR  # e[x]tract archive to DIR
 jar -tf JAR  # print file list
 jar -xf JAR FILE  # extract FILE from jar
 jar -tf | grep FILE
+
 tcpdump -i DEV  # dump [i]nterface DEV traffic e.g. sudo tcpdump -i ens32
 telinit CMD  # edit System V Init runlevel
 top  # M - organize by memory, P - cpu usage, r - renice, reprioritizer PID
@@ -309,20 +322,27 @@ popd  # pop stack
 pushd DIR  # push to stack
 
 # SED
-echo $PATH | sed 's/:/\n/g'  # parse $PATH example
-sed 's/ss//g'  	# remove string 'ss' all occurrences on line, [g]lobal
- 's/ */_/g'  # replace <space> with <under_score> 
- '/^$/d'  	# delete empty lines
- 's/:/\n/g' <<< $PATH | sort  # print PATH content vertically
- '/.*delete-line/d'  # delete line containg REGEX
- 's/.*delete-up-to-char-sequence//'  # delete up to REGEX, inclusive
- 's/delete-after-char-sequence.*//' # delete after REGEX, inclusive 
- 's/^/prefix/'  # add prefix to all lines
-cat FILE | sed REGEX ; sed REGEX << cat IN-FILE | sed REGEX ...  # exec patterns
+echo $ENV_VAR | sed REGEX
+cat IN_FILE | sed REGEX > OUT_FILE
+sed REGEX << cat IN-FILE | sed REGEX ...  # chain pattern, multiple sed regex for input
+find PARM -exec sed PARM REGEX {} \;  # find files, 'pipe' (exec) to sed
+
+sed -e|i|n REGEX FILE   # [e]xpression, [i]n-place edit file, [n]-quiet|silent
+  's/:/\n/g'  		# parse $PATH, sub ':' for 'newline'
+  '/^$/d'  		# delete empty lines
+  '/.*delete-line/d'  	# delete lines containg REGEX
+  's/ss//g'  		# remove string 'ss' all occurrences, [g]lobal
+  's/ */_/g'     	# replace SPACE with UNDER_SCORE
+  's/.*delete-sequence//'  # delete up to REGEX, inclusive
+  's/delete-sequence.*//' # delete after REGEX, inclusive 
+  's/^/prefix/'  # add prefix to all lines
+
+sed -n N1,N2p FILE  	# print line number range, N1 - N2
+sed -n -e N1p -e N2p FILE  # print lines N1 and N2
+sed -n N1p FILE  	# print line N1
 
 # CLI Tools
 cmatrix  # 'matrix' animation
-
 tmux  # terminal multiplexer
  ctrl+b  # prefix
  ?  # help

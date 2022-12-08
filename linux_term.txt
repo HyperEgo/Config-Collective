@@ -146,18 +146,17 @@ for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy DIR, exec in ba
 for file in *; do mv $file `echo $file | tr ' ' '_'` ; done  # for filename(s), replace SPACE for UNDER_SCORE
 for file in *; do echo “this is a test file” >> $file; done  # append string to file
 
-find /var/log -type f -size +100k  # find [f]iles in /var/log greater than 100 KB
-find . -type f -mmin -30  # find files updated in last 30 minutes 
-find . -type f -size 0 -or -size +100k -mmin -30  # find files empty or +100 KB and updated last 30 mins
-
-find . -type d -iname "KEY"  # find [d]irectory 'KEY'
-find . -type f -iname "*.log"  # find file by extension 
-find . -type f -iname "*.bin" -exec mv -t ./dumpbin {} \;  # move files to dir
-find . -type f -iname "*.txt" -exec rsync {} DIR \;  # find file(s) for pattern, copy|rsync to DIR
-find . -iname ".svn" -exec rm -rvf {} \;  # delete .svn directories and file recursively
-find . -inum INODE -exec rm -i {} \;  # delete file by INODE number
-find . -type f -exec sed -i 's/original-text/replace/g' {} \;  # find text in files, edit in-place
-find . -type f -iname "*.txt" -exec mv {} {}_append_txt \;  # append ext to filename
+find . -type d|f -iname KEY  # find [d]irectory, [f]ile for KEY value
+find /var/log -type f -size +100k  # file type in /var/log, size > 100 KB
+find . -inum INODE -exec rm -i {} \;  # file type find by INODE, remove [i]nteractively e.g.> ll|ls -li
+find . -type f -mmin -30  # files updated in last 30 minutes 
+find . -type f -size 0 -or -size +100k -mmin -30  # files empty or > 100 KB, updated 30 mins recent
+find . -type f -iname "*.log"
+find . -type f -iname "*.bin" -exec mv -t /tmp/dump {} \;  # file type, move to '/tmp/bin'
+find . -type f -iname "*.txt" -exec rsync {} 192.168.10.1:/home/$USER \; # file type, move to network location w/ rsync
+find . -iname ".svn" -exec rm -rvf {} \;  # file + dir type '.svn', remove all
+find . -type f -iname "*.txt" -exec mv {} {}_append_txt \;  # file type, append
+find . -type f -iname "*.java" -exec sed -i 's/original/replace/g' {} \;  # file type, replace text [i]n-place
 
 fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 getent group GRP  # print group membership list
@@ -245,7 +244,7 @@ printenv  # print user environment variables
 ps -elf | grep -i "EXPR"  # print process for EXPR
 readonly  # print shell read-only variables
 renice  # alter priority of running processes
-rename -- .old-ext .new-ext *.old-ext  # rename file extensions
+rename -- .old-ext .new-ext *.old-ext  # rename file extension
 rmmod -f ARG  # [f]orce kernel mod ARG remove
 rsync -havz SRC DEST  # remote copy, sync files [h]uman readable, [a]rchive, [v]erbose, [z]compression
 runlevel  # print previous and current System V Init runlevel
@@ -274,12 +273,13 @@ systemd-analyze |blame | dump  # print startup process times, longest decending,
 tail -f FILE  # print file appends
 tail -n10 FILE  # print FILE last 10 lines
 tail -n+500 FILE  # print FILE line 500->EOF
+
 tar PARM --exclude=GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
 tar -zcvf TAR DIR|FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
 tar -tvf TAR  # print archive file list, [t]list
 tar -zxvf TAR -C DIR  # e[x]tract archive to DIR
 jar -tf JAR  # print file list
-jar -xf JAR FILE  # extract FILE from jar
+jar -xf JAR FILE  # extract FILE
 jar -tf | grep FILE
 
 tcpdump -i DEV  # dump [i]nterface DEV traffic e.g. sudo tcpdump -i ens32
@@ -318,25 +318,29 @@ zip -r ZIP DIR|FILE  # compress CONTENTS [r]ecursive
 
 # dir mngmt
 dirs  # print dir stack
+dirs -c  # clear stack
 popd  # pop stack
 pushd DIR  # push to stack
 
 # SED
-echo $ENV_VAR | sed REGEX
-cat IN_FILE | sed REGEX > OUT_FILE
-sed REGEX << cat IN-FILE | sed REGEX ...  # chain pattern, multiple sed regex for input
-find PARM -exec sed PARM REGEX {} \;  # find files, 'pipe' (exec) to sed
+## model
+echo $ENV | sed REGEX  # echo var, exec cmd
+cat IN_FILE | sed REGEX > OUT_FILE  # print file, exec cmd, write to output
+sed REGEX << cat IN-FILE | sed REGEX ...  # chain multiple cmd to input file
+find PARM -exec sed PARM REGEX {} \;  # pipe 'find' to 'sed' (e.g. specify file type)
 
-sed -e|i|n REGEX FILE   # [e]xpression, [i]n-place edit file, [n]-quiet|silent
-  's/:/\n/g'  		# parse $PATH, sub ':' for 'newline'
+## pattern
+sed -e|i|n REGEX FILE   # [e]xpression, edit file [i]n-place, [n]-quiet|silent
   '/^$/d'  		# delete empty lines
-  '/.*delete-line/d'  	# delete lines containg REGEX
-  's/ss//g'  		# remove string 'ss' all occurrences, [g]lobal
+  '/.*delete-line/d'  	# delete lines containing
+  's/:/\n/g'  		# e.g.> echo $PATH, pipe sed, replace ':' for 'newline'
+  's/ss//g'  		# remove 'ss' all occurrences, [g]lobal
   's/ */_/g'     	# replace SPACE with UNDER_SCORE
-  's/.*delete-sequence//'  # delete up to REGEX, inclusive
-  's/delete-sequence.*//' # delete after REGEX, inclusive 
-  's/^/prefix/'  # add prefix to all lines
+  's/.*delete-sequence//'  # delete up to sequence, inclusive
+  's/delete-sequence.*//' # delete after sequence, inclusive 
+  's/^/prefix/' 	 # add prefix to all lines
 
+## print lines
 sed -n N1,N2p FILE  	# print line number range, N1 - N2
 sed -n -e N1p -e N2p FILE  # print lines N1 and N2
 sed -n N1p FILE  	# print line N1

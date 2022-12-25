@@ -153,11 +153,11 @@ sw(config)# vlan VLAN
 sw(config-vlan)# name NAME  # optional
 sw(config)# int range RANGE
 sw(config-if-range)# switchport access vlan VLAN  # assign int to vlan
-sw(config-if-range)# switchport mode access  # specify port type, e.g.> access | trunk
+sw(config-if-range)# switchport mode access  # specify port type 'access | trunk'
 sw(config-if-range)# description TEXT  # optional
 sw(config-if-range)# no shut
 e.g.>
-sw(config)# int range fa0/1-5  # ports must exist e.g. no fa0/0!
+sw(config)# int range fa0/1-5  # ports must exist physically exist
 sw(config-if-range)# switchport access vlan 10
 sw(config-if-range)# switchport mode access
 
@@ -285,7 +285,7 @@ show ip protocols  # print routing protocol parameters, timers
 show ip route  # print IPv4 routes
 show ip route ospf
 show ip route connected | static | ospf  # print route table metrics
-show ip route IP  # print detailed route info, e.g. next hop
+show ip route IP  # print detailed route info, e.g.> next hop
 show ip router IP MASK
 show |ip arp  # print router ARP cache
 clear ip arp |IP  # delete dynamic ARP cache, per IPv4 addr
@@ -310,8 +310,8 @@ ip ospf network broadcast | point-to-point
 
 ip | ipv6 mtu SIZE  # set Maximum Transmit Unit
 network ID WILD area AREA  # create ospf route w/ area id
-router-id ID
-router ospf ID  # create router id
+router-id ID  # RID must be unique for entire ospf AS - autonomous system
+router ospf PROC  # PID is local process id to differeniate various running ospf instances
 |no passive-interface INT  # stop send 'hello', do not discover neighors
 int loopback INT
 maximum-paths PATHS

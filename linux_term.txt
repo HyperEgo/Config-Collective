@@ -108,7 +108,6 @@ chmod g+s DIR  # set SGID bit to enforce group association for child entities
 chmod +t DIR  # set sticky bit, disable deletion by non-owners
 CMD /bin/kill  # send CMD to kill container, testing
 CMD > /dev/null 2>&1  # send CMD to /dev/null, stdout, stderr 
-
 cp -air /src/dir/* /dest/dir  # copy source CONTENTS to dest
 cp -R /src/dir /dest/dir  # copy source DIR to dest
 crontab -lu USER  # print [u]ser cron job [l]ist
@@ -137,15 +136,13 @@ echo $UID  # print user id
 echo -n "value" | openssl md5 -hmac "key"  # gen md5 hash from data input
 ethtool DEV  # print net driver and hd setting for DEV
 env  # print user environment variables
+eog FILE  # GNOME Image Viewer
 g|parted  # partition editor
 f|gdisk -l DEV  # manage device partitions, e.g. fdisk -l DEV ; fdisk < gdisk < parted < gparted
-mkfs.ext4 -F DEV  # format DEV to ext4 [F]orce
-mke2fs -t ext2|3|4  # create filesystem
 
 for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy DIR, exec in background
-for file in *; do mv $file `echo $file | tr ' ' '_'` ; done  # for filename(s), replace SPACE for UNDER_SCORE
-for file in *; do echo “this is a test file” >> $file; done  # append string to file
-
+for file in *; do echo “test file” >> $file; done  # append string to file
+for file in *; do mv "$file" `echo $file | tr ' ' '_'` ; done  # find filenames, change SPACE to UNDERSCORE, no depth recurse
 find . -type d|f -iname KEY  # find [d]irectory, [f]ile for KEY value
 find /var/log -type f -size +100k  # file type in /var/log, size > 100 KB
 find . -inum INODE -exec rm -i {} \;  # file type find by INODE, remove [i]nteractively e.g.> ll|ls -li
@@ -157,7 +154,6 @@ find . -type f -iname "*.txt" -exec rsync {} 192.168.10.1:/home/$USER \; # file 
 find . -iname ".svn" -exec rm -rvf {} \;  # file + dir type '.svn', remove all
 find . -type f -iname "*.txt" -exec mv {} {}_append_txt \;  # file type, append
 find . -type f -iname "*.java" -exec sed -i 's/original/replace/g' {} \;  # file type, replace text [i]n-place
-
 fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 getent group GRP  # print group membership list
 getent hosts  # print hosts db
@@ -218,7 +214,8 @@ lsof -u USER  # list open files by USER
 lspci -nn|v|vv|vvv  # list PCI devices, vendor codes, numbers, names, [v]erbose
 lsusb -tv  # list USB devices, [t]ype, [v]erbose
 md5sum FILE  # print MD5 message digest
-sha256sum  # print SHA256 message digest
+mkfs.ext4 -F DEV  # format DEV to ext4 [F]orce
+mke2fs -t ext2|3|4  # create filesystem
 modinfo DEV.ko.xz  # print kernel module info e.g. modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
 more FILE  # print contents, forward only
 mount -a  # mount [a]ll filesystems in fstab
@@ -251,6 +248,7 @@ runlevel  # print previous and current System V Init runlevel
 sar -u  # print performance info e.g. 'sar 2 6' - 2 sec interval, 6 queries total
 screen | tmux  # terminal session multiplexer
 setsebool -P  # SELinux write curr values to disc at reboot
+sha256sum  # print SHA256 message digest
 shutdown -c  # cmd [sudo], interrupt stop reboot sequence
 snap info PKG  # Linux cross distribution, dependency app installer
 sort -k COLUMN
@@ -335,7 +333,7 @@ sed -e|i|n REGEX FILE   # [e]xpression, edit file [i]n-place, [n]-quiet|silent
   '/.*delete-line/d'  	# delete lines containing
   's/:/\n/g'  		# e.g.> echo $PATH, pipe sed, replace ':' for 'newline'
   's/ss//g'  		# remove 'ss' all occurrences, [g]lobal
-  's/ */_/g'     	# replace SPACE with UNDER_SCORE
+  's/ */_/g'     	# replace SPACE with UNDER_SCORE for text in file
   's/.*delete-sequence//'  # delete up to sequence, inclusive
   's/delete-sequence.*//' # delete after sequence, inclusive 
   's/^/prefix/' 	 # add prefix to all lines

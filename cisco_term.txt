@@ -93,6 +93,7 @@ dev(config-line)#
  exec-timeout VAL  # set terminal time-out value, minutes-seconds
  service tcp-keepalives-in  # enable keepalives
 
+
 # SWITCH
 show
  vlan brief  # print vlan id, name, status, ports 
@@ -387,33 +388,51 @@ ip ospf
  priority VAL
  network broadcast | point-to-point
 
-
 ## IPv6
+global unicast  # static, dynamic (DHCP, SLAAC)
+unique local  #  FD00::/8
+link local  # FE80::/10, WAN link, no advertise for routing protocol
+multi-cast
+ all hosts  # FF02::1
+ all routers  # FF02::2
+ routing protocol
+ solicited-node  # FF02::1:FF /104
+anycast  # :: or all 0's, starter addr or service exclusive
+loopback  #  ::1 or 127 0's with single 1 (end)
+
 show ipv6
- route |IP | MASK  # print route contents
  int |INT
  int brief
- route |summary  # print routing table - summary
+ route |summary | connected | local  # print routing table
+ route |IP | MASK  # print route contents
  static |IP | INT  # print installed static routes
  static detail  # print static route detail
  protocols  # print routing protocol
- rip
  neighbors  # print neighbor discovery cache
  routers  # print advertisements
  traffic  # print traffic stats
+ rip
 
 clear ipv6
- rip  # delete rip routing table
  route*  # delete all routing table routes
  route IP  # delete specific route
  traffic  # reset traffic counters
+ rip  # delete rip routing table
 
 debug ipv6
- rip  # print debug msg
  packet  # print debug msg
  routing  # print debug msg, cache updates
+ rip  # print debug msg
 
-ip | ipv6 mtu SIZE  # set Maximum Transmit Unit
+ipv6
+ unicast-routing  # enable ipv6 routing
+ enable  # assign interface link-local addr
+ address 
+  ADDR/PFIX |eui-64  # static cfg or calculate int id using EUI-64 rules
+  dhcp  # dynamic learning DHCP
+  autoconfig  # dynamic learning, router calculates int id using EUI-64 rules SLAAC
+ 
+ mtu SIZE  # set Maximum Transmit Unit
 
 ## SDM - Security Device Manager
 rtr(config)#
@@ -468,7 +487,7 @@ rtr(config-if)#
 ## HDLC - High-Level Data Link Control
 rtr(config-if)# encapsulation hdlc  # enable HDLC link encap 
 
-## ROAS (router-on-a-stick) - layer 3 inter-vlan routing via router; small network, singular trunk link
+## ROAS - Router-On-A-Stick - layer 3 inter-vlan routing via router; small network, singular trunk link
 rtr(config)# int INT | SUB-INT  # define sub int
 rtr(config-subif)#
  encapsulation dot1q VLAN # enable trunking w/ vlan tag

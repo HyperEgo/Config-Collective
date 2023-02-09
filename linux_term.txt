@@ -139,10 +139,12 @@ env  # print user environment variables
 eog FILE  # GNOME Image Viewer
 g|parted  # partition editor
 f|gdisk -l DEV  # manage device partitions, e.g. fdisk -l DEV ; fdisk < gdisk < parted < gparted
+fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 
 for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy DIR, exec in background
 for file in *; do echo “test file” >> $file; done  # append string to file
 for file in *; do mv "$file" `echo $file | tr ' ' '_'` ; done  # find filenames, change SPACE to UNDERSCORE, no depth recurse
+
 find . -type d|f -iname KEY  # find [d]irectory, [f]ile for KEY value
 find /var/log -type f -size +100k  # file type in /var/log, size > 100 KB
 find . -inum INODE -exec rm -i {} \;  # file type find by INODE, remove [i]nteractively e.g.> ll|ls -li
@@ -154,13 +156,6 @@ find . -type f -iname "*.txt" -exec rsync {} 192.168.10.1:/home/$USER \; # file 
 find . -iname ".svn" -exec rm -rvf {} \;  # file + dir type '.svn', remove all
 find . -type f -iname "*.txt" -exec mv {} {}_append_txt \;  # file type, append
 find . -type f -iname "*.java" -exec sed -i 's/original/replace/g' {} \;  # file type, replace text [i]n-place
-fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
-getent group GRP  # print group membership list
-getent hosts  # print hosts db
-getfacl DIR  # print ACL attribs for DIR
-setfacl -R -m g:GRP:r DIR  # grant read-only perms to GRP for DIR
-getsebool -a  # SELinux print boolean list
-gpg --gen-key|send-key  # generate key pair, send to server
 
 grep --exclude-dir=.svn 'DEPRECATED_'  # search keyword, exclude dir
 grep -niR '.sh' DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive, no asterisk!
@@ -168,6 +163,12 @@ grep '^(str)' .  # search curr dir, begin str
 grep -v '^(str)' .  # search curr dir, exclude matches
 grep -w 'test' .  # search curr dir, match whole word only
 
+getent group GRP  # print group membership list
+getent hosts  # print hosts db
+getfacl DIR  # print ACL attribs for DIR
+setfacl -R -m g:GRP:r DIR  # grant read-only perms to GRP for DIR
+getsebool -a  # SELinux print boolean list
+gpg --gen-key|send-key  # generate key pair, send to server
 groupmod -n OLD NEW  # edit group [n]ame from OLD to NEW
 groups USER  # print USER groups
 head -30 /dev/urandom > FILE  # write begin 30 lines from input to FILE
@@ -256,7 +257,6 @@ sort FILE | uniq  # remove duplicates
 ss -p | grep EXPR  # print sockets w/ PIDs
 su -l|c  # substitute user, [l]ogin, issue [c]ommand to shell
 swapon  # print swap file metrics
-
 systemctl daemon-reload  # reload the systemd manager configuration
 systemctl isolate graphical.target | multi-user.target  # launch UI | cli
 systemctl set-default TARGET  # set default target at boot
@@ -268,18 +268,18 @@ systemctl list-units |grep -i "service | target | mount"  # print curr loaded mo
 systemctl start | stop | | restart |enable | disable SRVC  # manage SRVC
 systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
 
-tail -f FILE  # print file appends
-tail -n10 FILE  # print FILE last 10 lines
-tail -n+500 FILE  # print FILE line 500->EOF
-
 tar PARM --exclude=GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
 tar -zcvf TAR DIR|FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
 tar -tvf TAR  # print archive file list, [t]list
 tar -zxvf TAR -C DIR  # e[x]tract archive to DIR
+
 jar -tf JAR  # print file list
 jar -xf JAR FILE  # extract FILE
 jar -tf | grep FILE
 
+tail -f FILE  # print file appends
+tail -n10 FILE  # print FILE last 10 lines
+tail -n+500 FILE  # print FILE line 500->EOF
 tcpdump -i DEV  # dump [i]nterface DEV traffic e.g. sudo tcpdump -i ens32
 telinit CMD  # edit System V Init runlevel
 top  # M - organize by memory, P - cpu usage, r - renice, reprioritizer PID
@@ -314,7 +314,7 @@ lpr FILE.txt  # CUPS, convert text FILE to pdf, def dest /home/$USER/Desktop
 lpq  # list printer queue
 zip -r ZIP DIR|FILE  # compress CONTENTS [r]ecursive
 
-# dir mngmt
+# dir locale stack
 dirs  # print dir stack
 dirs -c  # clear stack
 popd  # pop stack
@@ -358,27 +358,16 @@ set -g history-limit 10000
 set -g status-fg green
 set -g status-bg black
 
-# LVM - physical > volume > logical
-pvscan  # print physical volume info
-pvdisplay  # print physical volume detail
-vgscan  # print volume group info
-vgdispay  # pring volume group detail
-lvscan  # print logical volume info
-lvdisplay [VGLABEL]  # print logical volume detail e.g. sudo lvdisplay backup
+# RPM - RHELx package manager
+rpm -ivh PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
+rpm -e PKG  # [e]rase or uninstall package
+rpm -qa PKG  # query PKG name exact
+rpm -qa | grep NAME  # grep package name unknown
+rpm -qi PKG  # query PKG installer info
+rpm -ql PKG  # query PKG installer files
+rpm -ql <<< rpm -qa ksh | sort > FILE  # print to file PKG installer files from common name
 
-pvcreate DEV1 DEV2 ..  # create physical volume across devices
-vgcreate VGLABEL DEV1 DEV2 ..  # create volume group from physical volume assignments
-lvcreate --name LVNAME --size LVSIZE VGLABEL  # e.g. sudo lvcreate --name sysbk --size 1GB backup
-
-lvextend -L{SIZE} LV-DEV  # extend logical volume to SIZE e.g. sudo lvextend -L5GB /dev/backup/databk
-lvreduce -L{SIZE} LV-DEV  # reduce logical volume to SZIE e.g. sudo lvreduce -L1GB /dev/backup/logbk
-mkfs.ext4 LV-DEV  # create logical volume filesystem
-mount LV-DEV MOUNTDIR  # mount logical volume e.g. sudo mount /dev/backup/sysbk /backup/sys
-umount DIR  # unmount previous mounted device
-LVDEVCE DIR TYPE defaults 0 0  # edit entries to /etc/fstab for auto mount on reboot
-e.g.> /dev/backup/sysbk /backup/sys xfs defaults 0 0  # fstab example
-
-# YUM, RPM - Fedora | Red Hat package managers
+# YUM - RHELx package manager
 yum list installed | sort  # print yum local rpm packages installed
 yum -v repolist  # print connected repos [v]erbose: base url, last updated, etc.
 yum list "python*"  # print packages, default exclusive
@@ -390,14 +379,8 @@ yum info PKG  # Fedora query PKG info
 yum install -y epel-release cups-pdf
 yum provides CFG  # print config file package association e.g. yum provides /etc/vsftpd/vsftpd.conf
 yum remove -y PKG  # remove PKG
-rpm -ivh PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
-rpm -qa PKG  # query PKG installer name e.g. rpm -qa python*
-rpm -qi PKG  # query PKG installer info
-rpm -ql PKG  # query PKG installer files
-rpm -ql <<< rpm -qa ksh | sort > FILE  # print to file PKG installer files from common name
-rpm -e PKG  # [e]rase or uninstall package
 
-## YUM - local repo
+## YUM - create local repo
 find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
 cd /local/rpms/customrepo.repo  # browse to rpm local dir
 createrepo .
@@ -407,7 +390,7 @@ yum makecache
 yum install PKG | --nogpgcheck  # install PKG, no gpg-key check, unofficial RHELx
 rpm -ivh PKG --nodeps  # install PKG, ignore dependencies, official RHELx
 
-# FS - create mount
+# FS - filesystem, create mount
 lsblk  # print connected devices w/ mounts
 mkdir -p /mnt/dd1 /mnt/dd2  # create directories for device
 parted /dev/sdX print  # print device info
@@ -427,17 +410,12 @@ vim /etc/fstab  # edit fstab  w/ UUID, label
 mount -L LABEL MOUNT  # mount using label
 mount -a  # test mounts, sudo
 
-# SSH Key config
+# SSH Key cfg
 ssh-keygen  # creates public, pvt key pair
  ~/.ssh/id_rsa  # pvt key
  ~/.ssh/id_rsa.pub  # public key
  ~/.ssh/authorized_keys  # connecting device pub key file
 ssh-copy-id SRV  # copy pub key to server
-
-# CRYPTO config
-shred FILE  # overwrite FILE contents, secure wipe
-cryptsetup OPTIONS ACTION ACTION-ARG  # manage volume encryption
-cryptsetup -v --verify-passphrase luksFormat VOLUME  # prompts for UPPER case 'YES'
 
 # VIM
 e  # next word, end
@@ -538,13 +516,13 @@ python3  # start python interpreter
 >>> help("modules")  	 # print local modules installed, get help info
 >>> help("_struct")
 
-## Python3 - pip3, plugin manager
+## PIP3 - python3 plugin manager
 yum install -y python36
 pip3 install --upgrade pip
 pip3 download -d . "pywinrm>=0.3.0"  # dl python3 pywinrm plugin installer
 pip3 install --no-index --find-links *  # install plugin w/ deps local, offline mode
 
-# RAID config
+# RAID cfg
 RAID 0 = stripe, no parity, no disk failures (max performance)
 RAID 1 = mirror (1-to-1 disk backup)
 RAID 4 = stripe, parity on single disk
@@ -583,6 +561,31 @@ cat /proc/mdstat  # show RAID personality overview
 mdadm --detail /dev/md1  # show RAID part details: sz, dev, state
 systemctl enable mdmonitor  # enable service at runtime
 systemctl start mdmonitor  # auto start service at boot
+
+# LVM - physical > volume > logical
+pvscan  # print physical volume info
+pvdisplay  # print physical volume detail
+vgscan  # print volume group info
+vgdispay  # pring volume group detail
+lvscan  # print logical volume info
+lvdisplay [VGLABEL]  # print logical volume detail e.g. sudo lvdisplay backup
+
+pvcreate DEV1 DEV2 ..  # create physical volume across devices
+vgcreate VGLABEL DEV1 DEV2 ..  # create volume group from physical volume assignments
+lvcreate --name LVNAME --size LVSIZE VGLABEL  # e.g. sudo lvcreate --name sysbk --size 1GB backup
+
+lvextend -L{SIZE} LV-DEV  # extend logical volume to SIZE e.g. sudo lvextend -L5GB /dev/backup/databk
+lvreduce -L{SIZE} LV-DEV  # reduce logical volume to SZIE e.g. sudo lvreduce -L1GB /dev/backup/logbk
+mkfs.ext4 LV-DEV  # create logical volume filesystem
+mount LV-DEV MOUNTDIR  # mount logical volume e.g. sudo mount /dev/backup/sysbk /backup/sys
+umount DIR  # unmount previous mounted device
+LVDEVCE DIR TYPE defaults 0 0  # edit entries to /etc/fstab for auto mount on reboot
+e.g.> /dev/backup/sysbk /backup/sys xfs defaults 0 0  # fstab example
+
+# CRYPTO cfg
+shred FILE  # overwrite FILE contents, secure wipe
+cryptsetup OPTIONS ACTION ACTION-ARG  # manage volume encryption
+cryptsetup -v --verify-passphrase luksFormat VOLUME  # prompts for UPPER case 'YES'
 
 # Sudoers file - visudo
 student01 ALL=(ALL) NOPASSWD:ALL  # student01 acc exec all sudo cmds w/o switch 'su -' & no pd

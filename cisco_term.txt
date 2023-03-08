@@ -389,7 +389,7 @@ ip ospf
  network broadcast | point-to-point
 
 ## IPv6
-global unicast  # static, dynamic (DHCP, SLAAC)
+global unicast  # static, dynamic (SLAAC)
 unique local  #  FD00::/8
 link local  # FE80::/10, WAN link, no advertise for routing protocol
 multi-cast
@@ -427,13 +427,14 @@ debug ipv6
 ipv6
  unicast-routing  # enable ipv6 routing
  enable  # assign interface link-local addr
+ mtu SIZE  # set Maximum Transmit Unit
  address 
   ADDR/PFIX |eui-64  # static cfg or calculate int id using EUI-64 rules
   dhcp  # dynamic learning DHCP
   autoconfig  # dynamic learning, router calculates int id using EUI-64 rules SLAAC
+ route PREFIX NEXT-HOP |[OUT-INT | NEXT-HOP]  # define static route
+  ::/0  # define default route
  
- mtu SIZE  # set Maximum Transmit Unit
-
 ## SDM - Security Device Manager
 rtr(config)#
  ip http server | secure server | authentication local

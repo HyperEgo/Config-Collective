@@ -6,7 +6,7 @@
 
 [user]
 	email = $EMAIL
-	name = !bash -c '"echo \"$USER\";"'
+	name = $NAME
 [core]
 	editor = vi
 [color]
@@ -14,11 +14,12 @@
 [alias]
 	st = status
 	lgg = log --graph --oneline --decorate --abbrev-commit --all
+	ad = add -A .
 	ci = commit
+	cm = commit -m
+
+	# update all submodules to latest remote version
 	modU = !git submodule deinit -f --all && git submodule init && git submodule update --remote
+
+	# update arg '$1' to latest remote version
 	modS = !git submodule deinit -f $1 && git submodule init $1 && git submodule update --remote $1 && :
-
-#	modU  # update all submodules to latest remote version
-#	modS  # update arg '$1' to latest remote version
-
-#	test = !bash -c '"echo \"User =  $USER\";"'

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set directory permissions, recursive
+# set curr directory perms, recursive
 
 # constants
 PERMS=775

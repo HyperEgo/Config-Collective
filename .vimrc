@@ -56,7 +56,7 @@ if &t_Co > 2 || has("gui_running")
   syntax on
 
   " Background color schemes
-  colorscheme elflord
+  "colorscheme elflord
   "colorscheme peachpuff
   "colorscheme evening
   "colorscheme shine

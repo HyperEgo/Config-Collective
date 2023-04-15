@@ -200,9 +200,12 @@ find . -type f
 
 
 for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir N-times, exec in background
-for file in *;
- do echo "append string to file contents" >> $file; done
- do mv "$file" `echo $file | tr ' ' '_'` ; done  # change filename SPACE to UNDER_SCORE, no dir recurse
+for f in *;
+ do echo "append_this_string_to_current_file_contents" >> $f; done
+ do mv "$f" `echo $f | tr ' ' '_'` ; done  # edit filename from SPACE to UNDER_SCORE, single char, no recurse
+ do mv "$f" "${f//old_string/new_string}" ; done  # replace filename string, no recurse
+ do mv "$f" "${f//old_string/}" ; done  # replace filename string with 'nothing', no recurse
+
 
 grep
  --exclude-dir=.svn 'DEPRECATED_'  # search keyword, exclude dir

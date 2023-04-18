@@ -102,16 +102,23 @@ alt+<.>  # cycle CLI input arg; alt+<.> - cycle; <enter> - execute
 CMD /bin/kill  # send CMD to kill container, testing
 CMD > /dev/null 2>&1  # send CMD to /dev/null, stdout, stderr 
 aptitude install PKG  # use aptitude package manager
-apt-get update  # Debian update package cache
 
 apt
- info PKG  # Debian query PKG info
- list  # print packages installed
- search "KEY"  # available package containing KEY
+ info PKG  # Debian package query
+ list  # print package list installed
+ search STR  # query package installed for STR
  update  # update package list to latest
- upgrade  # install latest package versions
+ upgrade  # install package latest version
+apt-get update  # Debian package update cache
+apt-cache search REGEX  # Debian query APT cache, local
 
-apt-cache search REGEX  # query the APT cache, search available package lists
+snap install PKG  # Debian install snap package, online
+
+dpkg
+ -i PKG  # Debian package [i]nstall
+ -s PKG  # query package [s]tatus
+dpkg-reconfigure  # Debian package reconfigure, local
+
 add-apt-repository universe | multiverse  # add Debian repos e.g. install tree
 apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 atq # manage jobs
@@ -152,21 +159,13 @@ dd if=
 
 depmod -A  # gen modules.dep file, map files, exits if older then curr
 df  # print disc filesystem space usage
-dig SERVER  # query mail server
+dig SRV  # query mail server
 
 dmesg
  |-D  # print kernel ring buffer, [D]isable console logging
  -H -l err  # print kernel [l]evel log errors, [H]uman readable output
 
-dnf
- install PKG  # Fedora install PKG
- search PKG   # Fedora search PKG
 
-dpkg
- -i PGK  # Debian [i]nstall PKG
- -s PKG  # Debian [s]tatus PKG
-
-dpkg-reconfigure  # Debian reconfigure installed packages
 du  # print file space usage
 dumpe2fs -b DEV  # print device bad blocks
 e2label DEV LABEL  # label device, e.g. e2label /dev/sdX WEB_SERVER
@@ -185,7 +184,7 @@ fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 
 find . -inum INODE -exec rm -i {} \;  # by INODE, remove [i]nteractively e.g.> ll|ls -li
 find /var/log -type f -size +100k  # /var/log, size > 100 KB
-find . -type d|f -iname STRING  # find [d]irectory, [f]ile for value STRING
+find . -type d|f -iname STR  # find [d]irectory, [f]ile for value STR
 
 find . -type f -iname 
  *.txt -exec mv {} {}.append_string \;  # append string to filename
@@ -371,7 +370,7 @@ jar
  -tf | grep FILE
 
 rpm
- -ivh PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
+ -ivh PKG|*  # RHELx Fedora install local rpm [i]nstall, [v]erbose, [h]ash marks
  -e PKG  # [e]rase or uninstall package
  -qa PKG  # query PKG name exact
  -qa | grep NAME  # grep package name unknown
@@ -379,8 +378,12 @@ rpm
  -ql PKG  # query PKG installer files
  -ql <<< rpm -qa ksh | sort > FILE  # print to file PKG installer files from common name
 
+dnf
+ install PKG  # Fedora install PKG
+ search PKG   # Fedora search PKG
+
 yum
- list installed | sort  # print yum local rpm packages installed
+ list installed | sort  # RHELx Fedora print yum local rpm packages installed
  -v repolist  # print connected repos [v]erbose: base url, last updated, etc.
  list "python*"  # print packages, default exclusive
  search "python"  # search repo db, default inclusive

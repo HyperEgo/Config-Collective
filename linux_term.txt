@@ -77,10 +77,9 @@
 
 /var/spool/cron/crontabs  # user cron jobs
 
-# Terminal cmd, keystrokes
+# CLI keystrokes
 CMD +SPACE +TABx2  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
 F11  # terminal full screen toggle
-
 ctrl
  +l  # clear screen
  +a  # cursor line begin
@@ -91,26 +90,22 @@ ctrl
  +SHIFT+w  # close curr tab
  +page-up  # cycle tab left
  +page-down  # cycle tab right
-
 shift
  +ctrl+page-up  # cycle tab most left
  +ctrl+page-down  # cycle tab most right
+alt+[.]  # cycle CLI input arg; alt+<.> - cycle; <enter> - execute
 
-alt+<.>  # cycle CLI input arg; alt+<.> - cycle; <enter> - execute
-
-# CLI
+# CLI utility
 CMD /bin/kill  # send CMD to kill container, testing
 CMD > /dev/null 2>&1  # send CMD to /dev/null, stdout, stderr 
 aptitude install PKG  # use aptitude package manager
 apt-get update  # Debian update package cache
-
 apt
  info PKG  # Debian query PKG info
  list  # print packages installed
  search "KEY"  # available package containing KEY
  update  # update package list to latest
  upgrade  # install latest package versions
-
 apt-cache search REGEX  # query the APT cache, search available package lists
 add-apt-repository universe | multiverse  # add Debian repos e.g. install tree
 apropos KEYWORD  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
@@ -126,139 +121,105 @@ lsattr FILE  # print FILE attribs e.g. [i]mmutable, [a]ppend only
 lsb_release -a  # print Debian e.g. Ubuntu version | release
 chgrp -R GRP DIR  # edit directory group affiliation
 chown -R $USER DIR  # edit directory ownership
-
 chmod
- -R 775 DIR  # edit directory permissions
+ -R 775 DIR|FILE  # edit directory permissions
  -R {ugo}+{rwx} DIR  # edit dir perms, [u]ser, [g]roup, [o]ther, [r]ead, [w]rite, [e]xecute
  g+s DIR  # set SGID bit to enforce group association for child entities
  +t DIR  # set sticky bit, disable deletion by non-owners
-
 cp
  -air /src/dir/* /dest/dir  # copy source CONTENTS to dest
  -R /src/dir /dest/dir  # copy source DIR to dest
-
 crontab -lu USER  # print [u]ser cron job [l]ist
 curl -f URL  # download URL [f]ail silently
-
 date
  --date "+60 days"  # curr time + 60 days
  +%F  # e.g. 2021-11-27
  +%F_%R  # e.g. 2021-11-27_23:38
-
 dd if=
  /dev/sdX of=/mnt/bkup/os_image_$(date +%F).img  # save image from /dev/sdX to /mnt/bkup
  /dev/urandom of=/dev/sdX  # write random data to /dev/sdX
  /dev/zero of=/dev/sdX  # write zeros to /dev/sdX
-
 depmod -A  # gen modules.dep file, map files, exits if older then curr
 df  # print disc filesystem space usage
 dig SERVER  # query mail server
-
-dmesg
- |-D  # print kernel ring buffer, [D]isable console logging
+dmesg |-D  # print kernel ring buffer, [D]isable console logging
  -H -l err  # print kernel [l]evel log errors, [H]uman readable output
-
-dnf
- install PKG  # Fedora install PKG
- search PKG   # Fedora search PKG
-
-dpkg
- -i PGK  # Debian [i]nstall PKG
- -s PKG  # Debian [s]tatus PKG
-
+dnf install|search PKG  # Fedora package manager
+dpkg -i|s PGK  # Debian [i]nstall, status PKG
 dpkg-reconfigure  # Debian reconfigure installed packages
 du  # print file space usage
 dumpe2fs -b DEV  # print device bad blocks
 e2label DEV LABEL  # label device, e.g. e2label /dev/sdX WEB_SERVER
-
-echo
+echo |-e|  # accept special chars
  $HOME  # print home variable
  $UID  # print user id
  -n "value" | openssl md5 -hmac "key"  # gen md5 hash from data input
-
 ethtool DEV  # print net driver and hd setting for DEV
 env  # print user environment variables
 eog FILE  # GNOME Image Viewer
-[g|p]arted  # partition editor
-[f|g]disk -l DEV  # manage device partitions, e.g. fdisk -l DEV ; fdisk < gdisk < parted < gparted
+g|parted  # partition editor
+f|gdisk -l DEV  # manage device partitions, e.g. fdisk -l DEV ; fdisk < gdisk < parted < gparted
 fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
-
-find . -inum INODE -exec rm -i {} \;  # by INODE, remove [i]nteractively e.g.> ll|ls -li
 find /var/log -type f -size +100k  # /var/log, size > 100 KB
-find . -type d|f -iname STRING  # find [d]irectory, [f]ile for value STRING
-
+find . -inum INODE -exec rm -i {} \;  # by INODE, remove [i]nteractively e.g.> ll|ls -li
+find . -type d|f -iname STRING  # model [d]irectory, [f]ile, value STRING
+find . -type f
+ -mmin -30  # created most recent 30 minutes
+ -size 0 -or -size +100k -mmin -30  # empty or > 100 KB, updated most recent 30 minutes
 find . -type f -iname 
  *.txt -exec mv {} {}.append_string \;  # append string to filename
  *.txt -exec rsync {} $USER@192.168.10.1:/home/$USER \; # copy-update from curr dir to network node
  *.bin -exec mv -t /tmp/dump {} \;  # move to '/tmp/bin'
  *.svn -exec rm -rvf {} \;  # remove all
  *.java -exec sed -i 's/original/replace/g' {} \;  # replace file contents text [i]n-place
-
-find . -type f
- -mmin -30  # created most recent 30 minutes
- -size 0 -or -size +100k -mmin -30  # empty or > 100 KB, updated most recent 30 minutes
-
-
 for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir N-times, exec in background
 for f in *;
  do echo "append_this_string_to_current_file_contents" >> $f; done
  do mv "$f" `echo $f | tr ' ' '_'` ; done  # edit filename from SPACE to UNDER_SCORE, single char, no recurse
  do mv "$f" "${f//old_string/new_string}" ; done  # replace filename string, no recurse
  do mv "$f" "${f//old_string/}" ; done  # replace filename string with 'nothing', no recurse
-
-
 grep
  --exclude-dir=.svn 'DEPRECATED_'  # search keyword, exclude dir
  -niR '.sh' DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive, no asterisk!
  '^(str)' .  # search curr dir, begin str
  -v '^(str)' .  # search curr dir, exclude matches
  -w 'test' .  # search curr dir, match whole word only
-
 getent
  group GRP  # print group membership list
  hosts  # print hosts db
-
 getfacl DIR  # print ACL attribs for DIR
 setfacl -R -m g:GRP:r DIR  # grant read-only perms to GRP for DIR
 getsebool -a  # SELinux print boolean list
 gpg --gen-key|send-key  # generate key pair, send to server
 groupmod -n OLD NEW  # edit group [n]ame from OLD to NEW
 groups USER  # print USER groups
-
 head
  -30 /dev/urandom > FILE  # write begin 30 lines from input to FILE
  -c 100G < /dev/urandom > FILE  # read 100 GB data write to FILE
  -n10 FILE  # print FILE first 10 lines
-
 history NUM  # print history last NUM lines 
 host  # DNS lookup utility
 iconv --list # print coded character sets
 init 6  # systemd service manager, reboot
 iostat DEV  # print DEV read | write stat
 ioping -c NUM DEV  # ping latency request to DEV NUM times
-
 ip
  addr show |DEV  # print net device ip info
  monitor -t  # listen for net link traffic, [t]imestamp
  route  # print local route table entry
-
 iptables -nL  # print ip table rules [L]ist, [n]umeric output addr port
 iptables-save  # save config file, IPv4/6 packet filtering, NAT admin tool
 iwconfig  # print wireless devices
 jobs  # print curr jobs
-
 journalctl
  --disk-usage  # print journal filesystem usage
  -u SRVC  # print journal entries for SRVC
-
 kernel-install  # edit kernel, initramfs images from /boot
-
 kill
  %1  # kill job 1
  -9 PID  # kill proc by PID, ugly, ungraceful
  %JOB  # kill by job number
  -l  # [l]ist kill signal functions
-
 klist  # print curr kerberos certificates
 last  # print curr user login events
 lastb  # print user accounts w/ auth attempts
@@ -267,24 +228,19 @@ ldconfig  # configure dynamic linker run-time bindings, print cache
 ldd DEV   # print shared object deps, e.g. /bin/bash
 less -C FILE  # print contents, mouse nav, [C]lear previous contents
 locate FILE  # find FILE, local db
-
 localectl # print keyboard and layout settings e.g. localectl status
  list-locales  # print locales
  list-keymaps  # print keyboard mappings
-
 lshw  # pring hardware metrics
 ln -s path/to/dir |TEXT  # create 'soft' link; DO NOT append '/'
-
 ls
  -li  # print dir inode numbers
  -Z FILE  # print SELinux security context for FILE
-
+lsblk  # list devices, drive assign, mounts
 lsmod | sort | less  # print currently loaded kernel modules
-
 lsof
  -i  # list open files w/ process, [i]nternet
  -u USER  # list open files by USER
-
 lspci -nn|v|vv|vvv  # list PCI devices, vendor codes, numbers, names, [v]erbose
 lsusb -tv  # list USB devices, [t]ype, [v]erbose
 md5sum FILE  # print MD5 message digest
@@ -292,46 +248,34 @@ mkfs.ext4 -F DEV  # format DEV to ext4 [F]orce
 mke2fs -t ext2|3|4  # create filesystem
 modinfo DEV.ko.xz  # print kernel module info e.g. modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
 more FILE  # print contents, forward only
-
 mount
  | column -t  # output contents in column format e.g. package=util-linux
  -a  # mount [a]ll filesystems in fstab
  -t  # specify filesystem [t]ype
-
-nc [netcat]
+nc  # netcat
  -lp SERVER PORT  # [l]isten [p]ort PORT e.g. nc server02 22
-
  echo "this is a test" | nc 10.1.0.1 -v 80  # send test string to remote host
-
  -l -p 666 -e cmd.exe  # listen on host, port, export application output
  10.1.0.1 666  # connect listener to port, ip
-
  type accounts.sql | nc 10.1.0.192 6666  #  send file output to ip, port
  -l -p 6666 > account.sql  # listen on host, port receive data, export to file
-
 netstat -tuplen | grep "LISTEN"  # print listening ports
 nmap -sV SERVER -p PORT  # print SERVER port status e.g. nmap -sV server02 -p 21
-
 nmcli
  connection show  # print network device metrics: name, UUID, type, device
  device show  # print network device status: device, type, state, connection
  con up|down DEV  # enable|disable net DEV e.g. ens32
  con edit DEV  # open Net Manager dev editor > set ipv4.address 10.50.1.101/24
-
 nmtui  # text UI for Net Manager
 nslookup SERVER  # print name SERVER ip addr
-
 od
  -vAn -N1 -td1 < /dev/urandom  # write 1 byte signed decimal integer
  -vAn -N2 -tu2 < /dev/urandom  # write 2 byte unsigned decimal integer
-
 pgrep SRVC-NAME  # return service process id
 pidof PROG  # print process id of running program, e.g. firefox
-
 ping
  -c NUM  # execute ping NUM times
  -I INT  # ping from specific outbound interface
-
 pkill PID  # kill proc by id
 printenv  # print user environment variables
 ps -elf | grep -i "EXPR"  # print process for EXPR
@@ -347,15 +291,12 @@ setsebool -P  # SELinux write curr values to disc at reboot
 sha256sum  # print SHA256 message digest
 shutdown -c  # cmd [sudo], interrupt stop reboot sequence
 snap info PKG  # Linux cross distribution, dependency app installer
-
 sort
  -k COLUMN
  FILE | uniq  # remove duplicates
-
 ss -p | grep EXPR  # print sockets w/ PIDs
 su -l|c  # substitute user, [l]ogin, issue [c]ommand to shell
 swapon  # print swap file metrics
-
 systemctl
  daemon-reload  # reload the systemd manager configuration
  isolate graphical.target | multi-user.target  # launch UI | cli
@@ -366,20 +307,16 @@ systemctl
  --type=service|target  # print system services | targets
  list-units |grep -i "service | target | mount"  # print curr loaded modules
  start | stop | | restart |enable | disable SRVC  # manage SRVC
-
 systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
-
 tar 
  PARM --exclude=GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
  -zcvf TAR DIR|FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
  -tvf TAR  # print archive file list, [t]list
  -zxvf TAR -C DIR  # e[x]tract archive to DIR
-
 jar
  -tf JAR  # print file list
  -xf JAR FILE  # extract FILE
  -tf | grep FILE
-
 rpm
  -ivh PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
  -e PKG  # [e]rase or uninstall package
@@ -388,7 +325,6 @@ rpm
  -qi PKG  # query PKG installer info
  -ql PKG  # query PKG installer files
  -ql <<< rpm -qa ksh | sort > FILE  # print to file PKG installer files from common name
-
 yum
  list installed | sort  # print yum local rpm packages installed
  -v repolist  # print connected repos [v]erbose: base url, last updated, etc.
@@ -399,16 +335,13 @@ yum
  install -y epel-release cups-pdf
  provides CFG  # print config file package association e.g. yum provides /etc/vsftpd/vsftpd.conf
  remove -y PKG  # remove PKG
-
 yumdownloader
  PKG --destdir DIR --resolve
  python36 --destdir ~/Downloads/python36/ --resolve  # directory created if no exist
-
 tail
  -f FILE  # print file appends
  -n10 FILE  # print FILE last 10 lines
  -n+500 FILE  # print FILE line 500->EOF
-
 tcpdump -i DEV  # dump [i]nterface DEV traffic e.g. sudo tcpdump -i ens32
 telinit CMD  # edit System V Init runlevel
 top  # M - organize by memory, P - cpu usage, r - renice, reprioritizer PID
@@ -416,21 +349,17 @@ touch /home/$USER/file{1,2,3}  # create file1, file2, file3 in /home/$USER
 traceroute -T DEST  # run trace w/ tcp packets, def port 80
 truncate -s 0 FILE  # truncate FILE to [s]ize, delete alternative
 tune2fs -l DEV  # view DEV filesystem info
-
 udevadm
  control -R  # reload rules file
  monitor -u  # print received udev events
-
 ulimit -a  # print cpu stats, virtual mem, stack size
 umask  # print default file perms, e.g. 666-umask=default
 unzip ARCH.zip  # extract contents to curr dir
 useradd -D  # print user default attribs
-
 usermod
  -aG GRP USER  # add curr user to GRP or specify USER, [a]ppend, [G]roup
  -L|U USER  # [L]ock | [U]nlock USER account
  -m|d DIR USER  # [m]ove USER home [d]irectory to DIR
-
 users  # print users logged in
 virt-install  # install vm
 visudo  # edit sudoers file - run cmds as root without root password
@@ -449,8 +378,8 @@ lpr FILE.txt  # CUPS, convert text FILE to pdf, def dest /home/$USER/Desktop
 lpq  # list printer queue
 zip -r ZIP DIR|FILE  # compress CONTENTS [r]ecursive
 
-dirs  # print dir stack
- -c  # clear stack
+# file stack
+dirs |-c  # print, [c]lear stack
 popd  # pop stack
 pushd DIR  # push to stack
 
@@ -459,7 +388,6 @@ echo $ENV | sed REGEX  # echo var, exec cmd
 cat IN_FILE | sed REGEX > OUT_FILE  # print file, exec cmd, write to output
 sed REGEX << cat IN-FILE | sed REGEX ...  # chain multiple cmd to input file
 find PARM -exec sed PARM REGEX {} \;  # pipe 'find' to 'sed' (e.g. specify file type)
-
 sed -e|i|n REGEX FILE   # [e]xpression, edit file [i]n-place, [n]-quiet|silent
  '/^$/d'  		# delete empty lines
  '/.*delete-line/d'  	# delete lines containing
@@ -469,59 +397,33 @@ sed -e|i|n REGEX FILE   # [e]xpression, edit file [i]n-place, [n]-quiet|silent
  's/.*delete-sequence//'  # delete up to sequence, inclusive
  's/delete-sequence.*//' # delete after sequence, inclusive 
  's/^/prefix/' 	 # add prefix to all lines
-
 sed -n  # print lines
  N1,N2p FILE  	# print line number range, N1 - N2
  -e N1p -e N2p FILE  # print lines N1 and N2
  N1p FILE  	# print line N1
 
-# tools
+# CLI tools
 cmatrix  # 'matrix' animation
 tmux  # terminal multiplexer
- ctrl+b  # prefix
- ?  # help
- %  # split horiz
- "  # split vert
- x  # close
- d  # detach
+ ctrl+b  # prefix + CMD
+  c  # create session
+  d  # detach
+  w  # select
+  x  # close
+  [  # enable mouse scroll
+  ?  # help
+  %  # horizontal split
+  "  # vertical split
+  $  # name sessopm
 ~/.tmux.conf
+
 set -g
  default-terminal 'screen-256color'  # improve colors
  history-limit 10000
  status-fg green
  status-bg black
 
-# create local repo
-find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
-cd /local/rpms/customrepo.repo  # browse to rpm local dir
-createrepo .
-sed 's/enabled = 0/enabled = 1' /etc/yum.repos.d/redhat.repo
-yum repolist
-yum makecache
-yum install PKG | --nogpgcheck  # install PKG, no gpg-key check, unofficial RHELx
-rpm -ivh PKG --nodeps  # install PKG, ignore dependencies, official RHELx
-
-# create filesystem, mount
-lsblk  # print connected devices w/ mounts
-mkdir -p /mnt/dd1 /mnt/dd2  # create directories for device
-parted /dev/sdX print  # print device info
-parted /dev/sdX mklabel gpt  # set device label
-parted -a optimal /dev/sdX mkpart primary 0% 100%  # create device partition
-mkfs -t ext4 /dev/sdX  # create device file system type e.g. ext4
-mkfs.ext4 /dev/sdX  # deprecated
-blkid  # print connected devices w/ UUID, partUUID, label, partition type
-e2label DEV LABEL
-e2label /dev/sdX NEW_MOUNT
-
-cp -air /etc/fstab /etc/fstab.bak  # backup fstab
-vim /etc/fstab  # edit fstab  w/ UUID, label
-# UUID="ALPHA-NUMERIC" | LABEL  MOUNT  FS-TYPE  OPTIONS  DUMP PASS
-# UUID="b58ce781-4a45-496a-8cd3-ab28d3cef783"  /mnt/dd1  ext4  defaults  1 2
-# LABEL=NEW_MOUNT  /mnt/dd1  ext4  nofail  1 2
-mount -L LABEL MOUNT  # mount using label
-mount -a  # test mounts, sudo
-
-# SSH Key cfg
+# SSH keys
 ssh-keygen  # creates public, pvt key pair
  ~/.ssh/id_rsa  # pvt key
  ~/.ssh/id_rsa.pub  # public key
@@ -573,10 +475,14 @@ SHIFT+g  # FILE bottom
  nohls  # disable highlight search
  number
  nonumber
+:qa  # [q]uit [a]ll
+:wqa  # [w]rite [q]uit [a]ll
+imap, t <Esc>:tabnew<CR>  # e.g.>  map 't' -> 'tab new', ~/.vimrc
 
+/TEXT  # inclusive search
 /\<TEXT\>  # exclusive search
 
-:%s
+:%s  # sed - embedded
  /\<TEXT\>/NEW-TEXT/g  # exclusive search, copy replace [g]lobal
  /TEXT/NEW-TEXT/  # copy replace, first instance
  /TEXT/NEW-TEXT/g  # copy replace, global
@@ -596,19 +502,13 @@ vim -p FILE1, FILE2  # open in tabs
 :tabdo REGEX  # apply REGEX to all tabs
 
 ## split
-vim -o FILE1 FILE2  # horiz split => :split
-vim -O FILE1 FILE2  # vert split => :vsplit
+vim -o FILE1 FILE2  # :split - horizontal
+vim -O FILE1 FILE2  # :vsplit - vertical
 ctrl+w, j|k|l|i  # switch to adjacent window
 ctrl+w, left-arrow, right-arrow
 
-:qa  # [q]uit [a]ll
-:wqa  # [w]rite [q]uit [a]ll
-
-imap, t <Esc>:tabnew<CR>  # e.g.>  map 't' -> 'tab new', ~/.vimrc
-
 # Ant, Maven
 nohup ant &  # run ant background process, log to nohup.out
-
 ant
  -p  # print ant commands, must be in build.xml dir
  commonClean all
@@ -617,13 +517,12 @@ ant
  cmAll
  html
  mvnDeploy  # deploy ant maven artifacts to Nexus repo (see pom for url)
-
 mvn
  -p  # print maven commands, must be in build.xml dir
  compile
  compile clean
 
-# Python3 - CLI Interrupter
+# Python3 - Interrupter
 pydoc modules  # print python local installed modules
 python3  # start python interpreter
 >>> import vlc
@@ -641,6 +540,36 @@ pip3
  download -d . "pywinrm>=0.3.0"  # dl python3 pywinrm plugin installer
  install --no-index --find-links *  # install plugin w/ deps local, offline mode
 
+# Repo - create local
+find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
+cd /local/rpms/customrepo.repo  # browse to rpm local dir
+createrepo .
+sed 's/enabled = 0/enabled = 1' /etc/yum.repos.d/redhat.repo
+yum repolist
+yum makecache
+yum install PKG | --nogpgcheck  # install PKG, no gpg-key check, unofficial RHELx
+rpm -ivh PKG --nodeps  # install PKG, ignore dependencies, official RHELx
+
+# Filesystem - create, mount
+lsblk  # print connected devices w/ mounts
+mkdir -p /mnt/dd1 /mnt/dd2  # create directories for device
+parted /dev/sdX print  # print device info
+parted /dev/sdX mklabel gpt  # set device label
+parted -a optimal /dev/sdX mkpart primary 0% 100%  # create device partition
+mkfs -t ext4 /dev/sdX  # create device file system type e.g. ext4
+mkfs.ext4 /dev/sdX  # deprecated
+blkid  # print connected devices w/ UUID, partUUID, label, partition type
+e2label DEV LABEL
+e2label /dev/sdX NEW_MOUNT
+
+cp -air /etc/fstab /etc/fstab.bak  # backup fstab
+vim /etc/fstab  # edit fstab  w/ UUID, label
+# UUID="ALPHA-NUMERIC" | LABEL  MOUNT  FS-TYPE  OPTIONS  DUMP PASS
+# UUID="b58ce781-4a45-496a-8cd3-ab28d3cef783"  /mnt/dd1  ext4  defaults  1 2
+# LABEL=NEW_MOUNT  /mnt/dd1  ext4  nofail  1 2
+mount -L LABEL MOUNT  # mount using label
+mount -a  # test mounts, sudo
+
 # RAID 
 RAID 0 = stripe, no parity, no disk failures (max performance)
 RAID 1 = mirror (1-to-1 disk backup)
@@ -649,7 +578,7 @@ RAID 5 = stripe, parity across all disks, max one disk failure
 RAID 6 = stripe, double parity across all disks, max two disk failures
 RAID 10 = (1 + 0) mirroring + striping
 
-[g|f]disk /dev/sdX  # gdisk > 2 TB
+g|fdisk /dev/sdX  # gdisk > 2 TB
 > n # new partition
 > Partition number = (default)
 > First Sector = (default)
@@ -708,7 +637,7 @@ cryptsetup -v --verify-passphrase luksFormat VOLUME  # prompts for UPPER case 'Y
 # Sudoers file - visudo
 student01 ALL=(ALL) NOPASSWD:ALL  # student01 acc exec all sudo cmds w/o switch 'su -' & no pd
 
-# C++ compiler - example, test (g++, gcc)
+# C++ (g++, gcc) - compile, test
 vim foo.c
 #include<stdio.h>
 int main(void){

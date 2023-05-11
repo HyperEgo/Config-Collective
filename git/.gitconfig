@@ -8,7 +8,7 @@
 	email = $EMAIL
 	name = $NAME
 [core]
-	editor = vi
+	editor = vim
 [color]
 	ui = true
 [alias]

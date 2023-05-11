@@ -1,5 +1,10 @@
 # ~/.bashrc
 
+# Source global definitions
+if [[ -f /etc/bashrc ]] ; then
+  . /etc/bashrc
+fi
+
 bind -s 'set completion-ignore-case on'  # ignore case, tab complete
 
 # funct
@@ -42,6 +47,7 @@ alias ....='cd ../../..'
 alias bb='cd -'
 
 # Git
-alias lgg='git log --graph --oneline --decorate --abbrev-commit --all'
 alias gsh='git show --pretty --name-only $1'
 alias gs='git status'
+alias lgg='git log --graph --oneline --decorate --abbrev-commit --all'
+

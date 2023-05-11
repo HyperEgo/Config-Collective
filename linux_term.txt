@@ -308,15 +308,16 @@ systemctl
  list-units |grep -i "service | target | mount"  # print curr loaded modules
  start | stop | | restart |enable | disable SRVC  # manage SRVC
 systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
+jar
+ -tf JAR  # print file list
+ -xf JAR FILE  # extract FILE
+ -tf | grep FILE
+java -jar JAR  # execute jar cli
 tar 
  PARM --exclude=GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
  -zcvf TAR DIR|FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
  -tvf TAR  # print archive file list, [t]list
  -zxvf TAR -C DIR  # e[x]tract archive to DIR
-jar
- -tf JAR  # print file list
- -xf JAR FILE  # extract FILE
- -tf | grep FILE
 rpm
  -ivh PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
  -e PKG  # [e]rase or uninstall package

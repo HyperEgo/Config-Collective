@@ -23,3 +23,5 @@
 
 	# update arg '$1' to latest remote version
 	modS = !git submodule deinit -f $1 && git submodule init $1 && git submodule update --remote $1 && :
+[http]
+	sslVerify = false

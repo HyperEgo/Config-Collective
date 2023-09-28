@@ -476,13 +476,10 @@ SHIFT+g  # FILE bottom
  nohls  # disable highlight search
  number
  nonumber
-<<<<<<< HEAD
  ff=unix  # set [f]ile [f]ormat to unix
-=======
 :qa  # [q]uit [a]ll
 :wqa  # [w]rite [q]uit [a]ll
 imap, t <Esc>:tabnew<CR>  # e.g.>  map 't' -> 'tab new', ~/.vimrc
->>>>>>> 1066265ebf153ad9b4d6e79493ffc1b6c31c7734
 
 /TEXT  # inclusive search
 /\<TEXT\>  # exclusive search

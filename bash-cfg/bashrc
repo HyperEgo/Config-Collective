@@ -1,6 +1,7 @@
 # ~/.bashrc
 
-# set completion-ignore-case On  # ignore case, tab complete
+# set completion-ignore-case On
+# bind -s 'set completion-ignore-case on'  # ignore case, tab complete - centos_7, rhel_7
 
 # funct
 function removeDupPath() {  # remove duplicates in $PATH

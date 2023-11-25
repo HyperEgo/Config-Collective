@@ -169,7 +169,7 @@ find . -type f
 find . -type f -iname 
  *.txt -exec mv {} {}.append_string \;  # append string to filename
  *.txt -exec rsync {} $USER@192.168.10.1:/home/$USER \; # copy-update from curr dir to network node
- *.bin -exec mv -t /tmp/dump {} \;  # move to '/tmp/bin'
+ *.bin -exec mv {} /tmp/target \;  # move files to target
  *.svn -exec rm -rvf {} \;  # remove all
  *.java -exec sed -i 's/original/replace/g' {} \;  # replace file contents text [i]n-place
 for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir N-times, exec in background

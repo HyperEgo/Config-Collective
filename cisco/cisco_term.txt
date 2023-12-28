@@ -1,45 +1,48 @@
- Cisco IOS - Router, Switch
+Cisco IOS - Router, Switch
 
 # keystrokes
-?  # print CMD for curr mode
-CMD?  # print CMD complete options
-CMD ?  # print CMD complete options for args
-CMD ARG?  # print CMD complete options ARG---
-CMD ARG ?  # print CMD complete options ARG ---
+?  # print cmd for curr mode
+$CMD
+ ?  # print cmd complete options
+ _?  # print cmd complete options for args
+ _$ARG?  # print cmd complete options ARG---
+ _$ARG_?  # print cmd complete options ARG ---
 tab  # autocomplete
-ctrl+Break  # send interrupt
-ctrl+Shift+6, x  #  suspend curr telent | ssh
-ctrl+c  # stop cmd process
-ctrl+p  # print cmd history
-ctrl+n  # print next cmd history 
-ctrl+f  # move cursor foward
-ctrl+b  # move cursor backward
-ctrl+a  # move cursor to first character
-ctrl+e  # move cursor to last character
-ctrl+r  # refresh cmd line
-ctrl+d  # delete single character
-esc+b  # move backward one word
-esc+f  # move foward one word
+ctrl
+ +Break  # send interrupt
+ +Shift+6, x  #  suspend curr telent | ssh
+ +c  # stop cmd process
+ +p  # print cmd history
+ +n  # print next cmd history 
+ +f  # move cursor foward
+ +b  # move cursor backward
+ +a  # move cursor to first character
+ +e  # move cursor to last character
+ +r  # refresh cmd line
+ +d  # delete single character
+esc
+ +b  # move backward one word
+ +f  # move foward one word
 SPACE  # move 1 page down
 
 # CLI - common
-USER -> ENABLE -> GLOBAL Config -> INT | VLAN | LINE
-
+[USER] >> [ENABLE] >> [GLOBAL] >> [INT] | [LINE] | [VLAN]
+copy
+ run start  # copy running-config to startup-config
+ start run  # copy startup-config to running-config
+enable | disable  # enter | exit enable mode
 end | ctrl+z  # move to ENABLE mode
 exit  #  move backward one user mode
+logging synchronous  # halt device output interruptions during CLI output
 logout  # log out of terminal session
 reload  # reboot device
-enable | disable  # enter | exit enable mode
 shut | no shut  # enable | disable int
-copy run start  # copy running-config to startup-config
-copy start run  # copy startup-config to running-config
-logging synchronous  # halt device output interruptions during CLI output
 
 show
- run  # print running-config
- start  # print startup-config
  ip ssh  # print ssh version, auth timeout, retries
+ run  # print running-config
  ssh  # print info ea connected ssh client
+ start  # print startup-config
 
 transport input all | none | telnet | ssh  # declare service to support
 
@@ -60,570 +63,536 @@ reload  # reboot switch
 terminal monitor  # print console msg varied output
 
 # Device config - common
-> password only 
-dev(config)# line console 0
-dev(config-line)#
- password faith
- login
+[password only]
+dev(config)# line console 0 | vty 0 15
+ dev(config-line)#
+  password $PASSWD
+  login
 
-dev(config)# line vty 0 15
-dev(config-line)#
- password hope
- login
-
-> password + username 
+[password + username]
 dev(config)#
- username USER secret | password KEY
+ username $USER secret | password $KEY
  line vty 0 15
-dev(config-line)# login local  # enable username, password auth
+  dev(config-line)# login local  # enable username, password auth
 
-> ssh
-dev# show crypto key NAME rsa  # print key configurations
+[ssh]
+dev# show crypto key $NAME rsa  # print key configs
 dev(config)#
- hostname HOST
- ip domain-name NAME
+ hostname $HOST
  crypto key generate rsa  # create pub, pvt keys
- ip ssh time-out SECONDS  # set ssh time value
- ip ssh authentication-retries VAL
+ ip
+  domain-name $NAME
+  ssh
+   time-out $SEC  # set timeout value
+   authentication-retries $VALUE
 
-> line 
+[line]
 dev(config)#line console 0 | vty 0 15 | aux 0  # console, virtual term, auxiliary
-dev(config-line)#
- logging synchronous  
- exec-timeout VAL  # set terminal time-out value, minutes-seconds
- service tcp-keepalives-in  # enable keepalives
+ dev(config-line)#
+  logging synchronous  
+  exec-timeout $VALUE  # set terminal time-out value, minutes-seconds
+  service tcp-keepalives-in  # enable keepalives
 
 
 # SWITCH
 show
- vlan brief  # print vlan id, name, status, ports 
  dhcp lease  # print dhcp ip address for mngmt vlan
- int port-channel 12
- int status
 
-show ip 
- route
+ etherchannel
+  $CHAN summary  # print name, port state, protocol, port sec, ports inclusive
+  load-balance  # print balance algorithm
 
-show int
- status  # print int, name, status, vlan, duplex, speed, type
- description  # print int, status, protocol, description
- statistics  # print int stats, counters
- INT switchport  # print modes: admin, operate; trunk encap, native vlan, voice
- trunk  # print port, mode, encap, status
- INT trunk
- vlan VLAN  # print input queue, strategy, packets, broadcast, multicast, runts, buffer
+ int 
+  description  # print int, status, protocol, description
+  port-channel $CHAN
+  status  # print int, name, status, vlan, duplex, speed, type
+  statistics  # print int stats, counters
+  trunk  # print port, mode, encap, status
+  vlan $VLAN  # print input queue, strategy, packets, broadcast, multicast, runts, buffer
+  $INT
+   switchport  # print modes: admin, operate; trunk encap, native vlan, voice
+   trunk
 
-show mac address-table
- dynamic  # print table, dynamic
- dynamic address MAC  # print mac addr dynamic metrics
- dynamic int INT  # print table ints, dynamic
+ ip route
+ mac address-table
  count|aging-time  # print counter, aging
+ dynamic  # print table, dynamic
+  address $MAC  # print mac addr dynamic metrics
+  int $INT  # print table ints, dynamic
 
-clear mac address-table dynamic |vlan VLAN |int INT |address MAC # empty category 
+ port-security  # print int port security enabled
+  int $INT  # print int port sec status
 
-show vtp
- status  # print version, config revision, max vlan supported, number of existing vlan, domain name
- counters 
- password
+ spanning-tree  # print span tree proto, path cost, int roles, states
+  root  # print root  bridge id ea vlan
+  active  # print stp stats, active int only
+  detail  # print stp path cost
+  vlan $VLAN  # print [r]stp protocol, root | bridge id priority, cost, port, hello time
 
-show port-security  # print int port security enabled
- int INT  # print int port sec status
+ vlan brief  # print vlan id, name, status, ports 
+ vtp
+  status  # print version, config revision, max vlan supported, number of existing vlan, domain name
+  counters 
+  password
 
-show spanning-tree  # print span tree proto, path cost, int roles, states
- root  # print root  bridge id ea vlan
- active  # print stp stats, active int only
- detail  # print stp path cost
- vlan VLAN  # print [r]stp protocol, root | bridge id priority, cost, port, hello time
-
-debug spanning-tree events  # enable | disable stp debug, |no
-
+clear mac address-table dynamic |vlan $VLAN |int $INT |address $MAC # empty category 
 clear spanning-tree detected-protocols  # restart stp proto migration process
+debug spanning-tree events  # enable | disable stp debug, |no
 
 spanning-tree
  mode  # print modes
- vlan 1 priority ?  # print priority values
-
-show etherchannel
- CHAN summary  # print name, port state, protocol, port sec, ports inclusive
- 12 summary
- load-balance  # print balance algorithm
+ vlan 1 priority ?  # print priority value options for $VLAN
 
 do sh run int INT  # print run-config segment
 
 ## VLAN - default, remote access 
-sw(config)#
- ip default-gateway IP  # define default gateway
- ip domain-lookup  # enable | disable dns lookup, |no
- ip domain-name NAME  # declare domain name
+sw(config)# ip
+ default-gateway $IP  # define default gateway
+ domain-lookup  # enable | disable dns lookup, |no
+ domain-name $NAME  # declare domain name
  int vlan 1  # config default vlan
-sw(config-if)#
- ip address IP MASK
- duplex half | full | auto  # define int speed
- speed VAL  # value in mbps
- no shut
+  sw(config-if)#
+   ip address $IP $MASK
+   duplex half | full | auto  # define int speed
+   speed $VALUE  # value in mbps
+   no shut
 
 ## VLAN - default, remote access, alternate
-sw(config)# int vlan VLAN
- int vlan 99
-sw(config-if)#
- ip address NETWORK MASK  # assign ip address to mngmt vlan
- ip address dhcp  # assign dynamic ip add
- description TEXT
- no shut
- ip address 192.168.1.1 255.255.255.0
- description management int
-
+sw(config)# int vlan $VLAN
+ sw(config-if)# ip address $IP $MASK  # assign ip address to mngmt vlan
+   > ip address 192.168.1.1 255.255.255.0
+   dhcp  # assign dynamic ip add
+  description $TEXT
+  no shut
+  
 ## VLAN - basic config
-sw(config)# vlan VLAN 
-sw(config-vlan)# name NAME  # optional
+sw(config)# vlan $VLAN 
+ sw(config-vlan)# name $NAME  # optional
 
-sw(config)# int range RANGE
+sw(config)# int range $RANGE
  int range fa0/1-5  # ports must exist physically exist
-sw(config-if-range)#
- switchport access vlan VLAN  # assign int to vlan
- switchport mode access  # specify port type 'access | trunk'
- description TEXT  # optional
- no shut
- switchport access vlan 10
- switchport mode access
+  sw(config-if-range)# switchport
+    access vlan $VLAN  # assign int to vlan
+     > access vlan 10
+    mode access  # specify port type 'access | trunk'
+   description $TEXT  # optional
+   no shut
 
 ## VLAN - trunk native vlan
-sw(config-if)#
- switchport mode trunk
- switchport trunk native vlan 100
+sw(config-if)# switchport
+ mode trunk
+ trunk native vlan $VLAN
 
 ## VLAN - trunk allowed vlan
-sw(config-if)#
- switchport trunk allowed vlan VLAN
- switchport trunk allowed vlan add VLAN
- switchport trunk allowed vlan add | remove | all | except
- switchport trunk allowed vlan 10
- switchport trunk allowed vlan add 20, 30  
+sw(config-if)# switchport trunk allowed vlan $VLAN
+ add | remove | all | except
+ add $VLAN
+  > add 20, 30
 
 ## VLAN - voice
 sw(config)# vlan 10
-sw(config-vlan)#
- vlan 11  # create data, voice vlan
- int range fa0/1-4
-sw(config-if)#
- switchport mode access
- switchport access vlan 10
- switchport voice vlan 11
+ sw(config-vlan)#
+  vlan 11  # create data, voice vlan
+  int range fa0/1-4
+   sw(config-if)# switchport
+    mode access
+    access vlan 10
+    voice vlan 11
 
 ## VTP - vlan trunking protocol
 sw(config)# vtp mode transparent | off  # disable vtp
 
 ## DTP - dynamic trunking protocol (ieee 802.1q, isl)
-sw(config-if)#
- switchport trunk encapsulation dot1q | isl | negoiate
- switchport mode access  # disable DTP, access link
- switchport nonegotiate  # disable DTP, trunk link
- switchport mode dynamic auto | desirable  # auto=wait passive, desirable=start trunk
+sw(config-if)# switchport
+ trunk encapsulation dot1q | isl | negoiate
+ mode access  # disable DTP, access link
+ nonegotiate  # disable DTP, trunk link
+ mode dynamic auto | desirable  # auto=wait passive, desirable=start trunk
 
 ## [R]STP - rapid | spanning tree protocol
-sw(config)#
- spanning-tree mode ?  # print [R]STP modes: mst, pvst, rapid-pvst
- spanning-tree vlan VLAN root primary | secondary  # assign root switch role
- spanning-tree vlan VLAN root primary diameter VAL  # assign net diameter for root bridge
- spanning-tree vlan VLAN priority VAL  # assign priority value
- spanning-tree vlan 1 root primary diameter 5  # set switch network diameter to 5
-sw(config-if)#
- spanning-tree link type LINK  # define interface link type
- spanning-tree vlan VLAN cost COST  # define interface vlan port cost
- spanning-tree port-priority VAL  # configure port priority value
-
- spanning-tree link type point-to-point  # port role point-to-point
- spanning-tree vlan 1 cost 2
- spanning-tree port-priority 105
- spanning-tree portfast  # enable portfast, access ports only
- spanning-tree bpduguard enable  # enable bpdu guard
+sw(config)# spanning-tree
+ mode ?  # print [R]STP modes: mst, pvst, rapid-pvst
+ vlan $VLAN 
+  priority $VALUE  # assign priority value
+  root primary | secondary  # assign root switch role
+   diameter $VALUE  # assign net diameter for root bridge
+  sw(config-if)# spanning-tree
+   link type $LINK  # define interface link type
+    > link type point-to-point
+   vlan $VLAN cost $COST  # define interface vlan port cost
+    > vlan 1 cost 2
+   port-priority $VALUE  # configure port priority value
+    > port-priority 105
+   portfast  # enable portfast, access ports only
+   bpduguard enable  # enable bpdu guard
 
 ## port-security
-sw(config-if)#
- switchport mode access  # define int type 
- switchport port-security  # enable port security 
- switchport port-security maximum NUM  # define mac addr max number
- switchport port-security mac-address MAC  # define port sec via mac addr
- switchport port-security mac-address sticky  # enable 'sticky' learning
- switchport port-security violation protect | restrict | shutdown  # define action for non-port-sec ports
+sw(config-if)# switchport 
+ mode access  # define int type 
+ port-security  # enable port security
+  maximum $NUM  # define mac addr max number
+  mac-address $MAC  # define port sec via mac addr
+  mac-address sticky  # enable 'sticky' learning
+  violation protect | restrict | shutdown  # define action for non-port-sec ports
 
 ## Etherchannel L2 - aggregate layer 2 physical ints; end point metrics must match
-sw# test etherchannel load-balance int pol mac MAC1 MAC2  # test load-balance behavior
+sw# test etherchannel load-balance int pol mac $MAC1 $MAC2  # test load-balance behavior
 sw(config)# port-channel load-balance ?  # print load-balance config options
-sw(config-if)#
- channel-group GRP mode on | auto | desirable
- channel-group 1 mode on
+ sw(config-if)# channel-group
+  $GRP mode on | auto | desirable
 
 ## Etherchannel L3 - aggregate layer 3 ip routing ints
-sw_l3(config)# int INT
- int Port-channel12  # config port channel int
-
-sw_l3(config-if)#
- no switchport
- no ip address
- channel-group GRP mode on  # assign int to port channel group
- no switchport
- ip address IP MASK
+sw_l3(config)# int $INT  # config port channel int
+ > int Port-channel12  
+ sw_l3(config-if)#
+  no switchport
+  no ip address
+  channel-group $GRP mode on  # assign int to port channel group
+  no switchport
+  ip address $IP $MASK
 
 
 # ROUTER
-boot system  # define boot sequence (use cmd in succession)
-reload  # reboot
-setup  # enter setup mode
+auto-cost reference bandwidth $BAND  # input numerator; e.g.> REF_BAND / INT_BAND
 auto secure  # enable security features, disable inactive services
-pwd  # present working directory, use to verify presence current directory
-dir  # directory listing
+bandwidth $BAND
+boot system  # define boot sequence (use cmd in succession)
 cd nvram:  # change directory to nvram
+description $TEXT
 debug  # start debug, not recommended
-undebug all  # disable debug
-dir flash:  # print flash mem file list
-
-service timestamps log | debug  # enable time stamps, logging, debugging msg
-duplex full | half | auto
-speed 10 | 100 | 1000
-description TEXT
-bandwidth BAND
-
-network ID WILD area AREA  # create ospf route w/ area id
-router-id ID  # RID must be unique for entire ospf AS - autonomous system
-router ospf PROC  # PID is local process id to differeniate various running ospf instances
-no router PROTO  # disable routing protocol
-passive-interface INT  # stop send 'hello', do not discover neighors, |no
-maximum-paths PATHS
-auto-cost reference bandwidth BAND  # input numerator; e.g.> REF_BAND / INT_BAND
 default-information originate |always  # advert default route to ospf neighbors; always advert regardless if int down
-int loopback INT
-int TYPE INT.SUB-INT  # enter sub int
+dir  # directory listing
+ flash[?]:  # print file list e.g. flash:0
+duplex full | half | auto
+int $TYPE $INT.$SUB_INT  # enter sub int
+int loopback $INT
+maximum-paths $PATH
+network $ID $WILD area $AREA  # create ospf route w/ area id
+no router $PROTO  # disable routing protocol
+passive-interface $INT  # stop send 'hello', do not discover neighors, |no
+pwd  # present working directory, use to verify presence current directory
+reload  # reboot
+router-id $ID  # RID must be unique for entire ospf AS - autonomous system
+router ospf $PROC  # PID is local process id to differeniate various running ospf instances
+speed 10 | 100 | 1000
+service timestamps log | debug  # enable time stamps, logging, debugging msg
+setup  # enter setup mode
+undebug all  # disable debug
+
+clear ip
+ arp |$IP  # delete dynamic ARP cache, per IPv4 addr
+ route*  # delete dynamically learned routing table entries
+ route $IP  # delete ip route from routing table
+ ospf process  # reset ospf process; all neighbors states, auto-select RID
+ nat translations *  # clear dynamic translations
 
 copy
  run tftp  # copy run cfg to tftp server
- tftp run  # copy run cf from tftp server
- tftp flash  # copy tftp file to flash mem
  flash tftp  # copy flash file to tftp server
+ tftp 
+  run  # copy run cf from tftp server
+  flash  # copy tftp file to flash mem
+
+debug ip
+ routing  # start ip routing proto debug
+ $PROTO  # debug routing protocol
+ ospf hello | packets | events  # enable | disable ospf debug, |no
+ dhcp server events | packets | linkage  # print addr assignments, db updates stats 
+ nat  # enable | disable debug, |no
+  detailed
+
+ip
+ host $NAME $IP  # IP host to NAME map
+ def-network $NET  # assign net add, df gw
+ address $IP $MASK  # assign IPv4 addr + mask
+ route $NET $MASK $IP | $INT_TYPE | $INT_NUM | $DISTANCE |permanent  # config IPv4 static routes
+ routing  # enable | disable IPv4 routing protocol, |no
+
+ ospf
+  $ID area $AREA  # assign int to area
+  cost $COST
+  hello-interval $SEC
+  dead-interval $SEC
+  priority $VALUE
+  network broadcast | point-to-point
+
+ping  # define ping execution
+ $IP  # send ping to specified address
+ ip $IP # extended ping, ping target addr from source 
 
 show
- file system  # print file systems, memory allocated to each file
- protocols  # print int protocol status
- version  # print IOS version, hd, dev info
- process  # print physical mem allocation
- flash  # print flash mem allocation 
+ access-lists  # print access list contents
+ arp  # print arp table entries
  clock  # print device time
  clock_rate  # print clock rate for DCE connections
  controllers INT  # print DCE capability, clockrate info
+ dhcp server  # print dhcp server ip, lease agreements, counters
+ file system  # print file systems, memory allocated to each file
+ flash  # print flash mem allocation 
+ hosts  # print host ip name map
+ int status
+ process  # print physical mem allocation
+ protocols  # print int protocol status
+ version  # print IOS version, hd, dev info
+ vlans
 
-ping  # define ping execution
- IP  # send ping to specified address
- ip IP # extended ping, ping target addr from source 
+ ip 
+  access-lists  # print ip access list contents
+  arp  # print L3 ip to L2 arp correspondences
+  dhcp
+   binding  # print host ip addr to mac addr bindings
+   pool  # print dhcp pool stats
+   conflict  # print addr conflicts
+  host  # print host ip stats
+  int
+   |brief | include Vlan  # print short ip assign info
+    > include 0/0  # print int w 0/0/s
+   $INT  # print int stats: counters, acls
+  nat
+   translations  # print nat mappings
+    verbose
+   statistics  # print active translations, pool addr
+  ospf  # print metrics: ospf proc id, router id, areas, ints
+   database  # print LSA db
+   int |brief  # print ospf ints based on 'network' cmd
+    $INT  # print int stats: counters, status, timers
+   neighbor $ID
+   neighbor detail  # print neighbor list, priority, state
+  protocols  # print routing protocol parameters, timers
+  route  # print IPv4 routes
+   ospf
+   connected | static | ospf  # print route table metrics
+   $IP  # print detailed route info, e.g.> next hop
+    $MASK
 
-traceroute  # use extended version to specify destination and source
- IP  # trace route of input IP address
+traceroute $IP  # trace route of input IP address
 
 terminal
  ip netmask-format decimal  # print network masks, dotted decimal format
  monitor  # enable log, debug, alert msg print to screen
 
-show
- arp  # print arp table entries
- hosts  # print host ip name map
- dhcp server  # print dhcp server ip, lease agreements, counters
- access-lists  # print access list contents
- vlans
- int status
-
-show ip
- arp  # print L3 ip to L2 arp correspondences
- host  # print host ip stats
- int |brief | include Vlan  # print short ip assign info
- int INT  # print int stats: counters, acls
- protocols  # print routing protocol parameters, timers
- route  # print IPv4 routes
- route ospf
- route connected | static | ospf  # print route table metrics
- route IP  # print detailed route info, e.g.> next hop
- router IP MASK
- dhcp binding  # print host ip addr to mac addr bindings
- dhcp pool  # print dhcp pool stats
- dhcp conflict  # print addr conflicts
- access-lists  # print ip access list contents
- nat translations  # print nat mappings
- nat translations verbose
- nat statistics  # print active translations, pool addr
- route connected
- int brief | include 0/0  # print ints w/ 0/0s
-
-ip
- host NAME IP  # IP host to NAME map
- def-network NET  # assign net add, df gw
- address IP MASK  # assign IPv4 addr + mask
- route NET MASK IP | INT-TYPE | INT-NUM | DIST |permanent  # config IPv4 static routes
- routing  # enable | disable IPv4 routing protocol, |no
-
-debug ip
- routing  # start ip routing proto debug
- PROTO  # debug routing protocol
- ospf hello | packets | events  # enable | disable ospf debug, |no
- dhcp server events | packets | linkage  # print addr assignments, db updates stats 
- nat  # enable | disable debug, |no
- nat detailed
-
-clear ip
- arp |IP  # delete dynamic ARP cache, per IPv4 addr
- route*  # delete dynamically learned routing table entries
- route IP  # delete ip route from routing table
- ospf process  # reset ospf process; all neighbors states, auto-select RID
- nat translations *  # clear dynamic translations
-
-show ip ospf  # print metrics: ospf proc id, router id, areas, ints
- int |brief  # print ospf ints based on 'network' cmd
- int INT  # print int stats: counters, status, timers
- neighbor ID
- neighbor detail  # print neighbor list, priority, state
- database  # print LSA db
-
-ip ospf
- ID area AREA  # assign int to area
- cost COST
- hello-interval SEC
- dead-interval SEC
- priority VAL
- network broadcast | point-to-point
-
 ## IPv6
-global unicast  # static, dynamic (SLAAC)
-unique local  #  FD00::/8
-link local  # FE80::/10, WAN link, no advertise for routing protocol
-multi-cast
- all hosts  # FF02::1
- all routers  # FF02::2
- routing protocol
- solicited-node  # FF02::1:FF /104
 anycast  # :: or all 0's, starter addr or service exclusive
-loopback  #  ::1 or 127 0's with single 1 (end)
-
-show ipv6
- int |INT
- int brief
- route |summary | connected | local  # print routing table
- route |IP | MASK  # print route contents
- static |IP | INT  # print installed static routes
- static detail  # print static route detail
- protocols  # print routing protocol
- neighbors  # print neighbor discovery cache
- routers  # print advertisements
- traffic  # print traffic stats
- rip
-
 clear ipv6
  route*  # delete all routing table routes
  route IP  # delete specific route
  traffic  # reset traffic counters
  rip  # delete rip routing table
-
 debug ipv6
  packet  # print debug msg
  routing  # print debug msg, cache updates
  rip  # print debug msg
+global unicast  # static, dynamic (SLAAC)
 
 ipv6
  unicast-routing  # enable ipv6 routing
  enable  # assign interface link-local addr
- mtu SIZE  # set Maximum Transmit Unit
+ mtu $SIZE  # set Maximum Transmit Unit
  address 
-  ADDR/PFIX |eui-64  # static cfg or calculate int id using EUI-64 rules
+  $IP/$PFIX |eui-64  # static cfg or calculate int id using EUI-64 rules
   dhcp  # dynamic learning DHCP
   autoconfig  # dynamic learning, router calculates int id using EUI-64 rules SLAAC
- route PREFIX NEXT-HOP |[OUT-INT | NEXT-HOP]  # define static route
+ route $PFIX $NEXT_HOP | <$OUT_INT | $NEXT_HOP>  # define static route
   ::/0  # define default route
+
+link local  # FE80::/10, WAN link, no advertise for routing protocol
+loopback  #  ::1 or 127 0's with single 1 (end)
+multi-cast
+ all
+  hosts  # FF02::1
+  routers  # FF02::2
+ routing protocol
+ solicited-node  # FF02::1:FF/104
+
+show ipv6
+ int
+  |$INT
+  brief
+ protocols  # print routing protocol
+ rip
+ route
+  |summary | connected | local  # print routing table
+  |$IP | $MASK  # print route contents
+ routers  # print advertisements
+ static
+  |$IP | $INT  # print installed static routes
+  detail  # print static route detail
+  neighbors  # print neighbor discovery cache
+ traffic  # print traffic stats
+unique local  #  FD00::/8
  
 ## SDM - Security Device Manager
 rtr(config)#
  ip http server | secure server | authentication local
- username USER privilege NUM secret KEY
+ username $USER privilege $NUM secret $KEY
  line vty 0 15
-rtr(config-line)#
- privilege level NUM
- login local
- transport input telnet ssh
+  rtr(config-line)#
+   privilege level $NUM
+   login local
+   transport input telnet ssh
 
 ## default, static routes
-rtr(config)# ip route NET MASK IP INT ADMIN  # assign admin distance for next hop
- ip route 10.1.3.0 255.255.255.0 10.1.130.253 210
- ip route 0.0.0.0 0.0.0.0 s0/0  # assign default route to serial 0/0
- ip route 0.0.0.0 0.0.0.0 lo0  # create default route to lo0 exit int, traffic discarded
- ip route 172.16.0.0 255.255.0.0 s0/1  # create default route to exit int
-rtr(config-router)#
- default-information originate  # propagate def route to neighbors
- redistribute static  # advertise static routes to neighbors
+rtr(config)# ip route $IP1 $MASK $IP2 |$INT $ADMIN  # assign admin distance for next hop
+ ip route
+  > 10.1.3.0 255.255.255.0 10.1.130.253 210
+  > 0.0.0.0 0.0.0.0 s0/0  # assign default route to serial 0/0
+  > 0.0.0.0 0.0.0.0 lo0  # create default route to lo0 exit int, traffic discarded
+  > 172.16.0.0 255.255.0.0 s0/1  # create default route to exit int
+   rtr(config-router)#
+    default-information originate  # propagate def route to neighbors
+    redistribute static  # advertise static routes to neighbors
 
 ## bit bucket config
-rtr(config)# ip route NET MASK Null0  # send traffic to bit bucket 
+rtr(config)# ip route $IP $MASK Null0  # send traffic to bit bucket 
  ip route 192.168.1.0 255.255.255.0 Null0
 
 ## boot sequence config
-rtr(config)#
- boot system flash  # boot most recent ios file
- boot system flash FILE  # boot specific ios file
- boot system tftp FILE IP  # boot ios file from tftp server
- boot system rom  # boot rom monitor mode
+rtr(config)# boot system
+ flash  # boot most recent ios file
+  $FILE  # boot specific ios file
+ tftp $FILE $IP  # boot ios file from tftp server
+ rom  # boot rom monitor mode
 
 ## loopback int config
-rtr(config)# int INT-LOOP  # define loopback int
- int lo0  # loopback 0 int
-rtr(config-if)# ip address NET MASK  # assign ip address to loopback int
- ip address 10.0.0.1 255.0.0.0  # use full 32-bit mask, loopback int
+rtr(config)# int $INT  # define loopback int
+ > int lo0  # loopback 0 int
+ rtr(config-if)# ip address $IP $MASK  # assign ip address to loopback int
+  ip address 10.0.0.1 255.0.0.0  # use full 32-bit mask, loopback int
 
 ## PPP - Point-to-Point protocol
-rtr#
- debug ppp  # enable ppp debug
- debug ppp packet | authentication  # print send, receive packets, link debug stats
-rtr(config)# username NAME password KEY  # define ppp metrics, pap | chap auth
+rtr# debug ppp  # enable ppp debug
+ packet | authentication  # print send, receive packets, link debug stats
+rtr(config)# username $NAME password $KEY  # define ppp metrics, pap | chap auth
 rtr(config-if)#
- encapsulation ppp  # define ppp encap
- ppp authentication chap | pap
  compress predictor | static  # enable ppp compress proto
- ppp multilink  # enable multi-link load balance 
- ppp quality VAL  # define link quality
- ppp quality 80  # monitor link, packet drop exceed 20% shutdown link 
+ encapsulation ppp  # define ppp encap
+ ppp
+  authentication chap | pap
+  multilink  # enable multi-link load balance 
+  quality $VALUE  # define link quality
+   > quality 80  # monitor link, packet drop exceed 20% shutdown link 
 
 ## HDLC - High-Level Data Link Control
 rtr(config-if)# encapsulation hdlc  # enable HDLC link encap 
 
 ## ROAS - Router-On-A-Stick - layer 3 inter-vlan routing via router; small network, singular trunk link
-rtr(config)# int INT | SUB-INT  # define sub int
-rtr(config-subif)#
- encapsulation dot1q VLAN # enable trunking w/ vlan tag
- ip address NET MASK  # assign sub int network ip
+rtr(config)# int $INT | $SUB_INT  # define sub int
+ rtr(config-subif)#
+  encapsulation dot1q $VLAN # enable trunking w/ vlan tag
+  ip address $IP $MASK  # assign sub int network ip
 
 ## ROAS - native vlan config; Layer 2 switch config, include 'no shut' all ints
-sw_l2(config)#
- ip default-gateway 172.16.32.1
+sw_l2(config)# ip default-gateway 172.16.32.1
  int gi1/1
-sw_l2(config-if)#
- switchport mode trunk
- switchport trunk native vlan 10
- switchport allowed vlan 10
- switchport allowed vlan add 20, 30
+  sw_l2(config-if)# switchport
+   mode trunk
+   trunk native vlan $VLAN
+    > allowed vlan 10
+    > allowed vlan add 20, 30
 
-> router config
->> OPTION #1; cfg native vlan - cfg ip-addr on physical link, no encapsulation
+### Option 1 - ip-addr on physical link, no encapsulation
 rtr(config)# int gi1/0 
-rtr(config-if)# ip address 10.1.10.1 255.255.255.0 
+ rtr(config-if)# ip address 10.1.10.1 255.255.255.0 
 
->> OPTION #2; cfg native vlan - cfg sub-int as native vlan
-rtr(config-if)# int gi1/0.10
-rtr(config-subif)#
- encapsulation dot1q 10 native
- ip address 10.1.10.1 255.255.255.0
-rtr(config-if)# int gi1/0.20
-rtr(config-subif)# 
- encapsulation dot1q 20
- ip address 10.1.20.1 255.255.255.0
- int gi1/0.30
- encapsulation dot1q 30
- ip address 10.1.30.1 255.255.255.0
+### Option 2 - sub-int as native vlan
+rtr(config-if)# int gi1/0.10 | 0.20 | 0.30
+ rtr(config-subif)# encapsulation dot1q 10 native | 20 | 30
+  ip address 10.1.10|20|30.1 255.255.255.0
 
-## SVIs - switched virtual ints - layer 3 inter-vlan routing via switch; medium-large network, multiple trunk links | ints
+## SVIs - Switched Virtual Ints; layer 3 inter-vlan routing
 sw_l3(config)# sdm prefer lanbase-routing  # change forwarding ASCI to accept IPv4 routes
-sw_l3# reload  # reboot to recognize to ASCI IPv4 directive
 sw_l3(config)# ip routing  # enable IPv4 routing
-
-sw_l3(config)# int vlan VLAN  # create VLAN int for routing logic
-sw_l3(config-if)#
- ip address IP MASK  # VLAN int cfg mode, assign ip addr w/ mask
+sw_l3(config)# int vlan $VLAN  # create VLAN int for routing logic
+sw_l3(config-if)# ip address $IP $MASK  # VLAN int cfg mode, assign ip addr w/ mask
  no shut
+sw_l3# reload  # reboot to recognize to ASCI IPv4 directive
 
-## Routed Ports - layer 3 switch routing; small-medium network, layer must be enabled previous
-sw_l3(config)# int INT
-sw_l3(config-if)#
- no switchport
- ip address IP MASK
+## Routed Ports - layer 3 switch routing
+sw_l3(config)# int $INT
+sw_l3(config-if)# no switchport ip address $IP $MASK
 
 ## OSPF - create route
-rtr(config)# router ospf PROC-ID  # set local process id
-rtr(config-router)# network NET WILD AREA  # create ospf route
+rtr(config)# router ospf $PROC_ID  # set local process id
+rtr(config-router)# network $IP $WILD $AREA  # create ospf route
 rtr(config)# router ospf 1 
 rtr(config-router)#network 172.16.1.16 0.0.0.15 area 0  # backbone area denoted with "0"
-rtr(config-if)#
- bandwidth VAL  # modify bandwidth per int in kbps, |no
- ip ospf cost VAL  # modify cost value per int
- ip ospf hello-interval VAL  # modify hello interval in seconds
- ip ospf dead-interval VAL  # dead interval is 4 times hello interval, usually no need for modification
+rtr(config-if)# bandwidth $VALUE  # modify bandwidth per int in kbps, |no
+ ip ospf
+  cost $VALUE  # modify cost value per int
+  hello-interval $VALUE  # modify hello interval in seconds
+  dead-interval $VALUE  # dead interval is 4 times hello interval, usually no need for modification
 
 ## OSPF NMBA (non-broadcast multiple access)
-rtr(config-if)#
- ip ospf priority 0-255  # assign ospf int priority value
- ip ospf network point-to-multipoint  # enable net type
-rtr(config-router)#
- router-id IP  # assign ip address to router id
- neighbor IP  # no mask, identify neighbor router, no multicast
+rtr(config-if)# ip ospf
+ priority [0-255]  # assign ospf int priority value
+ network point-to-multipoint  # enable net type
+rtr(config-router)# router-id $IP  # assign ip address to router id
+ neighbor $IP  # no mask, identify neighbor router, no multicast
 
 ## OSPF - authenticate
-rtr(config-if)#
- ip ospf authentication-key KEY  # set ospf router auth password
- ip ospf message-digest key KEY md5 KEY  # encrypt router pd auth
-rtr(config-router)# area AREA authentication  # enable area wide auth
- area 0 authentication message-digest
-rtr(config-if)# ip ospf message-digest-key 1 md5 cisco
+rtr(config-if)# ip ospf
+ authentication-key $KEY  # set ospf router auth password
+ message-digest key $KEY md5 $KEY  # encrypt router pd auth
+  > message-digest-key 1 md5 cisco
+rtr(config-router)# area $AREA authentication  # enable area wide auth
+ > area 0 authentication message-digest
 
 ## DHCP
 rtr(config)# service dhcp  # enable | disable dhcp server, |no
-rtr(config-if)#
- ip address dhcp  # enable client
- ip helper-address IP  # send broadcasts, default router
- ip forward-protocol IP  # define forward port(s)
+rtr(config-if)# ip
+ address dhcp  # enable client
+ helper-address $IP  # send broadcasts, default router
+ forward-protocol $IP  # define forward port(s)
 rtr(config-dhcp)#
- network NET MASK  # define pool net addr
- default-router IP # define default router
+ network $IP $MASK  # define pool net addr
+ default-router $IP # define default router
  lease days | hours | minutes | infinite  # define lease period
-rtr(config)#
- ip dhcp excluded-address IPR1 IPR2  # define exclude ipv4 range
- ip dhcp pool NAME # define pool NAME
- ip dhcp excluded-address 191.168.10.1 192.168.10.10
- ip dhcp pool R0Fa0
-rtr(dhcp-config)#
- network IP MASK
- dns-server IP MASK
- default-router IP MASK
- network 192.168.10.0 255.255.255.0
- dns-server 192.168.11.5
- default-router 192.168.10.1
+rtr(config)# ip dhcp excluded-address $IP1 $IP2  # define exclude ipv4 range
+ > excluded-address 191.168.10.1 192.168.10.10
+ pool $NAME # define pool NAME
+  > pool R0Fa0
+rtr(dhcp-config)# network $IP $MASK
+ > network 192.168.10.0 255.255.255.0
+ dns-server $IP $MASK
+  > dns-server 192.168.11.5
+ default-router $IP $MASK
+  > default-router 192.168.10.1
 
 ## NAT
-rtr(config)# ip nat translation time VAL  # define timeout, seconds
+rtr(config)# ip nat translation time $VALUE  # define timeout, seconds
 
 ### static
-rtr(config)#
- ip nat inside source list static IP1 IP2  # define IPv4 static mapping
- ip nat inside source list static 192.168.20.254 209.165.200.254
+rtr(config)# ip nat inside source list static $IP1 $IP2  # define timeout, seconds
+  > ip nat inside source list static 192.168.20.254 209.165.200.254
 
 ### dynamic
-rtr(config)#
- ip nat pool NAME IP1 IP2 netmask MASK  # define translate pool range
- ip nat inside source list NAME pool NAME  # define acl translate
+rtr(config)# ip nat
+ pool $NAME $IP1 $IP2 netmask $MASK  # define translate pool range
+ inside source list $NAME pool $NAME  # define acl translate for list and pool names
 
 ### NAT w/ ACL
-rtr(config)# ip access-list extended LIST  # apply acl LIST
-rtr(config-ext-nacl)#
- permit ip 192.168.10.0 0.0.0.255 any  # define pvt host addr
- permit ip 192.168.11.0 0.0.0.255 any
-rtr(config)#
- ip nat pool POOL 209.165.200.241 209.165.200.246 netmask 255.255.255.248
- ip nat inside source list NAT-LIST pool POOL
+rtr(config)# ip access-list extended $LIST  # apply acl LIST
+rtr(config-ext-nacl)# permit ip $IP $WILD $PROTO
+ > 192.168.10.0 0.0.0.255 any  # define pvt host addr
+ > 192.168.11.0 0.0.0.255 any
+rtr(config)# ip nat
+ pool $POOL 209.165.200.241 209.165.200.246 netmask 255.255.255.248
+ inside source list $NAT_LIST pool $POOL
 
 ### PAT dynamic
-rtr(config)#
- access-list 10 permit 192.168.0.0 0.0.255.255  # define acl pvt ip host
- ip nat inside source list 10 int serial0/1/0 overload  # enable pub int
+rtr(config)# access-list $NUM permit $IP $WILD
+ > access-list 10 permit 192.168.0.0 0.0.255.255  # define acl pvt ip host
+ ip nat inside source list 10 int serial0/1/0 overload  # enable public int
  int fa0/1
 rtr(config-if)#
  ip nat inside
  int s0/1/0
  ip nat outside
 
-rtr(config)#
- access-list 10 permit 192.168.0.0 0.0.255.255  # define pool
- ip nat pool POOL2 209.165.200.226 209.165.200.240 netmask 255.255.255.248
- ip nat inside source list 10 pool POOL2 overload  # enable pub ip pool
+rtr(config)# access-list $NUM permit $IP $WILD
+ > access-list 10 permit 192.168.0.0 0.0.255.255  # define pool
+ ip nat pool $POOL 209.165.200.226 209.165.200.240 netmask 255.255.255.248
+ ip nat inside source list 10 pool $POOL overload  # enable pub ip pool
  int s0/0/0
 rtr(config-if)#
  ip nat inside
@@ -631,161 +600,151 @@ rtr(config-if)#
  ip nat outside
 
 ## ACL - implicit "deny all"
-rtr(config)#
- access-list 101 permit ip 10.2.2.0 0.0.0.3 any
- access-list 101 permit ip 192.168.30.0 0.0.0.255 any
+rtr(config)# access-list $NUM permit ip $IP $WILD $PROTO
+ > 101 permit ip 10.2.2.0 0.0.0.3 any
+ > 101 permit ip 192.168.30.0 0.0.0.255 any
  line vty 0 15
-rtr(config-line)# access-class 101 in  # enable acl on inbound int
+  rtr(config-line)# access-class 101 in  # enable acl on [in]bound int
 
 ### Numbered, named 
 rtr(config)# no access-list 101  # delete acl
 rtr(config-if)# no ip access-group 101 in  # remove acl from int BEFORE edit
 
-rtr(config)#
- access-list NUM permit | deny IP WILDCARD  # define acl numbered
- access-list 10 permit 192.168.30.0 0.0.0.255
-rtr(config-if) #access-group 10 in
+rtr(config)# access-list $NUM permit | deny $IP $WILD  # define acl numbered
+ > access-list 10 permit 192.168.30.0 0.0.0.255
+  rtr(config-if) #access-group 10 in
 
-rtr(config)#
- access-list NUM permit | deny PROTOCOL IP-SRC IP-DST eq PORT
- access-list 101 permit tcp 192.168.30.0 0.0.0.255 any ep 80
-rtr(config-if)# access-group 101 in  # apply to inbound int
+rtr(config)# access-list $NUM permit | deny $PROTO $IP1 $IP2 $PARM $PORT  # IP1= src, IP2=dest
+ > access-list 101 permit tcp 192.168.30.0 0.0.0.255 any ep 80
+  rtr(config-if)# access-group 101 in  # apply to inbound int
 
-rtr(config)#
- access-list 101 permit ip 10.2.2.0 0.0.0.3 any
- access-list 101 permit ip 192.168.30.0 0.0.0.255 any
+rtr(config)# access-list $NUM permit ip $IP $WILD $PROTO
+ access-list
+  101 permit ip 10.2.2.0 0.0.0.3 any
+  101 permit ip 192.168.30.0 0.0.0.255 any
  line vty 0 4
-rtr(config-line)# access-class 101 in  # apply to inbound telnet lines
+  rtr(config-line)# access-class 101 in  # apply to inbound telnet lines
 
-rtr(config)#
- ip access-list standard NAME  # define acl named
- ip access-list standard NAME
-rtr(config-std-nacl)# deny IP WILD log  # deny, use mask wildcard, print to log
-rtr(config-if)# ip access-group NAME in  # apply to inbound int
+rtr(config)# ip access-list standard $NAME  # define acl named
+rtr(config-std-nacl)# deny $IP $WILD log  # deny, use mask wildcard, print to log
+ > deny 192.168.11.0 0.0.0.255 log
+ > permit any  # deny source then permit any
+rtr(config-if)# ip access-group $NAME in  # apply to inbound int
 
-rtr(config-std-nacl)#
- deny 192.168.11.0 0.0.0.255 log
- permit any  # deny source then permit any
-rtr(config-if)# ip access-group NAME in
+rtr(config)# ip access-list extended $NAME  # define acl extended named
+rtr(config-ext-nacl)# deny $IP1 $WILD host $IP2  # IP1 = src, IP2 = dest; deny src to host, no host mask
+ > deny 192.168.10.0 0.0.0.255 host 209.165.200.225
+rtr(config-if)# ip access group $NAME out  # apply to outbound int
 
-rtr(config)# ip access-list extended NAME  # define acl extended named
-rtr(config-ext-nacl)# deny IP WILD host IP  # deny src to host, no host mask
-rtr(config-if)# ip access group NAME out  # apply to outbound int
+rtr(config)# access-list $NUM $REMARK  # define remark, view contents w/ 'show run'
+ access-list
+  10 remark permit hosts from network 192.168.10.0
+  10 permit 192.168.10.1 255.255.255.0
 
-rtr(config)# ip access-list extended NAME
-rtr(config-ext-nacl)# deny 192.168.10.0 0.0.0.255 host 209.165.200.225
-rtr(config-if)# ip access-group NAME out
-
-rtr(config)#
- access-list NUM REMARK  # define remark, view contents w/ 'show run'
- access-list 10 remark permit hosts from network 192.168.10.0
- access-list 10 permit 192.168.10.1 255.255.255.0
- ip access-list extended NAME 
-rtr(config-ext-nacl)#
- remark this acl blocks bob from telnet access
+rtr(config)# ip access-list extended $NAME
+rtr(config-ext-nacl)# remark "this acl blocks bob from telnet access"
  deny tcp host 192.168.10.13 any eq telnet
 
-rtr(config)# ip access-list standard 24  # define acl standard named w/ number
-rtr(config-std-nacl)#
- permit 10.1.1.0 0.0.0.255
- permit 10.1.2.0 0.0.0.255
- deny any
+rtr(config)# ip access-list standard $NUM  # define acl standard named w/ number
+rtr(config-std-nacl)# permit $IP $WILD
+ > permit 10.1.1.0 0.0.0.255
+ > permit 10.1.2.0 0.0.0.255
+ > deny any
  do show ip access-list 24  # exec 'do', print contents, no exit
 
-rtr(config-line)# autocommand access-enable host timeout VAL  # enable timeout
+rtr(config-line)# autocommand access-enable host timeout $VALUE  # enable timeout
 
-rtr(config)#
- access-list NUM permit | deny ACL-EXT  # assign number to extended acl
- access-list NUM dynamic testlist timeout VAL permit | deny ACL-EXT
- access-list 101 permit tcp any host 10.2.2.2 eq telnet
- access-list 101 dynamic testlist timeout 15 permit ip any any
+rtr(config)# access-list $NUM permit | deny $ACL_EXT  # assign number to extended acl
+ > access-list 101 permit tcp any host 10.2.2.2 eq telnet
+
+rtr(config)# access-list $NUM dynamic $NAME timeout $VALUE permit | deny $ACL_EXT
+ > access-list 101 dynamic testlist timeout 15 permit ip any any
  int s0/0/1  # point to incoming telnet clients
-rtr(config-if)# access-group 101 in
+  rtr(config-if)# access-group 101 in
 
-rtr(config)# ip access-list extended OUT-FLTR  # define acl extended for reflexive
-rtr(config-ext-nacl)#
- permit tcp 192.168.0.0 0.0.255.255 any reflect TCP-TRAF
- permit icmp 192.168.0.0 0.0.255.255 any reflect ICMP-TRAF
+rtr(config)# ip access-list extended $FLTR_OUT  # define acl extended for reflexive
+rtr(config-ext-nacl)# permit $PROTO $IP $WILD $PARM reflect $FLTR_OUT
+ > permit tcp 192.168.0.0 0.0.255.255 any reflect $TRAF_TCP
+ > permit icmp 192.168.0.0 0.0.255.255 any reflect $TRAF_ICMP
 
-rtr(config)# ip access-list extended IN-FLTER
+rtr(config)# ip access-list extended $FLTR_IN
 rtr(config-ext-nacl)#
- evaluate TCP-TRAF  # map out filter tcp traff to inbound filter
- evaluate ICMP-TRAF
+ evaluate $TRAF_TCP  # map out filter tcp traff to inbound filter
+ evaluate $TRAF_ICMP
 rtr(config)# int s0/1/0
 rtr(config-if)#
- ip access-group IN-FLTER in
- ip access-group OUT-FLTR out
+ ip access-group $FLTR_IN in
+ ip access-group $FLTR_OUT out
 
-rtr(config)# time-range RNG-DAY  # define acl time based
+rtr(config)# time-range $DAY_RNG  # define acl time based
 rtr(config-time-range)# periodic Monday Wednesday Friday 8:00 to 17:00  # time boundary
-rtr(config)#
- access-list 101 permit tcp 192.168.10.0 0.0.0.255 any eq telnet time-range TOG-DAY
+rtr(config)# access-list 101 permit tcp 192.168.10.0 0.0.0.255 any eq telnet time-range $DAY_RNG
  int s0/0/0
-rtr(config-if)# ip access-group 101 out
+  rtr(config-if)# ip access-group 101 out
 
-rtr(config)#
- access-list 101 remark allow http and telnet access
- access-list 101 permit tcp 192.168.1.0 0.0.0.255 10.1.1.0 0.255.255.255 eq 80 
- access-list 101 permit tcp 192.168.2.0 0.0.0.255 10.1.1.0 0.255.255.255 eq 23 
- access-list 101 deny ip any any  # add to view counter increment
+rtr(config)# access-list $NUM ...
+ > 101 remark allow http and telnet access
+ > 101 permit tcp 192.168.1.0 0.0.0.255 10.1.1.0 0.255.255.255 eq 80 
+ > 101 permit tcp 192.168.2.0 0.0.0.255 10.1.1.0 0.255.255.255 eq 23 
+ > 101 deny ip any any  # add to view counter increment
 
- access-list 102 remark allow outbound traffic to return only from 172.22.10.0
- access-list 102 permit tcp any 172.22.10.0 0.0.0.255 established
- access-list 102 deny ip any any
+ > 102 remark allow outbound traffic to return only from 172.22.10.0
+ > 102 permit tcp any 172.22.10.0 0.0.0.255 established
+ > 102 deny ip any any
 
- access-list 120 permit tcp any gt 1023 host 10.1.3.2 eq 22  # permit any src port > 1023 to host
- access-list 120 permit tcp any any eq 25
- access-list 120 deny ip any any
+ > 120 permit tcp any gt 1023 host 10.1.3.2 eq 22  # permit any src port > 1023 to host
+ > 120 permit tcp any any eq 25
+ > 120 deny ip any any
 
- access-list 121 remark stop any src from using ping or traceroute comms to query e-commerce server
- access-list 121 deny icmp any host 172.16.1.1  # deny icmp traffic from any srce to host
- access-list 121 permit ip any any
+ > 121 remark stop any src from using ping or traceroute comms to query e-commerce server
+ > 121 deny icmp any host 172.16.1.1  # deny icmp traffic from any srce to host
+ > 121 permit ip any any
 
- access-list 122 permit udp 1.0.0.0 0.255.255.255 lt 1023 any eq 53  # permit any source port < 1023 to host
- access-list 122 deny ip any any
+ > 122 permit udp 1.0.0.0 0.255.255.255 lt 1023 any eq 53  # permit any source port < 1023 to host
+ > 122 deny ip any any
 
- access-list 123 remark allow any src traffic to any dest for dhcp, tftp, and snmp,  deny everything else
- access-list 123 permit udp any any eq 67
- access-list 123 permit udp any any eq 68
- access-list 123 permit udp any any eq 69
- access-list 123 permit udp any any eq 161
- access-list 123 deny ip any any
+ > 123 remark allow any src traffic to any dest for dhcp, tftp, and snmp,  deny everything else
+ > 123 permit udp any any eq 67
+ > 123 permit udp any any eq 68
+ > 123 permit udp any any eq 69
+ > 123 permit udp any any eq 161
+ > 123 deny ip any any
 
-rtr(config)# ip access-list extended LCL-AREA
+rtr(config)# ip access-list extended $AREA_LCL
 rtr(config-ext-nacl)#
- remark deny ftp, management traffic, permit everything else
- deny tcp 10.1.1.0 255.0.0.0 any eq 20  # ftp data
- deny tcp 10.1.1.0 255.0.0.0 any eq 21  # ftp
- deny udp 10.1.2.0 255.0.0.0 any eq 161
- permit ip any any
+ > remark deny ftp, management traffic, permit everything else
+ > deny tcp 10.1.1.0 255.0.0.0 any eq 20  # ftp data
+ > deny tcp 10.1.1.0 255.0.0.0 any eq 21  # ftp
+ > deny udp 10.1.2.0 255.0.0.0 any eq 161
+ > permit ip any any
 
 ## IPv6
-rtr(config)#
- ipv6 unicast-routing  # enable forwarding
- ipv6 router rip NAME
+rtr(config)# ipv6
+  unicast-routing  # enable forwarding
+  router rip NAME
+
+rtr(config-if)# ipv6
+  rip NAME enable  # enable rip proto
+  address IP PFIX eui-64  # define ip eui format
+
+rtr(config-if)# ipv6 address $IP $MASK  # enable ipv6
+ ip address
+  $IP $MASK secondary  # enable secondary ipv4 addr
+  10.1.7.252 255.255.255.0 secondary
 
 rtr(config-if)#
- ipv6 rip NAME enable  # enable rip proto
- ipv6 address IP PFIX eui-64  # define ip eui format
+ clock rate $VALUE
+ description $TEXT
+ mac-address $MAC  # define mac addr
 
 rtr(config-if)#
- ipv6 address IP MASK  # enable ipv6
- ip address IP MASK secondary  # enable secondary ipv4 addr
- ip address 10.1.7.252 255.255.255.0 secondary
+ keepalive $VALUE  # enable | disable keep-alive, equal link ends, |no
+ mtu $VALUE  # set maximum transmission unit
+ ip mtu $VALUE  # set ip mtu - not recommended
 
-rtr(config-if)#
- clock rate VAL
- description TEXT
- mac-address MAC  # define mac addr
-
-rtr(config-if)#
- keepalive VAL  # enable | disable keep-alive, equal link ends, |no
- mtu VAL  # set maximum transmission unit
- ip mtu VAL  # set ip mtu - not recommended
-
-rtr(config)# router PROTOCOL  # enter router engine mode
+rtr(config)# router $PROTO  # enter router engine mode
 rtr(config-router)#
  auto-summary  # enable | disable auto summary, |no
  passive-int default  # set all ints to passive
- passive-int TYPE  # stop route updates for TYPE
- passive-int fa0/1  # no router updates for  fa0/1
+ passive-int $TYPE  # stop route updates for TYPE
+  > passive-int fa0/1  # no router updates for  fa0/1

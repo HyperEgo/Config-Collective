@@ -78,7 +78,7 @@
 /var/spool/cron/crontabs  # user cron jobs
 
 # CLI keystrokes
-CMD +SPACE +TABx2  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
+$CMD +SPACE +(x2)TAB  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
 F11  # terminal full screen toggle
 ctrl
  +l  # clear screen
@@ -96,12 +96,12 @@ shift
 alt+[.]  # cycle CLI input arg; alt+<.> - cycle; <enter> - execute
 
 # CLI utility
-CMD /bin/kill  # send CMD to kill container, testing
-CMD > /dev/null 2>&1  # send CMD to /dev/null, stdout, stderr 
+$CMD /bin/kill  # send CMD to kill container, testing
+$CMD > /dev/null 2>&1  # send CMD to /dev/null, stdout, stderr 
 aptitude install PKG  # use aptitude package manager
 apt-get update  # Debian update package cache
 apt
- info PKG  # Debian query PKG info
+ info $PKG  # Debian query PKG info
  list  # print packages installed
  search "KEY"  # available package containing KEY
  update  # update package list to latest
@@ -141,7 +141,7 @@ dd if=
  /dev/zero of=/dev/sdX  # write zeros to /dev/sdX
 depmod -A  # gen modules.dep file, map files, exits if older then curr
 df  # print disc filesystem space usage
-dig SERVER  # query mail server
+dig SRVR  # query mail server
 dmesg |-D  # print kernel ring buffer, [D]isable console logging
  -H -l err  # print kernel [l]evel log errors, [H]uman readable output
 dnf install|search PKG  # Fedora package manager
@@ -160,13 +160,14 @@ eog FILE  # GNOME Image Viewer
 g|parted  # partition editor
 f|gdisk -l DEV  # manage device partitions, e.g. fdisk -l DEV ; fdisk < gdisk < parted < gparted
 fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
-find /var/log -type f -size +100k  # /var/log, size > 100 KB
-find . -inum INODE -exec rm -i {} \;  # by INODE, remove [i]nteractively e.g.> ll|ls -li
-find . -type d|f -iname STRING  # model [d]irectory, [f]ile, value STRING
-find . -type f
+find
+ /var/log -type f -size +100k  # /var/log, size > 100 KB
+ . -inum INODE -exec rm -i {} \;  # by INODE, remove [i]nteractively e.g.> ll|ls -li
+ . -type d|f -iname STRING  # model [d]irectory, [f]ile, value STRING
+ . -type f
  -mmin -30  # created most recent 30 minutes
  -size 0 -or -size +100k -mmin -30  # empty or > 100 KB, updated most recent 30 minutes
-find . -type f -iname 
+ . -type f -iname 
  *.txt -exec mv {} {}.append_string \;  # append string to filename
  *.txt -exec rsync {} $USER@192.168.10.1:/home/$USER \; # copy-update from curr dir to network node
  *.bin -exec mv {} /tmp/target \;  # move files to target
@@ -210,6 +211,11 @@ ip
 iptables -nL  # print ip table rules [L]ist, [n]umeric output addr port
 iptables-save  # save config file, IPv4/6 packet filtering, NAT admin tool
 iwconfig  # print wireless devices
+jar
+ -tf $JAR  # print file list
+ -xf $JAR $FILE  # extract FILE
+ -tf | grep $FILE
+java -jar $JAR  # execute jar cli
 jobs  # print curr jobs
 journalctl
  --disk-usage  # print journal filesystem usage
@@ -308,13 +314,8 @@ systemctl
  list-units |grep -i "service | target | mount"  # print curr loaded modules
  start | stop | | restart |enable | disable SRVC  # manage SRVC
 systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
-jar
- -tf JAR  # print file list
- -xf JAR FILE  # extract FILE
- -tf | grep FILE
-java -jar JAR  # execute jar cli
 tar 
- PARM --exclude=GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
+ $PARM --exclude=GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
  -zcvf TAR DIR|FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
  -tvf TAR  # print archive file list, [t]list
  -zxvf TAR -C DIR  # e[x]tract archive to DIR
@@ -382,7 +383,7 @@ zip -r ZIP DIR|FILE  # compress CONTENTS [r]ecursive
 # file stack
 dirs |-c  # print, [c]lear stack
 popd  # pop stack
-pushd DIR  # push to stack
+pushd $DIR  # push to stack
 
 # SED - model
 echo $ENV | sed REGEX  # echo var, exec cmd
@@ -399,14 +400,14 @@ sed -e|i|n REGEX FILE   # [e]xpression, edit file [i]n-place, [n]-quiet|silent
  's/delete-sequence.*//' # delete after sequence, inclusive 
  's/^/prefix/' 	 # add prefix to all lines
 sed -n  # print lines
- N1,N2p FILE  	# print line number range, N1 - N2
- -e N1p -e N2p FILE  # print lines N1 and N2
- N1p FILE  	# print line N1
+ $NUM1,$NUM2p $FILE  # print line number range, NUM1 - NUM2
+ -e $NUM1p -e $NUM2p $FILE  # print lines NUM1 and NUM2
+ $NUM1p $FILE  # print line NUM1
 
 # CLI tools
 cmatrix  # 'matrix' animation
 tmux  # terminal multiplexer
- ctrl+b  # prefix + CMD
+ ctrl+b,  # prefix + next cmd
   c  # create session
   d  # detach
   w  # select

@@ -41,20 +41,24 @@ ap(config-if-ssid)# authentication open  # allow open ssid access all vlan devic
 
 ap(config-if)# station-role $ROLE  # select role of interface
  > station-role root  # configure access point for root operation
-power client $VALUE  # set max power level of client radio tranmissions
-power local $VALUE  # set max power level of access point transmissions
+power
+ client $VALUE  # set max power level of client radio tranmissions
+ local $VALUE  # set max power level of access point transmissions
 channel number | frequency  # set channel and frequency of interface
 world-mode
- antenna receive left | right | center
- antenna transmit diversity | left | right
+ antenna
+  receive left | right | center
+  transmit diversity | left | right
  port-protected
  beacon period $VALUE
- rts thershold $VALUE
- rts retries $VALUE
+ rts
+  thershold $VALUE
+  retries $VALUE
  packet retries $VALUE
  fragment-threshold $VALUE
-ip address $IP $MASK
-ip address dhcp  # enable dhcp client
+ip address
+ $IP $MASK
+ dhcp  # enable dhcp client
 
 
 # Rom Monitor
@@ -120,23 +124,24 @@ rtr(config-if)#
  frame-relay lmi-type cisco | ansi | q933a  # define lmi encap type (DTE-to-DCE)
  no frame-relay inverse-arp  # disable inverse arp; no dynamic learning
  ip address $IP $MASK  # assign ip address
- frame-relay map ip $IP $NUMBER broadcast  # map remote ip to dlci
- frame-relay map ip 10.1.1.2 102 broadcast  # allow ip broadcast
+ frame-relay map ip
+  $IP $NUMBER broadcast  # map remote ip to dlci
+  10.1.1.2 102 broadcast  # allow ip broadcast
  no shut
 
 ### DTE - sub-interfaces
 rtr(config)# int $INT
 rtr(config-if)# encapsulation $ENCAP_TYPE
  int $INT_SUB $ENCAP_TYPE
- > int fa0/1.1 point-to-point
+  > int fa0/1.1 point-to-point
 rtr(config-subif)# ip address $IP $MASK
  frame-relay interface-dlci $NUMBER cisco | ietf  # different encap types
- > frame-relay interface-dlci 501 ietf
+  > frame-relay interface-dlci 501 ietf
 
 
 # ROUTER
 show ip rip database  # print rip database
-debug ip rip  # enable|disable debug
+debug ip rip  # enable | disable debug
 
 show ip eigrp
  int  # print eigrp ints
@@ -145,7 +150,7 @@ show ip eigrp
   $NET  # print network addr status + ext route info
   all-links  # print all links
  traffic  # print traffic stats
- debug eigrp fsm|packet  # enable|disable debug
+ debug eigrp fsm | packet  # enable | disable debug
 
 ## RIP2
 rtr(config)# router rip
@@ -196,7 +201,7 @@ enable
  secret $PASSWD  # set encrypted enable password
 service
  password-encryption  # encode all passwords except enable secret password
- timestamps  # enable device to generate time stamps on log messages (especially debug messages!)
+ timestamps  # enable device to generate time stamps on log messages (+debug messages)
 banner
  motd_#$MESSAGE#  # set motd banner MESSAGE
  login_#$MESSAGE#  # set login MESSAGE, print after motd message
@@ -219,8 +224,8 @@ sw(config-if-range)# switchport voice vlan $VLAN  # assign ints to voice vlan
 
 # Router Global Configuration mode?
 (Ox) | Ox
-2100 - rom monitor
-2101 - rom mem, flash
-2102 - nvram
-2142 - passwd recover, reset
-config-register $HEX  # input hex registry setting
+ 2100 - rom monitor
+ 2101 - rom mem, flash
+ 2102 - nvram
+ 2142 - passwd recover, reset
+ config-register $HEX  # input hex registry setting

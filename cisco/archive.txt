@@ -1,0 +1,224 @@
+# Cisco IOS - Router, Switch, Access Point
+
+# CDP - Cisco Discovery Protocol
+show cdp  # print update timer, hold timer, global config status
+ int |$INT # print [all] cdp int stats
+ traffic
+ neighbors |detail
+ entry $NAME
+enable
+clear cdp
+ counters  # reset local cdp traffic counters
+ table  # empty contents of local cdp table
+|no cdp run  # enable|disable cdp advertisements
+
+# Access Point - BVI = bridge virtual interface  # access GUI
+1) establish console connection  
+2) assign ip address to BVI, no shut  
+3) connect fast ethernet straight-through cable from host pc to AP (DO NOT assign an ip address to fast ethernet interface!)
+4) statically assign ip address for host pc in same network as BVI  
+5) connect to AP through BVI by entering BVI address in to http address field of host pc internet browser
+
+show dot11
+ network-map  # print network map
+ adjacent-ap  # print adjacent access point list
+ associations client | all-client | statistics  # print radio, statistic associations, dot11 radio ints
+ interface dot11radio0 summary
+
+clear dot11
+ statistics interface | mac-address  # reset int stat for int or mac addr
+ statistics dot11radio0  # clears stats for dot11radio 0
+ > statistics 0040.9631.81cf  # clears stats for client radio with specified mac address
+ client $MAC  # deauthenticate radio client from mac address
+ > client 0040.9645.2196
+
+ap(config)# interface dot11radio $INT  # enter dot11radio interface mode
+ interface bvi1  # enter bridge virtual interface mode
+
+ap(config-if)# ssid $SSID  # enter ssid interface
+ ssid line $SSID  # declare ssid character name
+ap(config-if-ssid)# authentication open  # allow open ssid access all vlan devices
+
+ap(config-if)# station-role $ROLE  # select role of interface
+ station-role root  # configure access point for root operation
+ power client $VALUE  # set max power level of client radio tranmissions
+ power local $VALUE  # set max power level of access point transmissions
+ channel number|frequency  # set channel and frequency of interface
+ world-mode
+  antenna receive left | right | center
+  antenna transmit diversity | left | right
+  port-protected
+  beacon period $VALUE
+  rts thershold $VALUE
+  rts retries $VALUE
+  packet retries $VALUE
+  fragment-threshold $VALUE
+
+ ip address $IP $MASK
+ ip address dhcp  # enable dhcp client
+
+# Rom Monitor
+rm> show 
+ version  # print registry number, boot sequence
+ start
+
+dir flash:  # print flash contents
+boot flash:$IOS_FILE  # boot specified ios file, no space
+
+confreg  # edit terminal settings e.g. baud rate
+ (0x)2102  # boot from nvram
+ (0x)2142  # reset password settings
+
+reset | reload | boot  # reboot router
+xmodem_-c IOS-FILE  # download ios filename to flash
+set  # print rom monitor variables for tftp download session
+IP_ADDRESS=$IP  # assign ip addr
+IP_SUBNET_MASK=$MASK
+DEFAULT_GATEWAY=$IP
+TFTP_SERVER=$IP
+TFTP_FILE=$IOS_FILE
+tftpdnld  # enable tftp dl
+
+
+# Switch
+## VTP - vlan trunking protocol
+sw(config)# vtp mode server|client|transparent  # define vtp mode
+sw(config)# vtp domain DOMAIN  # assign vtp domain name
+sw(config)# vtp password PASS  # configure vtp domain password
+sw(config)# vtp version VER  # assign vtp version number
+sw(config)# vtp pruning  # enable vtp pruning
+
+## Frame Relay
+### DCE - Data Communication Equipment
+show frame-relay
+ route  # print routes of frame relay protocol
+ pvc  # print virtual circuit status of listed frame relay interfaces
+ map  # print info on static and dynamic ip mappings to dlci(s)
+
+sw(config)#
+ frame-relay switching  # define device frame relay switch
+ int s0/2/0
+sw(config-if)# encapsulation frame-relay
+ frame-relay intf-type dce  # can match different physical interface types
+ clockrate 64000
+ frame-relay route 102 interface s0/2/1 201  # fwd traffic from route 102 to serial route 201
+ no shut
+
+### DTE - Data Terminal Equipment
+show frame-relay
+ map  # print frame relay addressing info
+ pvc  # print pvc stats
+ lmi  # print lmi stats
+|no debug frame-relay lmi  # enable|disable debug, lmi packets
+clear frame-relay inverse-arp  # clears dynamically learned frame relay ip mapping
+
+### DLCI - Data Link Connection Identifier, CIR - Committed Information Rate
+rtr(config-if)#
+ encapsulation frame-relay cisco|ietf  # define FR encap type (DTE-to-DTE)
+ frame-relay lmi-type cisco|ansi|q933a  # define lmi encap type (DTE-to-DCE)
+ no frame-relay inverse-arp  # disable inverse arp; no dynamic learning
+ ip address IP MASK  # assign ip address
+ frame-relay map ip IP DLCI broadcast  # map remote ip to dlci
+ frame-relay map ip 10.1.1.2 102 broadcast  # allow ip broadcast
+ no shut
+
+### DTE - sub-interfaces
+rtr(config)# int $INT
+rtr(config-if)# encapsulation $ENCAP_TYPE
+ int $INT_SUB $ENCAP_TYPE
+ > int fa0/1.1 point-to-point
+rtr(config-subif)# ip address $IP $MASK
+ frame-relay interface-dlci DLCI cisco | ietf  # different encap types
+ > frame-relay interface-dlci 501 ietf
+
+
+# ROUTER
+show ip rip database  # print rip database
+|no debug ip rip  # enable|disable debug
+
+show ip eigrp
+ int  # print eigrp ints
+ neighbors  # print eigrp neighbors, successors
+ topology  # print successors,f easible successors
+ topology $NET  # print network addr status + ext route info
+ topology all-links  # print all links
+ traffic  # print traffic stats
+|no debug eigrp fsm|packet  # enable|disable debug
+
+## RIP2
+rtr(config)# router rip
+rtr(config-router)#
+ version 2  # enable rip version 2
+ no auto-summary  # disable auto summary
+rtr(config-router)#network $IP  # no mask
+
+## EIGRP
+rtr(config)# router eigrp $VALUE  # assign eigrp Autonomous System number
+rtr(config-router)#
+ network $IP $MASK  # define routed network ips
+ maximum-paths  # define equal load cost balancing paths
+ metric weights tos  # define bandwith delay metrics
+rtr(config-if)# |no bandwith $VALUE # enable|disable bandwith value, kbps
+ delay $VALUE  # set delay value, tens of microseconds
+ ip summary-address eigrp $VALUE $IP $MASK  # summarize nets per int
+ > ip summary-address eigrp 1 192.168.0.0 0.0.255.255
+
+rtr(config-if)# |no ip bandwidth-percent eigrp $VALUE  # set update bandwidth pct
+ > bandwidth-percent eigrp 1 50  # set update bandwidth limit 50 pct
+ hello-interval eigrp $VALUE  # define hello packet interval, sec
+ > hello-interval eigrp 1 60
+ hold-time eigrp $VALUE  # define hold-time, sec
+ > hold-time eigrp 1 180
+
+## RIP - authenticate
+rtr(config)# key chain $KEY
+rtr(config-keychain)# key 1
+rtr(config-keychain-key)# key-string cisco
+rtr(config-if)# ip rip authentication mode md5
+rtr(config-if)# ip rip authentication key-chain $KEY
+
+## EIGRP - authenticate
+rtr(config)# key chain $KEY
+rtr(config-keychain)# key 1
+rtr(config-keychain-key)# key-string cisco
+rtr(config-if)# ip authentication mode eigrp 1 md5
+rtr(config-if)# ip authentication key-chain eigrp 1 $KEY
+
+
+????????????????????? Mysterious cmd  ?????????????????????????????
+???????????????????????????????????????????????????????????????????
+
+hostname $HOSTNAME  # assign a host name
+enable
+ password $PASSWD  # set unencrypted enable password
+ secret $PASSWD  # set encrypted enable password
+service
+ password-encryption  # encode all passwords except enable secret password
+ timestamps  # enable device to generate time stamps on log messages (especially debug messages!)
+banner
+ motd_#$MESSAGE#  # set motd banner MESSAGE
+ login_#$MESSAGE#  # set login MESSAGE, print after motd message
+ exec_#$MESSAGE#  # set executive MESSAGE, print after login process
+
+show
+ sessions  # print telnet/ssh sessions w/ conn numbers
+ users  # print user log-in list
+
+telnet | ssh $IP
+resume $NUMBER
+disconnect $NUMBER
+
+# Switch Interface Configuration mode?
+sw(config-if)#
+ mdix auto  # media dependent interface with crossover; enable auto detect, can sense pin-out settings on both ends of link
+ mac-address $MAC  # assign static mac address to interface
+ mls qos trust cos  # identifies voice traffic as priority
+sw(config-if-range)# switchport voice vlan $VLAN  # assign ints to voice vlan
+
+# Router Global Configuration mode?
+(Ox) | Ox
+2100 - rom monitor
+2101 - rom mem, flash
+2102 - nvram
+2142 - passwd recover, reset
+config-register $HEX  # input hex registry setting

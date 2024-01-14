@@ -1,72 +1,66 @@
-# Docker terminal
+# Docker cli
 
-# Terminal cmd, keystrokes
-ctrl
- +p|q  # detach from running container
+# keystrokes
+ctrl + p|q  # detach from running container
+
+# terminal cmd
+## $IMG = $ID|$NAME:$TAG
 
 docker 
- build -f /path/to/Dockerfile .  # build docker container from dockerfile
-
- images  # print images, local regsitry
- image history
- image ls IMG NAME|ID  # print image info
- image import TGZ  # import img from archive
-
- exec -ti CNTR bash  # attach process to container, [i]nteractive, [t]erminal
- attach CNTR  # jump in to container
- kill CNTR  # kill container
-
- run -p 8080 -ti -v /share/docker:/home -w /home ubuntu:14.04 bash  # shared [v]olume, [w]orking dir prompt
-  --rm -ti -p HOST|:CNTR --name IMG NAME|ID:TAG CMD  # [rm]=remove on exit, [t]erminal, [i]nteractive, open [p]orts
-  --rm -ti -p 8080 -w /home ubuntu:14.04 bash
-   bash -c "sleep 3; echo all done"  # execute bash cmd
-   -p 1234:1234/udp
-   -p 127.0.0.1:1234:1234/tcp
-  -d -ti ubuntu bash  # [d]etached mode, do not enter
-  -d -p 5000:5000 --restart=always --name registry registry:2  # restart if fail
-  --name example -d ubuntu bash -c "less /etc/password"
-  --memory maximum-allowed-memory IMG NAME|ID CMD
-  
- stop CNTR-ID  # stop container
-
- rm CNTR  # remove container
- rmi -f IMG NAME|ID  # remove image from local regsitry, [f]orce
-
- commit CNTR IMG NAME|ID:TAG  # create new image from container changes
- pull IMG NAME:TAG
- push IMG NAME|ID:TAG  # push img to local registry
-
- save -o IMG NAME|ID  # save image to archive, [o]utput string
-  IMG.tgz debian:sid busybox ubuntu:14.04
- load -i images.tgz  # [i]nput img from archive in to local registry
- import /path/to/IMG.tgz  # import archive contents in to fs
- export CNTR > TGZ  # export container to archive
-
- ps |l|a|s # print curr containers, [l]atest, [a]ll, [s]ize total
- version
+ attach $CNTR  # jump in to container
+ build -f /path/to/Dockerfile .  # build image from Dockerfile
+ commit $CNTR $IMG  # create new image from container
+ exec -ti $CNTR bash  # attach process to container, [i]nteractive, [t]erminal
+ export $CNTR > $ARCH.tar  # export container to archive
+ images  # print images, local repo
+ image history $IMG
+ image ls $IMG  # print image info
+ import /path/to/image  # import one image into local docker repo
  info  # print container stats: running, stopped, server version
- search STR  # search online regsitry
+ inspect $IMG  # inspect image
+ kill $CNTR  # kill container
+ load -i $IMG  # load (multiple) image(s) into local docker repo, [i]nput
+ logs |-f $IMG|$CNTR  # print docker entity logs [f]orce
+ network disconnect bridge $CNTR  # disable running container network access
+ network ls  # list networks
+ port $CNTR $IMG $PORT|$PROTO  # list active ports, protocols
+ ps |-l|a|s # print curr containers, [l]atest, [a]ll, [s]ize total
+ pull $IMG  # pull image from remote docker repo
+ push $IMG  # push image to remote docker repo
+ rm $CNTR  # remove container
+ rmi -f $IMG  # remove image from local docker repo, [f]orce
+ run $PARM $IMG $CMD
+  > docker run hello-world  # execute test image, verify docker install integrity
+  > docker run --rm -ti -p HOST|:CNTR --name $IMG $CMD  # [rm]=remove on exit, [t]erminal, [i]nteractive, open [p]orts
+   > docker run --rm -ti -p 127.0.0.1:1234:1234/tcp -w /tmp --name $IMG bash
+  > docker run --rm -ti -p 8080 -w /home ubuntu:14.04 bash
+  > docker run -p 8080 -ti -v /share/docker:/home -w /home ubuntu:20.04 bash
+  > docker run -p 1234:1234/udp -ti -w /home $IMG bash
+  > docker run -ti -w /home $IMG bash -c "sleep 3; echo all done"  # execute bash cmd
+  > docker run -d ubuntu --name $IMG bash -c "less /etc/password"
+  > docker run -d -ti ubuntu bash  # [d]etached mode, do not enter
+  > docker run -d -p 5000:5000 --restart=always --name registry registry:2  # restart if fail
+  > docker run --memory maximum-allowed-memory $IMG $CMD
+ save -o $IMG /path/to/local/dir  # save image to local device
+ search $STR  # search online regsitry
   --filter "stars=8" --filter "is-official=true" ubuntu  # filter ubuntu img w/ 8+ stars
   --limit=25 ubuntu  # limit search results
- inspect IMG NAME|ID  # inspect image
- network disconnect bridge CONT NAME|ID  # disable running container network access
- network ls  # list networks
+ stop $CNTR  # stop container
  volume ls  # list volumes
 
- port CNTR NAME|ID PORT|PROTOCOL  # list active ports, protocols
- logs CNTR  # print container logs
-  -f IMG  # print IMG log details, [f]orce
 
 # Tags
-registry.example.com:port/organization/image-name:version-tag  # convention
-docker tag SRC_IMG:TAG TARGET_IMG:TAG
-docker image tag SRC-IMG:TAG TARGET-IMG:TAG
+## convention => registry.example.com:port/organization/image-name:version-tag
+docker tag $IMG:$TAG
+docker image tag $IMG_1:$TAG_1 $IMG_2:$TAG_2
+
 
 # Add User to docker group
 sudo groupadd docker  # create docker group (may already exist)
 sudo gpasswd -a $USER docker  # append docker group to $USER
 newgrp docker  # avoid logout|in to affect group change
 docker run hello-world  # test, no sudo
+
 
 # Containers connect - ports
 docker run --rm -ti -p OUT:IN
@@ -80,9 +74,11 @@ docker run --rm -ti ubuntu:14.04 bash  # container 2 start
 CNTR2# nc 10.35.3.24 45678  # set connection port from container 2|host ip to container 1
 CNTR2# nc 10.35.3.24 45679
 
+
 # Containers connect - direct
 docker run --rm -ti --name server ubuntu:14.04 bash  # container 1 start
  --link server --name client ubuntu:14.04 bash  # container 2 start
+
 
 # Containers connect - pvt network
 docker network create faux-net
@@ -91,10 +87,12 @@ CNTR1# nc -lp 1234
 docker run --rm -ti --link server --net=faux-net --name client ubuntu:14.04 bash
 CNTR2# nc server 1234
 
+
 # Shared volumes - host + containers
 docker run -ti -p PORT -v path/to/local/volume:path/to/container/dir -w WORK-DIR IMG CMD  # share btwn host and multiple containers
  -ti -p 8080 -v /share/docker:/home -w /home ubuntu:14.04 bash  # shared [v]olume
  -ti -v /share/docker:/home ubuntu bash
+
 
 # Compose - execute Dockerfile or YAML
 apt install docker-compose

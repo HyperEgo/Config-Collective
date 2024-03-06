@@ -1,117 +1,124 @@
 # Linux terminal 
 
+# Locations
 #!/usr/bin/env bash|python3  # env find executable
 /home/$USER/.ssh/config|known_hosts  # host, hostname, identity file, pub key
 /boot/grub2/grub.cfg  # boot loader gen grub-mkconfig
 /root  # root home dir
 
 /dev  # device filesystem by udev manage calls direct to kernel
- /mapper  # print volume information e.g. ll /dev/mapper
+  /mapper  # print volume information e.g. ll /dev/mapper
 
 /etc
- /apparmor.d  # AppArmor profiles
- /apt/sources.list  # Debian repository source list
- /cups  # open source printing system
- /default  # default system settings config
- /dhcp/dhclient.conf  # /sbin/dhclient config file
- /environment  # Debian, $PATH var
- /group  # groups account info
- /hosts  # map hostnames to IP addrs, local server access
- /init.d  # System V Init scripts
- /inittab  # run levels
- /issue  # message to console, user display prior to login
- |lib|run/systemd/system  # systemd units
- /libuser.conf  # libuser config file
- /login.defs  # user default settings
- /logrotate.d  # log rotate profiles config
- /modules-load.d/modules.conf  # kernel modules load at boot
- /motd  # message of the day, user display after login
- /nsswitch.conf  # name service switch config file
- /pam.d  # Pluggable Authentication Module config
- /passwd  # user pd, shell, settings config, e.g. /bin/false, /bin/nologin
- /pki  # RHEL shared system certificates
- /profile.d  # login run files
- /rc.d  # System V Init file executables, custom boot server, e.g. rc.local
- /resolv.conf  # name server request list
- /securetty  # virtual terminals allow root login
- /services  # network services w/ ports
- /shadow  # user account info
- /skel  # copy files to /home/$USER
- /ufw  # Ubuntu firewall profiles config
- /X11  # video libs
+  /apparmor.d  # AppArmor profiles
+  /apt/sources.list  # Debian repository source list
+  /cups  # open source printing system
+  /default  # default system settings config
+  /dhcp/dhclient.conf  # /sbin/dhclient config file
+  /environment  # Debian, $PATH var
+  /group  # groups account info
+  /hosts  # map hostnames to IP addrs, local server access
+  /init.d  # System V Init scripts
+  /inittab  # run levels
+  /issue  # message to console, user display prior to login
+    |lib|run/systemd/system  # systemd units
+  /libuser.conf  # libuser config file
+  /login.defs  # user default settings
+  /logrotate.d  # log rotate profiles config
+  /modules-load.d/modules.conf  # kernel modules load at boot
+  /motd  # message of the day, user display after login
+  /nsswitch.conf  # name service switch config file
+  /pam.d  # Pluggable Authentication Module config
+  /passwd  # user pd, shell, settings config, e.g. /bin/false, /bin/nologin
+  /pki  # RHEL shared system certificates
+  /profile.d  # login run files
+  /rc.d  # System V Init file executables, custom boot server, e.g. rc.local
+  /resolv.conf  # name server request list
+  /securetty  # virtual terminals allow root login
+  /services  # network services w/ ports
+  /shadow  # user account info
+  /skel  # copy files to /home/$USER
+  /ufw  # Ubuntu firewall profiles config
+  /X11  # video libs
 
 /lib
- /modules/KERNEL-VER/kernel/drivers  # currently loaded kernel modules e.g. uname -r = kernel version
- /systemd/systemd-journald  # systemd journald service
- /systemd/system  # systemd config
+  /modules/$KERNEL_VER/kernel/drivers  # currently loaded kernel modules e.g. uname -r = kernel version
+  /systemd/systemd-journald  # systemd journald service
+  /systemd/system  # systemd config
 
 /proc  # VFS - virtual file system representing sys info used by kernel
- /bus/pci  # PCI directory list
- /cpuinfo  # cpu, hardware stats
- /interrupts  # CPU IRQ (interrupt request) assignments
- /meminfo  # system memory usage
- /partitions  # major, minor part blocks
- /version  # cat for linux kernel version, OS flavor, gcc compiler
+  /bus/pci  # PCI directory list
+  /cpuinfo  # cpu, hardware stats
+  /interrupts  # CPU IRQ (interrupt request) assignments
+  /meminfo  # system memory usage
+  /partitions  # major, minor part blocks
+  /version  # cat for linux kernel version, OS flavor, gcc compiler
 
 /sbin/shutdown -r 15  # cmd [sudo], reboot after 15 mins
 /srv  # RHEL site specific data services, e.g. FTP, WWW, CVS
 
 /sys
- /block/DEV/queue/scheduler  # set device scheduler e.g. cfq, anticipatory, deadline, noop
- /block/DEV/stat  # I/O read device info, block devices
- /class  # virtual filesystem loaded in RAM, similiar devices, memory monitor
+  /block/DEV/queue/scheduler  # set device scheduler e.g. cfq, anticipatory, deadline, noop
+  /block/DEV/stat  # I/O read device info, block devices
+  /class  # virtual filesystem loaded in RAM, similiar devices, memory monitor
 
 /usr/lib
- /modules  # list kernel version
- /systemd/system/  # service and target directory e.g. graphical, multi-user.target
+  /modules  # list kernel version
+  /systemd/system/  # service and target directory e.g. graphical, multi-user.target
 
 /usr/share/doc  # linux tool documentation
- /grep-2.20/NEWS  # grep example command usage text file
+  /grep-2.20/NEWS  # grep example command usage text file
 
 /var/log
- /boot.log  # GRUB boot log
- /kern.log  # kernel log
- /secure  # secure log - passwd failures, sudo, pam, loading rules, server listening
- /syslog  # system log
- /yum.log  # yum install log
+  /boot.log  # GRUB boot log
+  /kern.log  # kernel log
+  /secure  # secure log - passwd failures, sudo, pam, loading rules, server listening
+  /syslog  # system log
+  /yum.log  # yum install log
 
 /var/spool/cron/crontabs  # user cron jobs
 
-# CLI keystrokes
+
+#Script - concat filename or string
+STR1="${STR2}_${STR3}.ext"
+
+
+# Keystrokes
 $CMD +SPACE +(x2)TAB  # print available cmd options e.g. yum|localctl|systemctl|service SPACE TAB TAB
 F11  # terminal full screen toggle
 ctrl
- +l  # clear screen
- +a  # cursor line begin
- +e  # cursor line end
- +u  # delete line
- +r  # cycle CLI cmd; ctrl+r - cycle; <enter> - execute
- +SHIFT+t  # open terminal tab
- +SHIFT+w  # close curr tab
- +page-up  # cycle tab left
- +page-down  # cycle tab right
+  +l  # clear screen
+  +a  # cursor line begin
+  +e  # cursor line end
+  +u  # delete line
+  +r  # cycle CLI cmd; ctrl+r - cycle; <enter> - execute
+  +SHIFT+t  # open terminal tab
+  +SHIFT+w  # close curr tab
+  +page-up  # cycle tab left
+  +page-down  # cycle tab right
 shift
- +ctrl+page-up  # cycle tab most left
- +ctrl+page-down  # cycle tab most right
+  +ctrl+page-up  # cycle tab most left
+  +ctrl+page-down  # cycle tab most right
 alt+<.>  # cycle previous cli input
 
-# CLI utility
+
+# CLI commands
 $CMD > /bin/kill  # send CMD output to kill container, test
 $CMD > /dev/null 2>&1  # send CMD output to /dev/null, stdout, stderr 
 aptitude install PKG  # use aptitude package manager
 apt-get update  # Debian update package cache
 apt
- info $PKG  # Debian query PKG info
- list  # print packages installed
- search "$STR"  # available package containing KEY
- update  # update package list to latest
- upgrade  # install latest package versions
+  info $PKG  # Debian query PKG info
+  list  # print packages installed
+  search "$STR"  # available package containing KEY
+  update  # update package list to latest
+  upgrade  # install latest package versions
 apt-cache search $STR  # query the APT cache, search available package lists
 add-apt-repository universe | multiverse  # add Debian repos e.g. install tree
 apropos $STR  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 atq # manage jobs
 base64 $DEV $PARM
- > base64 /dev/random | head -c 10M > FILE.txt  # create FILE w/ base64 10MB random data
+  base64 /dev/random | head -c 10M > FILE.txt  # create FILE w/ base64 10MB random data
 atrm $JOB  # remove job
 blkid -g  # purge cache, [g]arbage collect remove old devices
 brctl  # ethernet bridge admin
@@ -122,29 +129,29 @@ lsattr $FILE  # print FILE attribs e.g. [i]mmutable, [a]ppend only
 lsb_release -a  # print Debian e.g. Ubuntu version | release
 chgrp -R $GRP $DIR  # edit directory group affiliation
 chown -R $USER $DIR  # edit directory ownership
-chmod $PARM $REGEX $FILE|$DIR
- > -R 775 /home/$USER  # edit user home dir
- > -R {ugo}+{rwx} /path/to/dir  # edit dir perms, [u]ser, [g]roup, [o]ther, [r]ead, [w]rite, [e]xecute
- > g+s /path/to/dir  # set $SGID bit, enforce group association, child entities
- > +t /path/to/dir  # set sticky bit, disable deletion non-owners
-cp $PARM $DIR_1 $DIR_2
- > -air /src/dir/* /dest/dir  # copy source directory CONTENTS to dest
- > -R /src/dir /dest/dir  # copy source directory to dest
+chmod $PARM $RGX $FILE|$DIR
+  -R 775 /home/$USER  # edit user home dir
+  -R {ugo}+{rwx} /path/to/dir  # edit dir perms, [u]ser, [g]roup, [o]ther, [r]ead, [w]rite, [e]xecute
+  g+s /path/to/dir  # set $SGID bit, enforce group association, child entities
+  +t /path/to/dir  # set sticky bit, disable deletion non-owners
+cp $PARM $DIR1 $DIR2
+  -air /src/dir/* /dest/dir  # copy source directory CONTENTS to dest
+  -R /src/dir /dest/dir  # copy source directory to dest
 crontab -lu $USER  # print [u]ser cron job [l]ist
 curl -f $URL  # download URL [f]ail silently
 date
- --date "+60 days"  # curr time + 60 days
- +%F  # e.g. 2021-11-27
- +%F_%R  # e.g. 2021-11-27_23:38
-dd if=$DEV_1 of=$DEV_2
- > dd if=/dev/sda of=/mnt/bkup/os_image_$(date +%F).img  # save image from /dev/sda to /mnt/bkup
- > dd if=/dev/urandom of=/dev/sdb  # write random data to /dev/sdb
- > dd if=/dev/zero of=/dev/sdc  # write zeros to /dev/sdc
+  --date "+60 days"  # curr time + 60 days
+  +%F  # e.g. 2021-11-27
+  +%F_%R  # e.g. 2021-11-27_23:38
+dd if=$DEV1 of=$DEV2
+  dd if=/dev/sda of=/mnt/bkup/os_image_$(date +%F).img  # save image from /dev/sda to /mnt/bkup
+  dd if=/dev/urandom of=/dev/sdb  # write random data to /dev/sdb
+  dd if=/dev/zero of=/dev/sdc  # write zeros to /dev/sdc
 depmod -A  # gen modules.dep file, map files, exits if older then curr
 df  # print disc filesystem space usage
 dig $SRVR  # query mail server
 dmesg |-D  # print kernel ring buffer, [D]isable console logging
- -H -l err  # print kernel [l]evel log errors, [H]uman readable output
+  -H -l err  # print kernel [l]evel log errors, [H]uman readable output
 dnf install|search $PKG  # Fedora package manager
 dpkg -i|s $PGK  # Debian [i]nstall, status PKG
 dpkg-reconfigure  # Debian reconfigure installed packages
@@ -152,8 +159,8 @@ du  # print file space usage
 dumpe2fs -b $DEV  # print device bad blocks
 e2label $DEV $LABEL  # label device, e.g. e2label /dev/sdX WEB_SERVER
 echo -e  # accept special chars
- $HOME|$UI|$PATH  # print var contents
- -n "$STR_1" | openssl md5 -hmac "$STR_2"  # gen md5 hash from data input
+  $HOME|$UI|$PATH  # print var contents
+  -n "$STR1" | openssl md5 -hmac "$STR2"  # gen md5 hash from data input
 ethtool $DEV  # print net driver and hd setting for DEV
 env  # print user environment variables
 eog $FILE  # GNOME Image Viewer
@@ -161,35 +168,35 @@ g|parted  # partition editor
 f|gdisk -l $DEV  # manage device partitions, e.g. fdisk -l DEV; fdisk < gdisk < parted < gparted
 fsck -R|r $DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 find $DIR $PARM
- > find . -type f -iname *.txt -exec rm -rvf {} \;  # remove text files, curr dir
- > find -type d -iname super*  # find [d]irectory with string inclusive
- > find /var/log -type f -size +100k  # find files in /var/log, size >100 KB
- > find . -inum $INODE -exec rm -i {} \;  # find INODEs curr dir, remove [i]nteractively, e.g. list INODEs 'ls -li'
- > find . -mmin -30  # find files created 30 minutes recent
- > find . -size 0 -or -size +100k -mmin -30  # find files empty or >100 KB, updated 30 minutes recent
- > find . *.txt -exec mv {} {}.$STR \;  # append string to text file names
- > find . *.txt -exec rsync {} $USER@192.168.10.1:/home/$USER \; # update text file to remote user
- > find . *.bin -exec mv {} /path/to/directory \;  # move bin files to dir
- > find . *.svn -exec rm -rvf {} \;  # remove all svn files
- > find . *.java -exec sed -i 's/$STR_1/$STR_2/g' {} \;  # replace [i]n-place file contents string1 w/ string2
-for i in {$NUM_1..$NUM_2}; do $CMD; done  # loop specify number
- > for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir '10' times, exec in background
+  find . -type f -iname *.txt -exec rm -rvf {} \;  # remove text files, curr dir
+  find -type d -iname super*  # find [d]irectory with string inclusive
+  find /var/log -type f -size +100k  # find files in /var/log, size >100 KB
+  find . -inum $INODE -exec rm -i {} \;  # find INODEs curr dir, remove [i]nteractively, e.g. list INODEs 'ls -li'
+  find . -mmin -30  # find files created 30 minutes recent
+  find . -size 0 -or -size +100k -mmin -30  # find files empty or >100 KB, updated 30 minutes recent
+  find . *.txt -exec mv {} {}.$STR \;  # append string to text file names
+  find . *.txt -exec rsync {} $USER@192.168.10.1:/home/$USER \; # update text file to remote user
+  find . *.bin -exec mv {} /path/to/directory \;  # move bin files to dir
+  find . *.svn -exec rm -rvf {} \;  # remove all svn files
+  find . *.java -exec sed -i 's/$STR_1/$STR_2/g' {} \;  # replace [i]n-place file contents string1 w/ string2
+for i in {$NUM1..$NUM2}; do $CMD; done  # loop specify number
+  for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir '10' times, exec in background
 for f in *; do $CMD; done  # loop 'f' entities, do cmd
- > do echo "$STR" >> $f; done  # append string to file contents
- > do mv "$f" `echo $f | tr ' ' '_'` ; done  # replace filename SPACE w/ UNDER_SCORE, single char, no recurse dir
- > do mv "$f" "${f//$STR_1/STR_2}" ; done  # replace filename string1 w/ string2, no recurse dir
- > do mv "$f" "${f//$STR/}" ; done  # replace filename string with NOTHING, no recurse dir
-grep $OPTIONS $REGEX
- -niR $STR $DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive, no asterisk!
-  > -niR '.sh' /home/$USER
- > --exclude-dir=$DIR $STR  # keyword search, exclude dir
-  > --exclude-dir=.svn 'DEPRECATED_'
- > '^($STR)' .  # search begin string
- > -v '^($STR)' .  # search, exclude matches
- > -w '$STR' .  # search, match only whole string
+  do echo "$STR" >> $f; done  # append string to file contents
+  do mv "$f" `echo $f | tr ' ' '_'` ; done  # replace filename SPACE w/ UNDER_SCORE, single char, no recurse dir
+  do mv "$f" "${f//$STR1/STR2}" ; done  # replace filename string1 w/ string2, no recurse dir
+  do mv "$f" "${f//$STR/}" ; done  # replace filename string with NOTHING, no recurse dir
+grep $OPTIONS $RGX
+  -niR $STR $DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive, no asterisk!
+    -niR '.sh' /home/$USER
+  --exclude-dir=$DIR $STR  # keyword search, exclude dir
+    --exclude-dir=.svn 'DEPRECATED_'
+  '^($STR)' .  # search begin string
+  -v '^($STR)' .  # search, exclude matches
+  -w '$STR' .  # search, match only whole string
 getent
- group $GRP  # print group membership list
- hosts  # print hosts db
+  group $GRP  # print group membership list
+  hosts  # print hosts db
 getfacl $DIR  # print file ACL attribs for DIR
 setfacl -R -m g:$GRP:r $DIR  # grant read-only perms to GRP for DIR
 getsebool -a  # SELinux print boolean list
@@ -197,37 +204,37 @@ gpg --gen-key|send-key  # generate key pair, send to server
 groupmod -n $OLD $NEW  # edit group [n]ame from OLD to NEW
 groups $USER  # print USER groups
 head
- -30 /dev/urandom > $FILE  # write begin 30 lines from input to FILE
- -c 100G < /dev/urandom > $FILE  # read 100 GB data write to FILE
- -n10 $FILE  # print FILE first 10 lines
-history $NUMBER  # print history last NUM lines 
+  -30 /dev/urandom > $FILE  # write begin 30 lines from input to FILE
+  -c 100G < /dev/urandom > $FILE  # read 100 GB data write to FILE
+  -n10 $FILE  # print FILE first 10 lines
+history $NUM  # print history last NUM lines 
 host  # DNS lookup utility
 iconv --list # print coded character sets
 init 6  # systemd service manager, reboot
 iostat $DEV  # print DEV read | write stat
-ioping -c $NUMBER $DEV  # ping latency request to DEV NUM times
+ioping -c $NUM $DEV  # ping latency request to DEV NUM times
 ip
- addr show |$DEV  # print net device ip info
- monitor -t  # listen for net link traffic, [t]imestamp
- route  # print local route table entry
+  addr show |$DEV  # print net device ip info
+  monitor -t  # listen for net link traffic, [t]imestamp
+  route  # print local route table entry
 iptables -nL  # print ip table rules [L]ist, [n]umeric output addr port
 iptables-save  # save config file, IPv4/6 packet filtering, NAT admin tool
 iwconfig  # print wireless devices
 jar
- -tf $JAR  # print file list
- -xf $JAR $FILE  # extract FILE
- -tf | grep $FILE
+  -tf $JAR  # print file list
+  -xf $JAR $FILE  # extract FILE
+  -tf | grep $FILE
 java -jar $JAR  # execute jar
 jobs  # print curr jobs
 journalctl
- --disk-usage  # print journal filesystem usage
- -u $SRVC  # print journal entries for SRVC
+  --disk-usage  # print journal filesystem usage
+  -u $SRVC  # print journal entries for SRVC
 kernel-install  # edit kernel, initramfs images from /boot
 kill
- -9 $PID  # kill proc by PID, ugly, ungraceful
- -l  # [l]ist kill signal functions
- $JOB  # kill by job number
-  > kill %1  # kill job 1
+  -9 $PID  # kill proc by PID, ugly, ungraceful
+  -l  # [l]ist kill signal functions
+  $JOB  # kill by job number
+   > kill %1  # kill job 1
 klist  # print curr kerberos certificates
 last  # print curr user login events
 lastb  # print user accounts w/ auth attempts
@@ -237,58 +244,58 @@ ldd $DEV   # print shared object deps, e.g. /bin/bash
 less -C $FILE  # print contents, mouse nav, [C]lear previous contents
 locate $FILE  # find FILE, local db
 localectl # print keyboard and layout settings e.g. localectl status
- list-locales  # print locales
- list-keymaps  # print keyboard mappings
+  list-locales  # print locales
+  list-keymaps  # print keyboard mappings
 lshw  # pring hardware metrics
 ln -s path/to/dir |$STR  # create 'soft' link; DO NOT append '/'
 ls
- -li  # print dir inode numbers
- -Z $FILE  # print SELinux security context for FILE
+  -li  # print dir inode numbers
+  -Z $FILE  # print SELinux security context for FILE
 lsblk  # list devices, drive assign, mounts
 lsmod | sort | less  # print currently loaded kernel modules
 lsof
- -i  # list open files w/ process, [i]nternet
- -u $USER  # list open files by USER
+  -i  # list open files w/ process, [i]nternet
+  -u $USER  # list open files by USER
 lspci -nn|v|vv|vvv  # list PCI devices, vendor codes, numbers, names, [v]erbose
 lsusb -tv  # list USB devices, [t]ype, [v]erbose
 md5sum $FILE  # print MD5 message digest
 mkfs.ext4 -F $DEV  # format DEV to ext4 [F]orce
 mke2fs -t ext2|3|4  # create filesystem
 modinfo $DEV.ko.xz  # print kernel module info
- > modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
+  modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
 more $FILE  # print contents, forward only
 mount -a|t  # mount [a]ll fs in fstab, specify fs [t]ype
- | column -t  # output contents in column format e.g. package=util-linux
+  | column -t  # output contents in column format e.g. package=util-linux
 nc  # netcat
- -l -p $SRVR $PORT  # [l]isten [p]ort PORT e.g. nc server01 22
-  > -l -p 6666 > account.sql  # listen on host, port receive data, export to file
-  > -l -p 666 -e cmd.exe  # listen on host, port, export application output
- > echo "this is a test" | nc 10.1.0.1 -v 80  # send test string to remote host
- >> 10.1.0.1 666  # connect listener to port, ip
- type accounts.sql | nc 10.1.0.192 6666  #  send file output to ip, port
+  -l -p $SRVR $PORT  # [l]isten [p]ort PORT e.g. nc server01 22
+    -l -p 6666 > account.sql  # listen on host, port receive data, export to file
+    -l -p 666 -e cmd.exe  # listen on host, port, export application output
+  echo "this is a test" | nc 10.1.0.1 -v 80  # send test string to remote host
+    10.1.0.1 666  # connect listener to port, ip
+  type accounts.sql | nc 10.1.0.192 6666  #  send file output to ip, port
 netstat -tuplen | grep "LISTEN"  # print listening ports
 nmap -sV $SRVR -p $PORT  # print server port status e.g. nmap -sV server02 -p 21
 nmcli
- connection show  # print network device metrics: name, UUID, type, device
- device show  # print network device status: device, type, state, connection
- con up|down $DEV  # enable|disable network device e.g. ens32
- con edit $DEV  # open Net Manager dev editor > set ipv4.address 10.50.1.101/24
+  connection show  # print network device metrics: name, UUID, type, device
+  device show  # print network device status: device, type, state, connection
+  con up|down $DEV  # enable|disable network device e.g. ens32
+  con edit $DEV  # open Net Manager dev editor > set ipv4.address 10.50.1.101/24
 nmtui  # text UI for Net Manager
 nslookup $SRVR  # print name server ip addr
 od
- -vAn -N1 -td1 < /dev/urandom  # write 1 byte signed decimal integer
- -vAn -N2 -tu2 < /dev/urandom  # write 2 byte unsigned decimal integer
+  -vAn -N1 -td1 < /dev/urandom  # write 1 byte signed decimal integer
+  -vAn -N2 -tu2 < /dev/urandom  # write 2 byte unsigned decimal integer
 pgrep $SRVC  # return service process id
 pidof $STR  # print process id of running program name, e.g. firefox
 ping
- -c $NUM  # execute ping NUM times
- -I $INTERFACE  # ping from specific outbound interface
+  -c $NUM  # execute ping NUM times
+  -I $INTFC  # ping from specific outbound interface
 pkill $PID  # kill proc by id
 printenv  # print user environment variables
 ps -elf | grep -i "$STR"  # print process for string
 readonly  # print shell read-only variables
 renice  # alter priority of running processes
-rename -- .old-ext .new-ext *.old-ext  # rename file extension
+rename -- .old-ext .new-ext *.old-ext  # rename file extension, bulk multiple files
 rmmod -f $ARG  # [f]orce kernel mod ARG remove
 rsync -havz $SRC $DEST  # remote copy, sync files [h]uman readable, [a]rchive, [v]erbose, [z]compression
 runlevel  # print previous and current System V Init runlevel
@@ -299,57 +306,57 @@ sha256sum  # print SHA256 message digest
 shutdown -c  # cmd [sudo], interrupt stop reboot sequence
 snap info $PKG  # Linux cross distribution, dependency app installer
 sort
- -k $COLUMN
- $FILE | uniq  # remove duplicates
+  -k $COLUMN
+  $FILE | uniq  # remove duplicates
 ss -p | grep $STR  # print sockets w/ PIDs
 su -l|c  # substitute user, [l]ogin, issue [c]ommand to shell
 swapon  # print swap file metrics
 systemctl
- --type=service|target  # print system services | targets
- daemon-reload  # reload the systemd manager configuration
- get-default  # return default target at boot
- isolate graphical.target | multi-user.target  # launch UI | cli
- list-units |grep -i "service | target | mount"  # print curr loaded modules
- reboot -i
- set-default $TARGET  # set default target at boot
- start | stop | | restart |enable | disable $SRVC  # manage SRVC
- status --all |$SRVC  # print units runtime status
+  --type=service|target  # print system services | targets
+  daemon-reload  # reload the systemd manager configuration
+  get-default  # return default target at boot
+  isolate graphical.target | multi-user.target  # launch UI | cli
+  list-units |grep -i "service | target | mount"  # print curr loaded modules
+  reboot -i
+  set-default $TRGT  # set default target at boot
+  start | stop | | restart |enable | disable $SRVC  # manage SRVC
+  status --all |$SRVC  # print units runtime status
 systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
 tr ' ' '\n'  # replace SPACE with newline
- > groups | tr ' ' '\n'
+  groups | tr ' ' '\n'
 tar $PARM
- > -tf --exclude=$GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
- > -tvf $TAR  # print archive file list, [t]list
- > -zcvf $TGZ $DIR|$FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
- > -zxvf $TGZ -C $DIR  # e[x]tract archive to DIR
+  -tf --exclude=$GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
+  -tvf $TAR  # print archive file list, [t]list
+  -zcvf $TGZ $DIR|$FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
+  -zxvf $TGZ -C $DIR  # e[x]tract archive to DIR
 rpm
- -ivh $PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
- -e $PKG  # [e]rase or uninstall package
- -qa $PKG  # query PKG name exact
- -qa | grep $STR  # grep package name unknown
- -qi $PKG  # query PKG installer info
- -ql $PKG  # query PKG installer files
- -ql <<< rpm -qa ksh | sort > $FILE  # print to file PKG installer files from common name
+  -ivh $PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
+  -e $PKG  # [e]rase or uninstall package
+  -qa $PKG  # query PKG name exact
+  -qa | grep $STR  # grep package name unknown
+  -qi $PKG  # query PKG installer info
+  -ql $PKG  # query PKG installer files
+  -ql <<< rpm -qa ksh | sort > $FILE  # print to file PKG installer files from common name
 yum
- -v repolist  # print connected repos [v]erbose: base url, last updated, etc.
- deplist $PKG  # Fedora print deps list
-  > yum deplist python36-rpm.x86_64
- info $PKG  # Fedora query PKG info
- install -y epel-release cups-pdf
- list
-  installed | sort  # print yum local rpm packages installed
-   > yum list installed "python*"  # print packages, default exclusive
- provides $CFG  # print config file package association
-  > yum provides /etc/vsftpd/vsftpd.conf
- remove -y $PKG  # remove PKG
- search $STR  # search repo db, default inclusive
-  > yum search "python" 
+  -v repolist  # print connected repos [v]erbose: base url, last updated, etc.
+  deplist $PKG  # Fedora print deps list
+     yum deplist python36-rpm.x86_64
+  info $PKG  # Fedora query PKG info
+  install -y epel-release cups-pdf
+  list
+    installed | sort  # print yum local rpm packages installed
+      yum list installed "python*"  # print packages, default exclusive
+  provides $CFG  # print config file package association
+     yum provides /etc/vsftpd/vsftpd.conf
+  remove -y $PKG  # remove PKG
+  search $STR  # search repo db, default inclusive
+     yum search "python" 
 yumdownloader $PKG --destdir DIR --resolve
- > python36 --destdir ~/Downloads/python36/ --resolve  # directory created if no exist
+  python36 --destdir ~/Downloads/python36/ --resolve  # directory created if no exist
 tail
- -f $FILE  # print file appends
- -n10 $FILE  # print FILE last 10 lines
- -n+500 $FILE  # print FILE line 500->EOF
+  -f $FILE  # print file appends
+  -n10 $FILE  # print FILE last 10 lines
+  -n+500 $FILE  # print FILE line 500->EOF
 tcpdump -i $DEV  # dump [i]nterface DEV traffic e.g. sudo tcpdump -i ens32
 telinit $LVL  # edit System V Init runlevel
 top  # M - organize by memory, P - cpu usage, r - renice, reprioritizer PID
@@ -358,23 +365,23 @@ traceroute -T $DEST  # run trace w/ tcp packets, def port 80
 truncate -s 0 $FILE  # truncate FILE to [s]ize, delete alternative
 tune2fs -l $DEV  # view DEV filesystem info
 udevadm
- control -R  # reload rules file
- monitor -u  # print received udev events
+  control -R  # reload rules file
+  monitor -u  # print received udev events
 ulimit -a  # print cpu stats, virtual mem, stack size
 umask  # print default file perms, e.g. 666-umask=default
 unzip $ARCH.zip  # extract contents to curr dir
 useradd -D  # print user default attribs
 usermod
- -aG $GRP $USER  # add curr user to GRP or specify USER, [a]ppend, [G]roup
- -L|U $USER  # [L]ock | [U]nlock USER account
- -m|d $DIR $USER  # [m]ove USER home [d]irectory to DIR
+  -aG $GRP $USER  # add curr user to GRP or specify USER, [a]ppend, [G]roup
+  -L|U $USER  # [L]ock | [U]nlock USER account
+  -m|d $DIR $USER  # [m]ove USER home [d]irectory to DIR
 users  # print users logged in
 virt-install  # install vm
 visudo  # edit sudoers file - run cmds as root without root password
 vmstat -d 5 3  # print virtual mem usage, [d]evices, 5 sec interval, 3 queries total
 wget $URL -o FILE  # non-interactive network downloader, e.g. HTTP{S}, FTP, [o]utput to FILE
 whatis $CMD  # print one-line manual page description
- > whatis python
+  whatis python
 whereis -$PARM $CMD  # locate binary, executable
 whois $FQDN  # query whois db for fully qualified domain name
 who  # print users logged in
@@ -387,63 +394,57 @@ lpr $FILE.txt  # CUPS, convert text FILE to pdf, def dest /home/$USER/Desktop
 lpq  # list printer queue
 zip -r $ZIP $DIR|$FILE  # compress contents [r]ecursive
 
-# file stack
+## File stack
 dirs |-c  # print, [c]lear stack
 popd  # pop stack
 pushd $DIR  # push to stack
 
-# SED
-## model1 => sed 's/parm1/parm1/|g'
- > echo $PATH | sed 's/:/\n/g'  # print path var, replace ':' w/ newline
-
-## model2 => find $PARM -exec sed $PARM $REGEX {} \;  # pipe 'find' to 'sed'
-## model3 => cat $IN_FILE | sed $REGEX > $OUT_FILE  # print file, exec cmd, write to output
-## model4 => sed $REGEX_1 << cat $IN_FILE | sed $REGEX_2 ...  # chain multiple sed cmd to input file
-
-sed -e|i|n $REGEX $FILE   # [e]xpression, edit file [i]n-place, [n]-quiet|silent
- > '/^$/d'  # delete empty lines
-
- > '/.*$STR/d'  # delete lines containing string
- > 's/$STR//g'  # delete string all occurrences, [g]lobal
- > 's/.*$STR//'  # delete up to string sequence, inclusive
- > 's/$STR.*//'  # delete after string sequence, inclusive 
-
- > 's/:/\n/g'  # replace ':' w/ newline
- > 's/ */_/g'  # replace SPACE with UNDER_SCORE
-
- > 's/^/prefix/'  # add prefix to all lines
-
-sed -n  # print lines
- $NUM_1,$NUM_2p $FILE  # print line number range, NUM1 - NUM2
- -e $NUM_1p -e $NUM_2p $FILE  # print lines NUM1 and NUM2
- $NUM_1p $FILE  # print line NUM1
+## SED
+  model1: sed $OPT $RGX $FILE  # e.g. OPT=[e]xpression, edit file [i]n-place, [n]-quiet|silent
+  model2: find $PARM -exec sed $PARM $RGX {} \;
+  model3: sed $EXPR1 $FILE | sed $EXPR2 | ..
+  sed
+    '/^$/d'  # delete empty lines
+    '/$STR/d'  # delete lines containing string
+    's/$STR//g'  # [sub]-delete string all occurrences, [g]lobal
+    's/.*$STR//'  # [sub]-delete up to string sequence, inclusive
+    's/$STR.*//'  # [sub]-delete after string sequence, inclusive 
+    's/:/\n/g'  # [sub]-replace ':' w/ newline e.g. echo $PATH | $EXPR
+    's/ */_/g'  # [sub]-replace SPACE with UNDER_SCORE
+    's/^/prefix/'  # [sub]-add prefix to all lines
+    '/RUN/d' cpu-usage.raw | sed '/Linux/d' | awk '{print $1, $3, $13}'  # e.g. input raw file, parse strings, print columns
+  
+  sed -n  # print lines
+    $NUM1,$NUM2p $FILE  # print content, line number range NUM1-NUM2
+    -e $NUM1p -e $NUM2p $FILE  # alt: print content, line number range NUM1-NUM2
+    $NUM1p $FILE  # print content line NUM1
 
 # CLI tools
 cmatrix  # 'matrix' animation
 tmux  # terminal multiplexer
- ctrl+b,  # prefix + next cmd
-  c  # create session
-  d  # detach
-  w  # select
-  x  # close
-  [  # enable mouse scroll
-  ?  # help
-  %  # horizontal split
-  "  # vertical split
-  $  # name session
+  ctrl+b,  # prefix + next cmd
+    c  # create session
+    d  # detach
+    w  # select
+    x  # close
+    [  # enable mouse scroll
+    ?  # help
+    %  # horizontal split
+    "  # vertical split
+    $  # name session
 ~/.tmux.conf
 
 set -g
- default-terminal 'screen-256color'  # improve colors
- history-limit 10000
- status-fg green
- status-bg black
+  default-terminal 'screen-256color'  # improve colors
+  history-limit 10000
+  status-fg green
+  status-bg black
 
 # SSH keys
 ssh-keygen  # creates public, pvt key pair
- ~/.ssh/id_rsa  # pvt key
- ~/.ssh/id_rsa.pub  # public key
- ~/.ssh/authorized_keys  # connecting device pub key file
+  ~/.ssh/id_rsa  # pvt key
+  ~/.ssh/id_rsa.pub  # public key
+  ~/.ssh/authorized_keys  # connecting device pub key file
 ssh-copy-id $SRVR  # copy pub key to server
 
 # VIM
@@ -466,16 +467,16 @@ yy  # yank line
 u  # undo
 
 ctrl
- +r  # redo
- +o  # jump back
- +i  # jump forward
- +g  # print filename
- +o  # back 1 page
- +b  # back full screen
- +f  # forward full screen
- +d  # forward 1/2 screen
- +u  # back 1/2 screen
- +v [visual block], w - jump next column, x - delete, SHIFT+i ADD-TEXT + esc - apply changes
+  +r  # redo
+  +o  # jump back
+  +i  # jump forward
+  +g  # print filename
+  +o  # back 1 page
+  +b  # back full screen
+  +f  # forward full screen
+  +d  # forward 1/2 screen
+  +u  # back 1/2 screen
+  +v [visual block], w - jump next column, x - delete, SHIFT+i ADD-TEXT + esc - apply changes
 gg  # FILE top
 SHIFT+g  # FILE bottom
 
@@ -487,11 +488,11 @@ SHIFT+g  # FILE bottom
 :e  # open file
 :noh  # disable highlights
 :set
- hls  # enable highlight search
- nohls  # disable highlight search
- number
- nonumber
- ff=unix  # set [f]ile [f]ormat to unix
+  hls  # enable highlight search
+  nohls  # disable highlight search
+  number
+  nonumber
+  ff=unix  # set [f]ile [f]ormat to unix
 :qa  # [q]uit [a]ll
 :wqa  # [w]rite [q]uit [a]ll
 imap, t <Esc>:tabnew<CR>  # e.g.>  map 't' -> 'tab new', ~/.vimrc
@@ -500,12 +501,12 @@ imap, t <Esc>:tabnew<CR>  # e.g.>  map 't' -> 'tab new', ~/.vimrc
 /\<TEXT\>  # exclusive search
 
 :%s  # sed - embedded
- /\<TEXT\>/NEW-TEXT/g  # exclusive search, copy replace [g]lobal
- /TEXT/NEW-TEXT/  # copy replace, first instance
- /TEXT/NEW-TEXT/g  # copy replace, global
+  /\<TEXT\>/NEW-TEXT/g  # exclusive search, copy replace [g]lobal
+  /TEXT/NEW-TEXT/  # copy replace, first instance
+  /TEXT/NEW-TEXT/g  # copy replace, global
 
 ## tabs
-vim -p $FILE_1, $FILE_2  # open in tabs
+vim -p $FILE1, $FILE2  # open in tabs
 :tab help
 :help tab-page-intro
 :tabf $FILE  # open existing file in tab
@@ -516,28 +517,30 @@ vim -p $FILE_1, $FILE_2  # open in tabs
 :tablast  # go to last tab
 :tab 3  # go to tab 3
 :tabm N  # move tab to N pos
-:tabdo $REGEX  # apply REGEX to all tabs
+:tabdo $EXPR  # apply EXPR to all tabs
 
 ## split
-vim -o $FILE_1 $FILE_2  # :split - horizontal
-vim -O $FILE_1 $FILE_2  # :vsplit - vertical
+vim -o $FILE1 $FILE2  # :split - horizontal
+vim -O $FILE1 $FILE2  # :vsplit - vertical
 ctrl+w, j|k|l|i  # switch to adjacent window
 ctrl+w, left-arrow, right-arrow
+
 
 # Ant, Maven
 nohup ant &  # run ant background process, log to nohup.out
 ant
- -p  # print ant commands, must be in build.xml dir
- commonClean all
- clean 2>&1 | tee -a antlog_$(date +%F_%R).log  # logger, stderr, stdout to log file
- all
- cmAll
- html
- mvnDeploy  # deploy ant maven artifacts to Nexus repo (see pom for url)
+  -p  # print ant commands, must be in build.xml dir
+  commonClean all
+  clean 2>&1 | tee -a antlog_$(date +%F_%R).log  # logger, stderr, stdout to log file
+  all
+  cmAll
+  html
+  mvnDeploy  # deploy ant maven artifacts to Nexus repo (see pom for url)
 mvn
- -p  # print maven commands, must be in build.xml dir
- compile
- compile clean
+  -p  # print maven commands, must be in build.xml dir
+  compile
+  compile clean
+
 
 # Python3 - Interrupter
 pydoc modules  # print python local installed modules
@@ -553,11 +556,12 @@ python3  # start python interpreter
 ## PIP3 - python3 plugin manager
 yum install -y python36
 pip3
- install --upgrade pip
- download -d . "pywinrm>=0.3.0"  # dl python3 pywinrm plugin installer
- install --no-index --find-links *  # install plugin w/ deps local, offline mode
+  install --upgrade pip
+  download -d . "pywinrm>=0.3.0"  # dl python3 pywinrm plugin installer
+  install --no-index --find-links *  # install plugin w/ deps local, offline mode
 
-# Repo - create local
+
+# Repo - YUM create
 find . -iname "*.rpm" -exec mv '{}' ./rpm-dir \;  # move rpms to local dir
 cd /local/rpms/customrepo.repo  # browse to rpm local dir
 createrepo .
@@ -566,6 +570,7 @@ yum repolist
 yum makecache
 yum install PKG | --nogpgcheck  # install PKG, no gpg-key check, unofficial RHELx
 rpm -ivh PKG --nodeps  # install PKG, ignore dependencies, official RHELx
+
 
 # Filesystem - create, mount
 lsblk  # print connected devices w/ mounts
@@ -587,27 +592,28 @@ vim /etc/fstab  # edit fstab  w/ UUID, label
 mount -L LABEL MOUNT  # mount using label
 mount -a  # test mounts, sudo
 
+
 # RAID 
-RAID 0 = stripe, no parity, no disk failures (max performance)
-RAID 1 = mirror (1-to-1 disk backup)
-RAID 4 = stripe, parity on single disk
-RAID 5 = stripe, parity across all disks, max one disk failure
-RAID 6 = stripe, double parity across all disks, max two disk failures
-RAID 10 = (1 + 0) mirroring + striping
+  0 = stripe, no parity, no disk failures (max performance)
+  1 = mirror (1-to-1 disk backup)
+  4 = stripe, parity on single disk
+  5 = stripe, parity across all disks, max one disk failure
+  6 = stripe, double parity across all disks, max two disk failures
+  10 = (1 + 0) mirroring + striping
 
 g|fdisk /dev/sdX  # gdisk > 2 TB
-> n # new partition
-> Partition number = (default)
-> First Sector = (default)
-> Last Sector = (default)
-> Hex code or GUID = fd00  # RAID partition type code
-> t  # change partition type
-> p  # print partition
-> w  # write to disk
+  n # new partition
+  Partition number = (default)
+  First Sector = (default)
+  Last Sector = (default)
+  Hex code or GUID = fd00  # RAID partition type code
+  t  # change partition type
+  p  # print partition
+  w  # write to disk
 
 mdadm --create
- $RAID_DEV --level=$LEVEL --raid-devices=$NUM $DEV{1,2,..}  # create RAID partition at LEVEL for NUMber of DEVs
-  > /dev/md1 --level=0 --raid-devices=2 /dev/sdb /dev/sdc  # create RAID /dev/md1, RAID 0, 2 devices at /dev/{sdb, sdc}
+  $RAID_DEV --level=$LEVEL --raid-devices=$NUM $DEV{1,2,..}  # create RAID partition at LEVEL for NUMber of DEVs
+    /dev/md1 --level=0 --raid-devices=2 /dev/sdb /dev/sdc  # create RAID /dev/md1, RAID 0, 2 devices at /dev/{sdb, sdc}
 
 ## mount partition
 mkfs -t ext4 /dev/md1
@@ -626,6 +632,7 @@ mdadm --detail /dev/md1  # show RAID part details: sz, dev, state
 systemctl enable mdmonitor  # enable service at runtime
 systemctl start mdmonitor  # auto start service at boot
 
+
 # LVM - physical > volume > logical
 pvscan  # print physical volume info
 pvdisplay  # print physical volume detail
@@ -634,43 +641,44 @@ vgdispay  # pring volume group detail
 lvscan  # print logical volume info
 lvdisplay [VGLABEL]  # print logical volume detail e.g. sudo lvdisplay backup
 
-pvcreate $DEV_1 $DEV_2 ..  # create physical volume across devices
-vgcreate $VGLABEL $DEV_1 $DEV_2 ..  # create volume group from physical volume assignments
-lvcreate --name $LVNAME --size $LVSIZE $VGLABEL
- > sudo lvcreate --name sysbk --size 1GB backup
-
+pvcreate $DEV1 $DEV2 ..  # create physical volume across devices
+vgcreate $VGLABEL $DEV1 $DEV2 ..  # create volume group from physical volume assignments
+lvcreate --name $LVNAME --size $LVSIZE $VGLABEL sudo lvcreate --name sysbk --size 1GB backup
+   sudo lvcreate --name sysbk --size 1GB backup
 
 lvextend -L{$SIZE} $LV_DEV  # extend logical volume to SIZE
- > sudo lvextend -L5GB /dev/backup/databk
+  sudo lvextend -L5GB /dev/backup/databk
 
 lvreduce -L{$SIZE} $LV_DEV  # reduce logical volume to SIZE
- > sudo lvreduce -L1GB /dev/backup/logbk
+  sudo lvreduce -L1GB /dev/backup/logbk
 
 mkfs.ext4 $LV_DEV  # create logical volume filesystem
 mount $LV_DEV $MOUNT_DIR  # mount logical volume
- > sudo mount /dev/backup/sysbk /backup/sys
+  sudo mount /dev/backup/sysbk /backup/sys
 
 umount $DIR  # unmount previous mounted device
 $LV_DEV $DIR $TYPE defaults 0 0  # edit entries to /etc/fstab for auto mount on reboot
- > /dev/backup/sysbk /backup/sys xfs defaults 0 0  # fstab example
+  /dev/backup/sysbk /backup/sys xfs defaults 0 0  # fstab example
 
-# CRYPTO cfg
+
+# CRYPTO
 shred $FILE  # overwrite FILE contents, secure wipe
 cryptsetup $OPTIONS $ACTION $ACTION_ARG  # manage volume encryption
- > cryptsetup -v --verify-passphrase luksFormat $VOLUME  # prompts for UPPER case 'YES'
+  cryptsetup -v --verify-passphrase luksFormat $VOLUME  # prompts for UPPER case 'YES'
 
 # Sudoers file - visudo
- > student01 ALL=(ALL) NOPASSWD:ALL  # student01 acc exec all sudo cmds w/o switch 'su -' & no pd
+  student01 ALL=(ALL) NOPASSWD:ALL  # student01 acc exec all sudo cmds w/o switch 'su -' & no pd
 
 # C++ (g++, gcc) - compile, test
 vim foo.c
 #include<stdio.h>
 int main(void){
-	printf("Hello World!\n");
-	return 0;
+  printf("Hello World!\n");
+  return 0;
 }
 cc foo.c -o foo
 ./foo
+
 
 # Ports
 20 tcp|udp ftp  # file transfer protocol, data

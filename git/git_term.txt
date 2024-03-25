@@ -1,97 +1,96 @@
-# Git - terminal commands
+# Git terminal
 
-[WORKING] >> [STAGED] >> [LOCAL] >> [REMOTE]
-[create | edit] > [add] > [commit] -> [push]
+WORKING >> STAGED >> LOCAL >> REMOTE
+create|edit > add > commit -> push
 
-untracked files => working dir
-tracked files => repo
+untracked files => WORKING
+tracked files => WORKING|STAGED|LOCAL
 
 /etc/gitconfig  # global
 ~/.gitconfig  # local
 
 git help
- $CMD  # print CMD manual
- config | branch | merge
+  CMD  # print CMD manual
+  config | branch | merge
 
-## user cfg, env
+## User cfg, env
 git config 
- --global
-  user.name $USER
-  user.email $USER_EMAIL
-  core.editor $EDITOR (e.g. vim)
-  color.ui true
-  alias.st "status"
-  alias.lgg "log --graph --oneline --decorate --abbrev-commit --all"
-  alias.ci "commit message"
-  --unset $CMD   # remove git cmd alias
- --list  # print global creds
- --get remote.origin.url  # print upstream url remote 'origin'
+  --global
+    user.name USER
+    user.email USER_EMAIL
+    core.editor EDTR (e.g. vim)
+    color.ui true
+    alias.st "status"
+    alias.lgg "log --graph --oneline --decorate --abbrev-commit --all"
+    alias.ci "commit message"
+    --unset CMD   # remove git cmd alias
+  --list  # print global creds
+  --get remote.origin.url  # print upstream url remote 'origin'
 
-# management
+# Management
 git
- status
- add $FILE  # add file
- rm $FILE  # remove file from staged to working dir (e.g. after commit, before push)
- reset HEAD $FILE  # override file [WORKING] << [STAGED]
- clean -f  # remove [f]iles from working dir
- show $BR | $SHA  # print commit details
-  --pretty --name-only |$SHA  # print commit file list
+  status
+  add FILE  # add file
+  rm FILE  # remove file from staged to working dir (e.g. after commit, before push)
+  reset HEAD FILE  # override file WORKING << STAGED
+  clean -f  # remove [f]iles from working dir
+  show BRH | SHA  # print commit details
+    --pretty --name-only |SHA  # print commit file list
 
 git log
- --follow --stat -p -- $FILE
- --graph --pretty=format:"%C(auto)%h%d (%cr) %cn %s"
- --oneline --graph --decorate --all  # print logs: oneline, graph-tree format
- $BR  # print [BR]anch logs
+  --follow --stat -p -- FILE
+  --graph --pretty=format:"%C(auto)%h%d (%cr) %cn %s"
+  --oneline --graph --decorate --all  # print logs: oneline, graph-tree format
+  BRH  # print banch logs
 
 git branch  # see current branch
- $BR  # create branch, stay on current
- --merged  # print merged branches for current
- -m $BR_OLD $BR_NEW  # rename branch
- -D $BR  # [d]elete branch, force
- -r  # print [r]emote branches
- -a | --all  # print [a]ll remote branches
+  BRH  # create branch, stay on current
+  --merged  # print merged branches for current
+  -m BRH1 BR2  # rename BRH1 > BRH2
+  -D BRH  # [d]elete branch, force
+  -r  # print [r]emote branches
+  -a | --all  # print [a]ll remote branches
 
 git checkout
- $BR  # switch to branch
- -b $BR  # create [b]ranch, check it out
- -b $BR_SUB $BR_ORG  # checkout subordinate branch from main "original" branch
- -- $FILE  # checkout | override file [WORKING] << [LOCAL]
- --theirs path/to/file  # merge conflict; accept | override incoming changes [?]
- --theirs .  # [?]
+  BRH  # switch to branch
+  -b BRH  # create [b]ranch, check it out
+  -b BRH1 BRH2  # checkout BRH1 under BRH2
+  -- FILE  # checkout|override file WORKING << LOCAL
+  --theirs path/to/file  # merge conflict; accept | override incoming changes - no worky?
 
 git clone
- $URL  # clone repo, assume MASTER branch
- -b $BR $URL $DIR  # clone repo to directory
- -b $BR --single-branch $URL  # clone specific branch
- --recurse-submodules $URL  # clone branch w/ submods
+  URI  # clone repo, assume MASTER branch
+  -b BRH URI DIR  # clone repo to directory
+  -b BRH --single-branch URI  # clone specific branch
+  --recurse-submodules URI  # clone branch w/ submods
 
 git commit  # commit files, go to editor
- -m "commit message"  # commit files to current branch w/ [m]essage
- -am "add all modified files"  # commit all modified files, untracked not affected
- --amend -m "add to previous commit"  # amend to most recent commit
+  -m "commit message"  # commit files to current branch w/ [m]essage
+  -am "add all modified files"  # commit all modified files, untracked not affected
+  --amend -m "add to previous commit"  # amend to most recent commit
 
 git diff  # compare working dir and repo
- --staged  # compare staged area and repo
- --color-words  # compare changes side-by-side, color contrast
+  --staged  # compare staged area and repo
+  --color-words  # compare changes side-by-side, color contrast
 
 git merge 
- --squash $BR  # merge branch in to curr, optional squash commit messages
- --no-ff $BR  # execute merge, no fast forward
- --ff-only $BR  # execute merge, only fast forward merge, abort otherwise
- --abort  # abort merge
+  --squash BRH  # merge branch in to curr, optional squash commit messages
+  --no-ff BRH  # execute merge, no fast forward
+  --ff-only BRH  # execute merge, only fast forward merge, abort otherwise
+  --abort  # abort merge
 
 git push
- -u $ALIAS $BR  # push branch changes to remote [u]pstream tracking
- -u origin master  # push changes to remote named 'origin' on 'master' branch
- $ALIAS --delete $REMOTE  # keep local alias, delete remote
- --set-upstream origin master  # set upstream remote named 'origin' for 'master' branch
- $REMOTE --delete $BR  #  remove remote feature branch
+  -u ALIAS BRH  # push branch changes to remote [u]pstream tracking
+  -u origin master  # push changes to remote named 'origin' on 'master' branch
+  ALIAS --delete REMOTE  # keep local alias, delete remote
+  --set-upstream origin master  # set upstream remote named 'origin' for 'master' branch
+  REMOTE --delete BRH  #  remove remote feature branch
 
 git remote
- -v  # print remotes, current branch
- add $ALIAS $REMOTE  # add alias for remote
- add origin $URL # add remote named 'origin' for URL
- rm $ALIAS  # remove remote
+  -v  # print remotes, current branch
+  add ALIAS REMOTE  # add alias for remote
+  add origin URI # add remote named 'origin' for URI
+  rm ALIAS  # remove remote
 
 git reset path/to/submodule  # resolve submod conflicts
 
@@ -99,39 +98,39 @@ git pull = git fetch + git merge
 git fetch REMOTE --prune  # remove REMOTE refs
 
 git stash  # stash working changes
- list  # print stash list entries
- pop  # remove first single stash state from list, apply
- apply  # apply first single stash state from list
- clear
+  list  # print stash list entries
+  pop  # remove first single stash state from list, apply
+  apply  # apply first single stash state from list
+  clear
 
 git rebase
- $BR  # resync HEAD local branch to incoming
- > origin/master
+  BRH  # resync HEAD local branch to incoming
+  origin/master
 
 ## re-initialize submodules
 git
- submodule
-  deinit -f --all
-  init
- sync
- update --remote
+  submodule
+   deinit -f --all
+   init
+  sync
+  update --remote
 
 ## create local repo
 git
- init .
- add -A .
- commit -m "first commit"
- push
+  init .
+  add -A .
+  commit -m "first commit"
+  push
 
 ## create remote repo, local exclusive
 remote> git init --bare  # bare repo, no working dir
-local> git remote add origin $URL  # add remote named 'origin' for remote URL
+local> git remote add origin URI  # add remote named 'origin' for remote URI
 local> git remote -v  # list 'pull', 'fetch' connected remotes
 local> git push origin master  # push changes to remote named 'origin' on 'master' branch
 
 ## create remote repo, shared
 mkdir -p /share/devrepo.git
-sudo chgrp $GRP /share/devrepo.git  # set directory group name
+sudo chgrp GRP /share/devrepo.git  # set directory group name
 sudo chmod g+s|g+ws /share/devrepo.git  # set file attrib inheritance
 cd /share/devrepo.git
 git init --bare --shared=group  # explicitly set repo to shared status - multiple user contributes

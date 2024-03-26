@@ -84,7 +84,7 @@ git push
   -u origin master  # push changes to remote named 'origin' on 'master' branch
   ALIAS --delete REMOTE  # keep local alias, delete remote
   --set-upstream origin master  # set upstream remote named 'origin' for 'master' branch
-  REMOTE --delete BRH  #  remove remote feature branch
+  REMOTE --delete BRH  # remove remote feature branch
 
 git remote
   -v  # print remotes, current branch

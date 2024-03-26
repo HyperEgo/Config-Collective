@@ -5,10 +5,8 @@
 /home/USER/.ssh/config|known_hosts  # host, hostname, identity file, pub key
 /boot/grub2/grub.cfg  # boot loader gen grub-mkconfig
 /root  # root home dir
-
 /dev  # device filesystem by udev manage calls direct to kernel
   /mapper  # print volume information e.g. ll /dev/mapper
-
 /etc
   /apparmor.d  # AppArmor profiles
   /apt/sources.list  # Debian repository source list
@@ -40,12 +38,10 @@
   /skel  # copy files to /home/USER
   /ufw  # Ubuntu firewall profiles config
   /X11  # video libs
-
 /lib
   /modules/KERNEL_VER/kernel/drivers  # currently loaded kernel modules e.g. uname -r = kernel version
   /systemd/systemd-journald  # systemd journald service
   /systemd/system  # systemd config
-
 /proc  # VFS - virtual file system representing sys info used by kernel
   /bus/pci  # PCI directory list
   /cpuinfo  # cpu, hardware stats
@@ -53,29 +49,23 @@
   /meminfo  # system memory usage
   /partitions  # major, minor part blocks
   /version  # cat for linux kernel version, OS flavor, gcc compiler
-
 /sbin/shutdown -r 15  # cmd [sudo], reboot after 15 mins
 /srv  # RHEL site specific data services, e.g. FTP, WWW, CVS
-
 /sys
   /block/DEV/queue/scheduler  # set device scheduler e.g. cfq, anticipatory, deadline, noop
   /block/DEV/stat  # I/O read device info, block devices
   /class  # virtual filesystem loaded in RAM, similiar devices, memory monitor
-
 /usr/lib
   /modules  # list kernel version
   /systemd/system/  # service and target directory e.g. graphical, multi-user.target
-
 /usr/share/doc  # linux tool documentation
   /grep-2.20/NEWS  # grep example command usage text file
-
 /var/log
   /boot.log  # GRUB boot log
   /kern.log  # kernel log
   /secure  # secure log - passwd failures, sudo, pam, loading rules, server listening
   /syslog  # system log
   /yum.log  # yum install log
-
 /var/spool/cron/crontabs  # user cron jobs
 
 #Script - concat filename or string
@@ -114,7 +104,7 @@ apt-cache search STR  # query the APT cache, search available package lists
 add-apt-repository universe | multiverse  # add Debian repos e.g. install tree
 apropos STR  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
 atq # manage jobs
-base64 DEV PARM
+base64 DEV OPT
   base64 /dev/random | head -c 10M > FILE.txt  # create FILE w/ base64 10MB random data
 atrm JOB  # remove job
 blkid -g  # purge cache, [g]arbage collect remove old devices
@@ -122,16 +112,14 @@ brctl  # ethernet bridge admin
 bzip2  # compress, decompress block-sorting, e.g. .bz, .bz2, .tbz, .tbz2
 chage -l USER  # print account age info
 chattr +i FILE  # edit file attributes, [R]ecursive, [i]mmutable
-lsattr FILE  # print FILE attribs e.g. [i]mmutable, [a]ppend only
-lsb_release -a  # print Debian e.g. Ubuntu version | release
 chgrp -R GRP DIR  # edit directory group affiliation
 chown -R USER DIR  # edit directory ownership
-chmod PARM RGX FILE|DIR
+chmod OPT RGX FILE|DIR
   -R 775 /home/USER  # edit user home dir
   -R {ugo}+{rwx} /path/to/dir  # edit dir perms, [u]ser, [g]roup, [o]ther, [r]ead, [w]rite, [e]xecute
   g+s /path/to/dir  # set SGID bit, enforce group association, child entities
   +t /path/to/dir  # set sticky bit, disable deletion non-owners
-cp PARM DIR1 DIR2
+cp OPT DIR1 DIR2
   -air /src/dir/* /dest/dir  # copy source directory CONTENTS to dest
   -R /src/dir /dest/dir  # copy source directory to dest
 crontab -lu USER  # print [u]ser cron job [l]ist
@@ -164,7 +152,7 @@ eog FILE  # GNOME Image Viewer
 g|parted  # partition editor
 f|gdisk -l DEV  # manage device partitions, e.g. fdisk -l DEV; fdisk < gdisk < parted < gparted
 fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
-find DIR PARM
+find DIR OPT
   find . -type f -iname *.txt -exec rm -rvf {} \;  # remove text files, curr dir
   find -type d -iname super*  # find [d]irectory with string inclusive
   find /var/log -type f -size +100k  # find files in /var/log, size >100 KB
@@ -248,6 +236,8 @@ ln -s path/to/dir |STR  # create 'soft' link; DO NOT append '/'
 ls
   -li  # print dir inode numbers
   -Z FILE  # print SELinux security context for FILE
+lsattr FILE  # print FILE attribs e.g. [i]mmutable, [a]ppend only
+lsb_release -a  # print Debian e.g. Ubuntu version | release
 lsblk  # list devices, drive assign, mounts
 lsmod | sort | less  # print currently loaded kernel modules
 lsof
@@ -269,7 +259,7 @@ nc  # netcat
     -l -p 666 -e cmd.exe  # listen on host, port, export application output
   echo "this is a test" | nc 10.1.0.1 -v 80  # send test string to remote host
     10.1.0.1 666  # connect listener to port, ip
-  type accounts.sql | nc 10.1.0.192 6666  #  send file output to ip, port
+  type accounts.sql | nc 10.1.0.192 6666  # send file output to ip, port
 netstat -tuplen | grep "LISTEN"  # print listening ports
 nmap -sV SRVR -p PORT  # print server port status e.g. nmap -sV server02 -p 21
 nmcli
@@ -319,15 +309,14 @@ systemctl
   start | stop | | restart |enable | disable SRVC  # manage SRVC
   status --all |SRVC  # print units runtime status
 systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
-tr ' ' '\n'  # replace SPACE with newline
-  groups | tr ' ' '\n'
 tar OPT TGZ FILE  # extract specific file
 tar -zxvf cpu-metric.tgz parent-dir/some-script.sh
   -tf --exclude=GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
   -tvf TAR  # print archive file list, [t]list
   -zcvf TGZ DIR|FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
   -zxvf TGZ -C DIR  # e[x]tract to DIR
-
+tr ' ' '\n'  # replace SPACE with newline
+  groups | tr ' ' '\n'
 rpm
   -ivh PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
   -e PKG  # [e]rase or uninstall package
@@ -381,13 +370,13 @@ vmstat -d 5 3  # print virtual mem usage, [d]evices, 5 sec interval, 3 queries t
 wget URL -o FILE  # non-interactive network downloader, e.g. HTTP{S}, FTP, [o]utput to FILE
 whatis CMD  # print one-line manual page description
   whatis python
-whereis -PARM CMD  # locate binary, executable
+whereis -OPT CMD  # locate binary, executable
 whois FQDN  # query whois db for fully qualified domain name
 who  # print users logged in
 w  # print users logged in, session info
 wc -l  # print word count, [l]ines e.g. ls DIR | wc -l = file count
 xkill UI_SRVC  # kill windowed service by name | mouse
-xrdp PARM  # MS remote desktop tool, start xrdp daemon, edit firewall exceptions
+xrdp OPT  # MS remote desktop tool, start xrdp daemon, edit firewall exceptions
 xz -k DIR|FILE  # compress CONTENTS [k]eep original .xz, .lzma
 lpr FILE.txt  # CUPS, convert text FILE to pdf, def dest /home/USER/Desktop
 lpq  # list printer queue
@@ -400,7 +389,7 @@ pushd DIR  # push to stack
 
 ## SED
   model1: sed OPT RGX FILE  # e.g. OPT=[e]xpression, edit file [i]n-place, [n]-quiet|silent
-  model2: find PARM -exec sed PARM RGX {} \;
+  model2: find OPT -exec sed OPT RGX {} \;
   model3: sed EXPR1 FILE | sed EXPR2 | ..
   sed
     '/^$/d'  # delete empty lines

@@ -101,11 +101,11 @@ apt
   update  # update package list to latest
   upgrade  # install latest package versions
 apt-cache search STR  # query the APT cache, search available package lists
-add-apt-repository universe | multiverse  # add Debian repos e.g. install tree
-apropos STR  # search manual descriptions, e.g. 'apropos vim | ^ssh | email-address'
+add-apt-repository universe|multiverse  # add Debian repos e.g. install tree
+apropos STR  # search manual descriptions, e.g. 'apropos vim|^ssh|email-address'
 atq # manage jobs
 base64 DEV OPT
-  base64 /dev/random | head -c 10M > FILE.txt  # create FILE w/ base64 10MB random data
+  base64 /dev/random|head -c 10M > FILE.txt  # create FILE w/ base64 10MB random data
 atrm JOB  # remove job
 blkid -g  # purge cache, [g]arbage collect remove old devices
 brctl  # ethernet bridge admin
@@ -145,7 +145,7 @@ dumpe2fs -b DEV  # print device bad blocks
 e2label DEV LABEL  # label device, e.g. e2label /dev/sdX WEB_SERVER
 echo -e  # accept special chars
   HOME|UI|PATH  # print var contents
-  -n "STR1" | openssl md5 -hmac "STR2"  # gen md5 hash from data input
+  -n "STR1"|openssl md5 -hmac "STR2"  # gen md5 hash from data input
 ethtool DEV  # print net driver and hd setting for DEV
 env  # print user environment variables
 eog FILE  # GNOME Image Viewer
@@ -168,7 +168,7 @@ for i in {NUM1..NUM2}; do CMD; done  # loop specify number
   for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir '10' times, exec in background
 for f in *; do CMD; done  # loop 'f' entities, do cmd
   do echo "STR" >> $f; done  # append string to file contents
-  do mv "$f" `echo $f | tr ' ' '_'` ; done  # replace filename SPACE w/ UNDER_SCORE, single char, no recurse dir
+  do mv "$f" `echo $f|tr ' ' '_'` ; done  # replace filename SPACE w/ UNDER_SCORE, single char, no recurse dir
   do mv "f" "{f//$STR1/STR2}" ; done  # replace filename string1 w/ string2, no recurse dir
   do mv "$f" "${f//STR/}" ; done  # replace filename string with NOTHING, no recurse dir
 grep OPT RGX
@@ -196,7 +196,7 @@ history NUM  # print history last NUM lines
 host  # DNS lookup utility
 iconv --list # print coded character sets
 init 6  # systemd service manager, reboot
-iostat DEV  # print DEV read | write stat
+iostat DEV  # print DEV read|write stat
 ioping -c NUM DEV  # ping latency request to DEV NUM times
 ip
   addr show |DEV  # print net device ip info
@@ -208,7 +208,7 @@ iwconfig  # print wireless devices
 jar
   -tf JAR  # print file list
   -xf JAR FILE  # extract FILE
-  -tf | grep FILE
+  -tf|grep FILE
 java -jar JAR  # execute jar
 jobs  # print curr jobs
 journalctl
@@ -219,7 +219,7 @@ kill
   -9 PID  # kill proc by PID, ugly, ungraceful
   -l  # [l]ist kill signal functions
   JOB  # kill by job number
-   > kill %1  # kill job 1
+    kill %1  # kill job 1
 klist  # print curr kerberos certificates
 last  # print curr user login events
 lastb  # print user accounts w/ auth attempts
@@ -237,9 +237,9 @@ ls
   -li  # print dir inode numbers
   -Z FILE  # print SELinux security context for FILE
 lsattr FILE  # print FILE attribs e.g. [i]mmutable, [a]ppend only
-lsb_release -a  # print Debian e.g. Ubuntu version | release
+lsb_release -a  # print Debian e.g. Ubuntu version|release
 lsblk  # list devices, drive assign, mounts
-lsmod | sort | less  # print currently loaded kernel modules
+lsmod|sort|less  # print currently loaded kernel modules
 lsof
   -i  # list open files w/ process, [i]nternet
   -u USER  # list open files by USER
@@ -252,15 +252,15 @@ modinfo DEV.ko.xz  # print kernel module info
   modinfo /lib/modules/.../drivers/bluetooth/btusb.ko.xz
 more FILE  # print contents, forward only
 mount -a|t  # mount [a]ll fs in fstab, specify fs [t]ype
-  | column -t  # output contents in column format e.g. package=util-linux
+ |column -t  # output contents in column format e.g. package=util-linux
 nc  # netcat
   -l -p SRVR PORT  # [l]isten [p]ort PORT e.g. nc server01 22
     -l -p 6666 > account.sql  # listen on host, port receive data, export to file
     -l -p 666 -e cmd.exe  # listen on host, port, export application output
-  echo "this is a test" | nc 10.1.0.1 -v 80  # send test string to remote host
+  echo "this is a test"|nc 10.1.0.1 -v 80  # send test string to remote host
     10.1.0.1 666  # connect listener to port, ip
-  type accounts.sql | nc 10.1.0.192 6666  # send file output to ip, port
-netstat -tuplen | grep "LISTEN"  # print listening ports
+  type accounts.sql|nc 10.1.0.192 6666  # send file output to ip, port
+netstat -tuplen|grep "LISTEN"  # print listening ports
 nmap -sV SRVR -p PORT  # print server port status e.g. nmap -sV server02 -p 21
 nmcli
   connection show  # print network device metrics: name, UUID, type, device
@@ -279,7 +279,7 @@ ping
   -I INTFC  # ping from specific outbound interface
 pkill PID  # kill proc by id
 printenv  # print user environment variables
-ps -elf | grep -i "STR"  # print process for string
+ps -elf|grep -i "STR"  # print process for string
 readonly  # print shell read-only variables
 renice  # alter priority of running processes
 rename -- .old-ext .new-ext *.old-ext  # rename file extension, bulk multiple files
@@ -287,44 +287,44 @@ rmmod -f ARG  # [f]orce kernel mod ARG remove
 rsync -havz SRC DEST  # remote copy, sync files [h]uman readable, [a]rchive, [v]erbose, [z]compression
 runlevel  # print previous and current System V Init runlevel
 sar -u  # print performance info e.g. 'sar 2 6' - 2 sec interval, 6 queries total
-screen | tmux  # terminal session multiplexer
+screen|tmux  # terminal session multiplexer
 setsebool -P  # SELinux write curr values to disc at reboot
 sha256sum  # print SHA256 message digest
 shutdown -c  # cmd [sudo], interrupt stop reboot sequence
 snap info PKG  # Linux cross distribution, dependency app installer
 sort
   -k COLUMN
-  FILE | uniq  # remove duplicates
-ss -p | grep STR  # print sockets w/ PIDs
+  FILE|uniq  # remove duplicates
+ss -p|grep STR  # print sockets w/ PIDs
 su -l|c  # substitute user, [l]ogin, issue [c]ommand to shell
 swapon  # print swap file metrics
 systemctl
-  --type=service|target  # print system services | targets
+  --type=service|target  # print system services|targets
   daemon-reload  # reload the systemd manager configuration
   get-default  # return default target at boot
-  isolate graphical.target | multi-user.target  # launch UI | cli
-  list-units |grep -i "service | target | mount"  # print curr loaded modules
+  isolate graphical.target|multi-user.target  # launch UI|cli
+  list-units |grep -i "service|target|mount"  # print curr loaded modules
   reboot -i
   set-default TRGT  # set default target at boot
-  start | stop | | restart |enable | disable SRVC  # manage SRVC
+  start|stop|| restart |enable|disable SRVC  # manage SRVC
   status --all |SRVC  # print units runtime status
-systemd-analyze |blame | dump  # print startup process times, longest decending, dump manager logs
+systemd-analyze |blame|dump  # print startup process times, longest decending, dump manager logs
 tar OPT TGZ FILE  # extract specific file
 tar -zxvf cpu-metric.tgz parent-dir/some-script.sh
-  -tf --exclude=GLOB | --remove-files  # exclude file glob pattern, remove files after archiving
+  -tf --exclude=GLOB|--remove-files  # exclude file glob pattern, remove files after archiving
   -tvf TAR  # print archive file list, [t]list
   -zcvf TGZ DIR|FILE  # [c]reate archive, g[z]ip compression, [v]erbose, [f]ile from CONTENTS
   -zxvf TGZ -C DIR  # e[x]tract to DIR
 tr ' ' '\n'  # replace SPACE with newline
-  groups | tr ' ' '\n'
+  groups|tr ' ' '\n'
 rpm
   -ivh PKG|*  # install local rpm [i]nstall, [v]erbose, [h]ash marks
   -e PKG  # [e]rase or uninstall package
   -qa PKG  # query PKG name exact
-  -qa | grep STR  # grep package name unknown
+  -qa|grep STR  # grep package name unknown
   -qi PKG  # query PKG installer info
   -ql PKG  # query PKG installer files
-  -ql <<< rpm -qa ksh | sort > FILE  # print to file PKG installer files from common name
+  -ql <<< rpm -qa ksh|sort > FILE  # print to file PKG installer files from common name
 yum
   -v repolist  # print connected repos [v]erbose: base url, last updated, etc.
   deplist PKG  # Fedora print deps list
@@ -332,7 +332,7 @@ yum
   info PKG  # Fedora query PKG info
   install -y epel-release cups-pdf
   list
-    installed | sort  # print yum local rpm packages installed
+    installed|sort  # print yum local rpm packages installed
       yum list installed "python*"  # print packages, default exclusive
   provides CFG  # print config file package association
      yum provides /etc/vsftpd/vsftpd.conf
@@ -361,7 +361,7 @@ unzip ARCH.zip  # extract contents to curr dir
 useradd -D  # print user default attribs
 usermod
   -aG GRP USER  # add curr user to GRP or specify USER, [a]ppend, [G]roup
-  -L|U USER  # [L]ock | [U]nlock USER account
+  -L|U USER  # [L]ock|[U]nlock USER account
   -m|d DIR USER  # [m]ove USER home [d]irectory to DIR
 users  # print users logged in
 virt-install  # install vm
@@ -374,8 +374,8 @@ whereis -OPT CMD  # locate binary, executable
 whois FQDN  # query whois db for fully qualified domain name
 who  # print users logged in
 w  # print users logged in, session info
-wc -l  # print word count, [l]ines e.g. ls DIR | wc -l = file count
-xkill UI_SRVC  # kill windowed service by name | mouse
+wc -l  # print word count, [l]ines e.g. ls DIR|wc -l = file count
+xkill UI_SRVC  # kill windowed service by name|mouse
 xrdp OPT  # MS remote desktop tool, start xrdp daemon, edit firewall exceptions
 xz -k DIR|FILE  # compress CONTENTS [k]eep original .xz, .lzma
 lpr FILE.txt  # CUPS, convert text FILE to pdf, def dest /home/USER/Desktop
@@ -390,17 +390,17 @@ pushd DIR  # push to stack
 ## SED
   model1: sed OPT RGX FILE  # e.g. OPT=[e]xpression, edit file [i]n-place, [n]-quiet|silent
   model2: find OPT -exec sed OPT RGX {} \;
-  model3: sed EXPR1 FILE | sed EXPR2 | ..
+  model3: sed EXPR1 FILE|sed EXPR2|..
   sed
     '/^$/d'  # delete empty lines
     '/STR/d'  # delete lines containing string
     's/STR//g'  # [sub]-delete string all occurrences, [g]lobal
     's/.*STR//'  # [sub]-delete up to string sequence, inclusive
     's/STR.*//'  # [sub]-delete after string sequence, inclusive 
-    's/:/\n/g'  # [sub]-replace ':' w/ newline e.g. echo PATH | EXPR
+    's/:/\n/g'  # [sub]-replace ':' w/ newline e.g. echo PATH|EXPR
     's/ */_/g'  # [sub]-replace SPACE with UNDER_SCORE
     's/^/prefix/'  # [sub]-add prefix to all lines
-    '/RUN/d' cpu-usage.raw | sed '/Linux/d' | awk '{print $1, $3, $13}'  # e.g. input raw file, parse strings, print columns
+    '/RUN/d' cpu-usage.raw|sed '/Linux/d'|awk '{print $1, $3, $13}'  # e.g. input raw file, parse strings, print columns
   
   sed -n  # print lines
     NUM1,NUM2p FILE  # print content, line number range NUM1-NUM2
@@ -484,7 +484,7 @@ SHIFT+g  # FILE bottom
   ff=unix  # set [f]ile [f]ormat to unix
 :qa  # [q]uit [a]ll
 :wqa  # [w]rite [q]uit [a]ll
-imap, t <Esc>:tabnew<CR>  # e.g.>  map 't' -> 'tab new', ~/.vimrc
+imap, t <Esc>:tabnew<CR>  # e.g. map 't' -> 'tab new', ~/.vimrc
 
 /TEXT  # inclusive search
 /\<TEXT\>  # exclusive search
@@ -500,8 +500,8 @@ vim -p FILE1, FILE2  # open in tabs
 :help tab-page-intro
 :tabf FILE  # open existing file in tab
 :tabnew FILE  # open new file in tab
-:tabn | 'gt' | ctrl+PgDn  # tab next
-:tabp | 'gT' | ctrl+PgUp  # tab prev
+:tabn|'gt'|ctrl+PgDn  # tab next
+:tabp|'gT'|ctrl+PgUp  # tab prev
 :tabfirst  # go to first tab
 :tablast  # go to last tab
 :tab 3  # go to tab 3
@@ -519,7 +519,7 @@ nohup ant &  # run ant background process, log to nohup.out
 ant
   -p  # print ant commands, must be in build.xml dir
   commonClean all
-  clean 2>&1 | tee -a antlog_$(date +%F_%R).log  # logger, stderr, stdout to log file
+  clean 2>&1|tee -a antlog_$(date +%F_%R).log  # logger, stderr, stdout to log file
   all
   cmAll
   html
@@ -554,7 +554,7 @@ createrepo .
 sed 's/enabled = 0/enabled = 1' /etc/yum.repos.d/redhat.repo
 yum repolist
 yum makecache
-yum install PKG | --nogpgcheck  # install PKG, no gpg-key check, unofficial RHELx
+yum install PKG|--nogpgcheck  # install PKG, no gpg-key check, unofficial RHELx
 rpm -ivh PKG --nodeps  # install PKG, ignore dependencies, official RHELx
 
 # Filesystem - create, mount
@@ -571,7 +571,7 @@ e2label /dev/sdX NEW_MOUNT
 
 cp -air /etc/fstab /etc/fstab.bak  # backup fstab
 vim /etc/fstab  # edit fstab  w/ UUID, label
-# UUID="ALPHA-NUMERIC" | LABEL  MOUNT  FS-TYPE  OPT  DUMP PASS
+# UUID="ALPHA-NUMERIC"|LABEL  MOUNT  FS-TYPE  OPT  DUMP PASS
 # UUID="b58ce781-4a45-496a-8cd3-ab28d3cef783"  /mnt/dd1  ext4  defaults  1 2
 # LABEL=NEW_MOUNT  /mnt/dd1  ext4  nofail  1 2
 mount -L LABEL MOUNT  # mount using label

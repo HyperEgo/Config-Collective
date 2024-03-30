@@ -11,7 +11,7 @@ tracked files => WORKING|STAGED|LOCAL
 
 git help
   CMD  # print CMD manual
-  config | branch | merge
+  config|branch|merge
 
 ## User cfg, env
 git config 
@@ -29,89 +29,77 @@ git config
 
 # Management
 git
-  status
   add FILE  # add file
-  rm FILE  # remove file from staged to working dir (e.g. after commit, before push)
-  reset HEAD FILE  # override file WORKING << STAGED
+  branch  # see current branch
+    BRH  # create branch, stay on current
+    --merged  # print merged branches for current
+    -m BRH1 BR2  # rename BRH1 > BRH2
+    -D BRH  # [d]elete branch, force
+    -r  # print [r]emote branches
+    -a|--all  # print [a]ll remote branches
+  checkout
+    BRH  # switch to branch
+    -b BRH  # create [b]ranch, check it out
+    -b BRH1 BRH2  # checkout BRH1 under BRH2
+    -- FILE  # checkout|override file WORKING << LOCAL
+    --theirs path/to/file  # merge conflict; accept|override incoming changes - no worky?
   clean -f  # remove [f]iles from working dir
-  show BRH | SHA  # print commit details
+  clone
+    URI  # clone repo, assume MASTER branch
+    -b BRH URI DIR  # clone repo to directory
+    -b BRH --single-branch URI  # clone specific branch
+    --recurse-submodules URI  # clone branch w/ submods
+  commit  # commit files, go to editor
+    -m "commit message"  # commit files to current branch w/ [m]essage
+    -am "add all modified files"  # commit all modified files, untracked not affected
+    --amend -m "add to previous commit"  # amend to most recent commit
+  diff  # compare working dir and repo
+    --staged  # compare staged area and repo
+    --color-words  # compare changes side-by-side, color contrast
+  fetch REMOTE --prune  # remove REMOTE refs
+  log
+    --follow --stat -p -- FILE
+    --graph --pretty=format:"%C(auto)%h%d (%cr) %cn %s"
+    --oneline --graph --decorate --all  # print logs: oneline, graph-tree format
+    BRH  # print banch logs
+  merge 
+    --squash BRH  # merge branch in to curr, optional squash commit messages
+    --no-ff BRH  # execute merge, no fast forward
+    --ff-only BRH  # execute merge, only fast forward merge, abort otherwise
+    --abort  # abort merge
+  pull = git fetch + git merge
+  push
+    -u ALIAS BRH  # push branch changes to remote [u]pstream tracking
+    -u origin master  # push changes to remote named 'origin' on 'master' branch
+    ALIAS --delete REMOTE  # keep local alias, delete remote
+    --set-upstream origin master  # set upstream remote named 'origin' for 'master' branch
+    REMOTE --delete BRH  # remove remote feature branch
+  rebase
+    BRH  # resync HEAD local branch to incoming
+    origin/master
+  remote
+    -v  # print remotes, current branch
+    add ALIAS REMOTE  # add alias for remote
+    add origin URI # add remote named 'origin' for URI
+    rm ALIAS  # remove remote
+  reset path/to/submodule  # resolve submod conflicts
+    HEAD FILE  # override file WORKING << STAGED
+
+  rm FILE  # remove file from staged to working dir (e.g. after commit, before push)
+  show BRH|SHA  # print commit details
     --pretty --name-only |SHA  # print commit file list
-
-git log
-  --follow --stat -p -- FILE
-  --graph --pretty=format:"%C(auto)%h%d (%cr) %cn %s"
-  --oneline --graph --decorate --all  # print logs: oneline, graph-tree format
-  BRH  # print banch logs
-
-git branch  # see current branch
-  BRH  # create branch, stay on current
-  --merged  # print merged branches for current
-  -m BRH1 BR2  # rename BRH1 > BRH2
-  -D BRH  # [d]elete branch, force
-  -r  # print [r]emote branches
-  -a | --all  # print [a]ll remote branches
-
-git checkout
-  BRH  # switch to branch
-  -b BRH  # create [b]ranch, check it out
-  -b BRH1 BRH2  # checkout BRH1 under BRH2
-  -- FILE  # checkout|override file WORKING << LOCAL
-  --theirs path/to/file  # merge conflict; accept | override incoming changes - no worky?
-
-git clone
-  URI  # clone repo, assume MASTER branch
-  -b BRH URI DIR  # clone repo to directory
-  -b BRH --single-branch URI  # clone specific branch
-  --recurse-submodules URI  # clone branch w/ submods
-
-git commit  # commit files, go to editor
-  -m "commit message"  # commit files to current branch w/ [m]essage
-  -am "add all modified files"  # commit all modified files, untracked not affected
-  --amend -m "add to previous commit"  # amend to most recent commit
-
-git diff  # compare working dir and repo
-  --staged  # compare staged area and repo
-  --color-words  # compare changes side-by-side, color contrast
-
-git merge 
-  --squash BRH  # merge branch in to curr, optional squash commit messages
-  --no-ff BRH  # execute merge, no fast forward
-  --ff-only BRH  # execute merge, only fast forward merge, abort otherwise
-  --abort  # abort merge
-
-git push
-  -u ALIAS BRH  # push branch changes to remote [u]pstream tracking
-  -u origin master  # push changes to remote named 'origin' on 'master' branch
-  ALIAS --delete REMOTE  # keep local alias, delete remote
-  --set-upstream origin master  # set upstream remote named 'origin' for 'master' branch
-  REMOTE --delete BRH  # remove remote feature branch
-
-git remote
-  -v  # print remotes, current branch
-  add ALIAS REMOTE  # add alias for remote
-  add origin URI # add remote named 'origin' for URI
-  rm ALIAS  # remove remote
-
-git reset path/to/submodule  # resolve submod conflicts
-
-git pull = git fetch + git merge
-git fetch REMOTE --prune  # remove REMOTE refs
-
-git stash  # stash working changes
-  list  # print stash list entries
-  pop  # remove first single stash state from list, apply
-  apply  # apply first single stash state from list
-  clear
-
-git rebase
-  BRH  # resync HEAD local branch to incoming
-  origin/master
+  stash  # stash working changes
+    list  # print stash list entries
+    pop  # remove first single stash state from list, apply
+    apply  # apply first single stash state from list
+    clear
+  status
 
 ## re-initialize submodules
 git
   submodule
-   deinit -f --all
-   init
+    deinit -f --all
+    init
   sync
   update --remote
 

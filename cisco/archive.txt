@@ -2,14 +2,14 @@
 
 # CDP - Cisco Discovery Protocol
 show cdp  # print update timer, hold timer, global config status
- int |$INT # print [all] cdp int stats
- traffic
- neighbors |detail
- entry $NAME
+  int |$INT # print [all] cdp int stats
+  traffic
+  neighbors |detail
+  entry $NAME
 enable
 clear cdp
- counters  # reset local cdp traffic counters
- table  # empty contents of local cdp table
+  counters  # reset local cdp traffic counters
+  table  # empty contents of local cdp table
 cdp run  # enable|disable cdp advertisements
 
 # Access Point - BVI = bridge virtual interface  # access GUI
@@ -20,61 +20,61 @@ cdp run  # enable|disable cdp advertisements
 5) connect to AP through BVI by entering BVI address in to http address field of host pc internet browser
 
 show dot11
- network-map  # print network map
- adjacent-ap  # print adjacent access point list
- associations client | all-client | statistics  # print radio, statistic associations, dot11 radio ints
- interface dot11radio0 summary
-
+  network-map  # print network map
+  adjacent-ap  # print adjacent access point list
+  associations client|all-client|statistics  # print radio, statistic associations, dot11 radio ints
+  interface dot11radio0 summary
+ 
 clear dot11 statistics
-  interface | mac-address  # reset int stat for int or mac addr
+  interface|mac-address  # reset int stat for int or mac addr
   dot11radio0  # clears stats for dot11radio 0
-   > statistics 0040.9631.81cf  # clears stats for client radio with specified mac address
+    statistics 0040.9631.81cf  # clears stats for client radio with specified mac address
 client $MAC  # deauthenticate radio client from mac address
- > client 0040.9645.2196
+  client 0040.9645.2196
 
 ap(config)# interface dot11radio $INT  # enter dot11radio interface mode
 interface bvi1  # enter bridge virtual interface mode
 
 ap(config-if)# ssid $SSID  # enter ssid interface
- ssid line $SSID  # declare ssid character name
+  ssid line $SSID  # declare ssid character name
 ap(config-if-ssid)# authentication open  # allow open ssid access all vlan devices
 
 ap(config-if)# station-role $ROLE  # select role of interface
- > station-role root  # configure access point for root operation
+  station-role root  # configure access point for root operation
 power
- client $VALUE  # set max power level of client radio tranmissions
- local $VALUE  # set max power level of access point transmissions
-channel number | frequency  # set channel and frequency of interface
+  client $VALUE  # set max power level of client radio tranmissions
+  local $VALUE  # set max power level of access point transmissions
+channel number|frequency  # set channel and frequency of interface
 world-mode
- antenna
-  receive left | right | center
-  transmit diversity | left | right
- port-protected
- beacon period $VALUE
- rts
-  thershold $VALUE
-  retries $VALUE
- packet retries $VALUE
- fragment-threshold $VALUE
-ip address
- $IP $MASK
- dhcp  # enable dhcp client
-
-
+  antenna
+    receive left|right|center
+    transmit diversity|left|right
+  port-protected
+  beacon period $VALUE
+  rts
+    thershold $VALUE
+    retries $VALUE
+  packet retries $VALUE
+  fragment-threshold $VALUE
+  ip address
+   $IP $MASK
+   dhcp  # enable dhcp client
+ 
+ 
 # Rom Monitor
 rm> show 
- version  # print registry number, boot sequence
- start
+  version  # print registry number, boot sequence
+  start
 
 dir flash:  # print flash contents
 boot flash:$IOS_FILE  # boot specified ios file, no space
 
 confreg  # edit terminal settings e.g. baud rate
- (0x) | Ox 
-  2102  # boot from nvram
-  2142  # reset password settings
+  (0x)|Ox 
+    2102  # boot from nvram
+    2142  # reset password settings
 
-reset | reload | boot  # reboot router
+reset|reload|boot  # reboot router
 xmodem_-c IOS-FILE  # download ios filename to flash
 set  # print rom monitor variables for tftp download session
 IP_ADDRESS=$IP  # assign ip addr
@@ -88,144 +88,143 @@ tftpdnld  # enable tftp dl
 # Switch
 ## VTP - vlan trunking protocol
 sw(config)# vtp
- mode server | client | transparent  # define vtp mode
- domain $NAME  # assign vtp domain name
- password $PASSWD  # configure vtp domain password
- version $VERSION  # assign vtp version number
- pruning  # enable vtp pruning
+  mode server|client|transparent  # define vtp mode
+  domain $NAME  # assign vtp domain name
+  password $PASSWD  # configure vtp domain password
+  version $VERSION  # assign vtp version number
+  pruning  # enable vtp pruning
 
 ## Frame Relay
 ### DCE - Data Communication Equipment
 show frame-relay
- route  # print routes of frame relay protocol
- pvc  # print virtual circuit status of listed frame relay interfaces
- map  # print info on static and dynamic ip mappings to dlci(s)
+  route  # print routes of frame relay protocol
+  pvc  # print virtual circuit status of listed frame relay interfaces
+  map  # print info on static and dynamic ip mappings to dlci(s)
 
 sw(config)#
- frame-relay switching  # define device frame relay switch
- int s0/2/0
+  frame-relay switching  # define device frame relay switch
+  int s0/2/0
 sw(config-if)# encapsulation frame-relay
- frame-relay intf-type dce  # can match different physical interface types
- clockrate 64000
- frame-relay route 102 interface s0/2/1 201  # fwd traffic from route 102 to serial route 201
- no shut
+  frame-relay intf-type dce  # can match different physical interface types
+  clockrate 64000
+  frame-relay route 102 interface s0/2/1 201  # fwd traffic from route 102 to serial route 201
+  no shut
 
 ### DTE - Data Terminal Equipment
 show frame-relay
- map  # print frame relay addressing info
- pvc  # print pvc stats
- lmi  # print lmi stats
+  map  # print frame relay addressing info
+  pvc  # print pvc stats
+  lmi  # print lmi stats
 debug frame-relay lmi  # enable|disable debug, lmi packets
 clear frame-relay inverse-arp  # clears dynamically learned frame relay ip mapping
 
 ### DLCI - Data Link Connection Identifier, CIR - Committed Information Rate
 rtr(config-if)#
- encapsulation frame-relay cisco | ietf  # define FR encap type (DTE-to-DTE)
- frame-relay lmi-type cisco | ansi | q933a  # define lmi encap type (DTE-to-DCE)
- no frame-relay inverse-arp  # disable inverse arp; no dynamic learning
- ip address $IP $MASK  # assign ip address
- frame-relay map ip
-  $IP $NUMBER broadcast  # map remote ip to dlci
-  10.1.1.2 102 broadcast  # allow ip broadcast
- no shut
+  encapsulation frame-relay cisco|ietf  # define FR encap type (DTE-to-DTE)
+  frame-relay lmi-type cisco|ansi|q933a  # define lmi encap type (DTE-to-DCE)
+  no frame-relay inverse-arp  # disable inverse arp; no dynamic learning
+  ip address $IP $MASK  # assign ip address
+  frame-relay map ip
+    $IP $NUMBER broadcast  # map remote ip to dlci
+    10.1.1.2 102 broadcast  # allow ip broadcast
+  no shut
 
 ### DTE - sub-interfaces
 rtr(config)# int $INT
 rtr(config-if)# encapsulation $ENCAP_TYPE
- int $INT_SUB $ENCAP_TYPE
-  > int fa0/1.1 point-to-point
+  int $INT_SUB $ENCAP_TYPE
+    int fa0/1.1 point-to-point
 rtr(config-subif)# ip address $IP $MASK
- frame-relay interface-dlci $NUMBER cisco | ietf  # different encap types
-  > frame-relay interface-dlci 501 ietf
+  frame-relay interface-dlci $NUMBER cisco|ietf  # different encap types
+    frame-relay interface-dlci 501 ietf
 
 
 # ROUTER
 show ip rip database  # print rip database
-debug ip rip  # enable | disable debug
+debug ip rip  # enable|disable debug
 
 show ip eigrp
- int  # print eigrp ints
- neighbors  # print eigrp neighbors, successors
- topology  # print successors,f easible successors
-  $NET  # print network addr status + ext route info
-  all-links  # print all links
- traffic  # print traffic stats
- debug eigrp fsm | packet  # enable | disable debug
+  int  # print eigrp ints
+  neighbors  # print eigrp neighbors, successors
+  topology  # print successors,f easible successors
+    $NET  # print network addr status + ext route info
+    all-links  # print all links
+  traffic  # print traffic stats
+  debug eigrp fsm|packet  # enable|disable debug
 
 ## RIP2
 rtr(config)# router rip
 rtr(config-router)#
- version 2  # enable rip version 2
- no auto-summary  # disable auto summary
+  version 2  # enable rip version 2
+  no auto-summary  # disable auto summary
 rtr(config-router)#network $IP  # no mask
 
 ## EIGRP
 rtr(config)# router eigrp $VALUE  # assign eigrp Autonomous System number
 rtr(config-router)#
- network $IP $MASK  # define routed network ips
- maximum-paths  # define equal load cost balancing paths
- metric weights tos  # define bandwith delay metrics
+  network $IP $MASK  # define routed network ips
+  maximum-paths  # define equal load cost balancing paths
+  metric weights tos  # define bandwith delay metrics
 rtr(config-if)# |no bandwith $VALUE # enable|disable bandwith value, kbps
- delay $VALUE  # set delay value, tens of microseconds
- ip summary-address eigrp $VALUE $IP $MASK  # summarize nets per int
-  > ip summary-address eigrp 1 192.168.0.0 0.0.255.255
+  delay $VALUE  # set delay value, tens of microseconds
+  ip summary-address eigrp $VALUE $IP $MASK  # summarize nets per int
+    ip summary-address eigrp 1 192.168.0.0 0.0.255.255
 
 rtr(config-if)# |no ip bandwidth-percent eigrp $VALUE  # set update bandwidth pct
- > bandwidth-percent eigrp 1 50  # set update bandwidth limit 50 pct
+  bandwidth-percent eigrp 1 50  # set update bandwidth limit 50 pct
 hello-interval eigrp $VALUE  # define hello packet interval, sec
- > hello-interval eigrp 1 60
+  hello-interval eigrp 1 60
 hold-time eigrp $VALUE  # define hold-time, sec
- > hold-time eigrp 1 180
+  hold-time eigrp 1 180
 
 ## RIP - authenticate
 rtr(config)# key chain $KEY
 rtr(config-keychain)# key 1
 rtr(config-keychain-key)# key-string cisco
 rtr(config-if)# ip rip authentication mode md5
- ip rip authentication key-chain $KEY
+  ip rip authentication key-chain $KEY
 
 ## EIGRP - authenticate
 rtr(config)# key chain $KEY
 rtr(config-keychain)# key 1
 rtr(config-keychain-key)# key-string cisco
 rtr(config-if)# ip authentication mode eigrp 1 md5
- ip authentication key-chain eigrp 1 $KEY
+  ip authentication key-chain eigrp 1 $KEY
 
 
-????????????????????? Mysterious cmd  ?????????????????????????????
-???????????????????????????????????????????????????????????????????
+????????????????????? Mysterious  ?????????????????????????????
 
 hostname $HOSTNAME  # assign a host name
 enable
- password $PASSWD  # set unencrypted enable password
- secret $PASSWD  # set encrypted enable password
+  password $PASSWD  # set unencrypted enable password
+  secret $PASSWD  # set encrypted enable password
 service
- password-encryption  # encode all passwords except enable secret password
- timestamps  # enable device to generate time stamps on log messages (+debug messages)
+  password-encryption  # encode all passwords except enable secret password
+  timestamps  # enable device to generate time stamps on log messages (+debug messages)
 banner
- motd_#$MESSAGE#  # set motd banner MESSAGE
- login_#$MESSAGE#  # set login MESSAGE, print after motd message
- exec_#$MESSAGE#  # set executive MESSAGE, print after login process
+  motd_#$MESSAGE#  # set motd banner MESSAGE
+  login_#$MESSAGE#  # set login MESSAGE, print after motd message
+  exec_#$MESSAGE#  # set executive MESSAGE, print after login process
 
 show
- sessions  # print telnet/ssh sessions w/ conn numbers
- users  # print user log-in list
+  sessions  # print telnet/ssh sessions w/ conn numbers
+  users  # print user log-in list
 
-telnet | ssh $IP
+telnet|ssh $IP
 resume $NUMBER
 disconnect $NUMBER
 
 # Switch Interface Configuration mode?
 sw(config-if)#
- mdix auto  # media dependent interface with crossover; enable auto detect, can sense pin-out settings on both ends of link
- mac-address $MAC  # assign static mac address to interface
- mls qos trust cos  # identifies voice traffic as priority
+  mdix auto  # media dependent interface with crossover; enable auto detect, can sense pin-out settings on both ends of link
+  mac-address $MAC  # assign static mac address to interface
+  mls qos trust cos  # identifies voice traffic as priority
 sw(config-if-range)# switchport voice vlan $VLAN  # assign ints to voice vlan
 
 # Router Global Configuration mode?
-(Ox) | Ox
- 2100 - rom monitor
- 2101 - rom mem, flash
- 2102 - nvram
- 2142 - passwd recover, reset
- config-register $HEX  # input hex registry setting
+(Ox)|Ox
+  2100 - rom monitor
+  2101 - rom mem, flash
+  2102 - nvram
+  2142 - passwd recover, reset
+  config-register $HEX  # input hex registry setting

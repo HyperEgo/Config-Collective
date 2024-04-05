@@ -1,0 +1,7 @@
+# Jenkins Agent labels
+build-farm
+build-farm-centos7
+build-farm-rhel7
+linux
+rhel7
+rhel8

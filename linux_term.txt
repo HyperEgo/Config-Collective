@@ -151,7 +151,6 @@ env  # print user environment variables
 eog FILE  # GNOME Image Viewer
 g|parted  # partition editor
 f|gdisk -l DEV  # manage device partitions, e.g. fdisk -l DEV; fdisk < gdisk < parted < gparted
-fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 find DIR OPT
   find . -type f -iname *.txt -exec rm -rvf {} \;  # remove text files, curr dir
   find -type d -iname super*  # find [d]irectory with string inclusive
@@ -164,6 +163,7 @@ find DIR OPT
   find . *.bin -exec mv {} /path/to/directory \;  # move bin files to dir
   find . *.svn -exec rm -rvf {} \;  # remove all svn files
   find . *.java -exec sed -i 's/STR_1/STR_2/g' {} \;  # replace [i]n-place file contents string1 w/ string2
+firewall-cmd --list-all
 for i in {NUM1..NUM2}; do CMD; done  # loop specify number
   for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir '10' times, exec in background
 for f in *; do CMD; done  # loop 'f' entities, do cmd
@@ -171,6 +171,7 @@ for f in *; do CMD; done  # loop 'f' entities, do cmd
   do mv "$f" `echo $f|tr ' ' '_'` ; done  # replace filename SPACE w/ UNDER_SCORE, single char, no recurse dir
   do mv "f" "{f//$STR1/STR2}" ; done  # replace filename string1 w/ string2, no recurse dir
   do mv "$f" "${f//STR/}" ; done  # replace filename string with NOTHING, no recurse dir
+fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 grep OPT RGX
   -niR STR DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive, no asterisk!
     -niR '.sh' /home/USER
@@ -202,8 +203,9 @@ ip
   addr show |DEV  # print net device ip info
   monitor -t  # listen for net link traffic, [t]imestamp
   route  # print local route table entry
-iptables -nL  # print ip table rules [L]ist, [n]umeric output addr port
-iptables-save  # save config file, IPv4/6 packet filtering, NAT admin tool
+iptables --list | grep ACCEPT
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+iptables-save  # save changes, persist reboot
 iwconfig  # print wireless devices
 jar
   -tf JAR  # print file list
@@ -260,8 +262,9 @@ nc  # netcat
   echo "this is a test"|nc 10.1.0.1 -v 80  # send test string to remote host
     10.1.0.1 666  # connect listener to port, ip
   type accounts.sql|nc 10.1.0.192 6666  # send file output to ip, port
-netstat -tuplen|grep "LISTEN"  # print listening ports
+netstat -tuplen | grep LISTEN  # network status
 nmap -sV SRVR -p PORT  # print server port status e.g. nmap -sV server02 -p 21
+nmap -Pn -n 10.165.134.84  # print open, filtered ports for IP
 nmcli
   connection show  # print network device metrics: name, UUID, type, device
   device show  # print network device status: device, type, state, connection

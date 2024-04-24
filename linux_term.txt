@@ -162,7 +162,7 @@ find DIR OPT
   find . *.txt -exec rsync {} USER@192.168.10.1:/home/USER \; # update text file to remote user
   find . *.bin -exec mv {} /path/to/directory \;  # move bin files to dir
   find . *.svn -exec rm -rvf {} \;  # remove all svn files
-  find . *.java -exec sed -i 's/STR_1/STR_2/g' {} \;  # replace [i]n-place file contents string1 w/ string2
+  find . *.java -exec sed -i 's/STR1/STR2/g' {} \;  # replace [i]n-place file contents string1 w/ string2
 firewall-cmd --list-all
 for i in {NUM1..NUM2}; do CMD; done  # loop specify number
   for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir '10' times, exec in background

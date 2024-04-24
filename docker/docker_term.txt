@@ -1,7 +1,7 @@
 # Docker terminal
 
 # Keystrokes
-ctrl + p|q  # detach from running container
+ctrl + p,q  # detach from running container
 
 # CLI commands
 IMG = ID|NAME:TAG
@@ -31,17 +31,14 @@ docker
   rm CNTR  # remove container
   rmi -f IMG  # remove image from local docker repo, [f]orce
   run OPT IMG CMD
-  run hello-world  # run test image, verify docker install
-    --rm -ti -p HOST|:CNTR --name IMG CMD  # [rm]=remove on exit, [t]erminal, [i]nteractive, open [p]orts
-    --rm -ti -p 127.0.0.1:1234:1234/tcp -w /tmp --name IMG bash
-    --rm -ti -p 8080 -w /home ubuntu:14.04 bash
-    -p 8080 -ti -v /share/docker:/home -w /home ubuntu:20.04 bash
-    -p 1234:1234/udp -ti -w /home IMG bash
-    -ti -w /home IMG bash -c "sleep 3; echo all done"  # execute bash cmd
-    -d ubuntu --name IMG bash -c "less /etc/password"
-    -d -ti ubuntu bash  # [d]etached mode, do not enter
-    -d -p 5000:5000 --restart=always --name registry registry:2  # restart if fail
-    --memory maximum-allowed-memory IMG CMD
+  run hello-world  # test image, verify docker install
+    --rm -ti -p -d HOST|:CNTR --name IMG CMD  # [rm]=remove on exit, [t]erminal, [i]nteractive, open [p]orts, [d]aemon mode
+    --rm -ti -p localhost:1234:1234/tcp -w /tmp --name ubuntu ubuntu:20.04 /bin/bash
+    --rm -ti -p 8080 -w /home ubuntu:14.04 /bin/bash
+    -v /share/docker:/home -w /home  # share [v]olume, [w]orking dir prompt
+    -w /home IMG bash -c "sleep 2; echo all done"  # execute bash [c]md
+    -w /tmp IMG bash -c "less /etc/password"
+    --restart=always --memory maximum-allowed-memory IMG CMD
   save -o IMG /path/to/local/dir  # save image to local device
   search STR  # search online regsitry
     --filter "stars=8" --filter "is-official=true" ubuntu  # filter ubuntu img w/ 8+ stars

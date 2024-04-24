@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# install docker rhel|centos - run as 'sudo'
+# Install docker rhel|centos - run as 'sudo', requires internet access
 
-# base install seq
+# Base
 yum install -y yum-utils
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# create docker group
+# Create docker group
 groupadd docker
 
-# add user to docker group
-usermod -aG docker $USER  # affect: restart terminal session
-# newgrp docker  # affect: auto add instance
+# Add docker group to current User
+usermod -a -G docker $USER  # restart terminal session
+# newgrp docker  # effect immediate
 
-# start docker service
+# Start docker service
 systemctl start docker
 systemctl enable docker

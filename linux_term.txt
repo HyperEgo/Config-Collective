@@ -310,7 +310,7 @@ systemctl
   reboot -i
   set-default TRGT  # set default target at boot
   start|stop|| restart |enable|disable SRVC  # manage SRVC
-  status --all |SRVC  # print units runtime status
+  status --all |SRVC  # print impl services
 systemd-analyze |blame|dump  # print startup process times, longest decending, dump manager logs
 tar OPT TGZ FILE  # extract specific file
 tar -zxvf cpu-metric.tgz parent-dir/some-script.sh

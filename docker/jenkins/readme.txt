@@ -1,13 +1,13 @@
 # Readme - Jenkins Docker setup
 
 1.  Install docker on host.
-	sudo bash install.sh
+	bash install.sh
 
 2.  Verify docker install - optional
 	docker run hello-world
 
 3.  Install and Configure Nexus Trust Certifications
-	sudo bash cert_cfg.sh
+	bash cert_cfg.sh
 
 4.  Download Jenkins image.
 
@@ -15,7 +15,7 @@
 	docker load -i JENKINS_IMAGE
 
 6.  Start Docker container w/ Jenkins image
-	sudo bash run.sh JENKINS_IMAGE
+	bash run.sh JENKINS_IMAGE
 
 7.  Disable proxy via CLI (temporary terminal session) - optional
 	unset http_proxy; unset https_proxy

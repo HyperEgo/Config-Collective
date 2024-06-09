@@ -133,14 +133,16 @@ dd if=DEV1 of=DEV2
   dd if=/dev/urandom of=/dev/sdb  # write random data to /dev/sdb
   dd if=/dev/zero of=/dev/sdc  # write zeros to /dev/sdc
 depmod -A  # gen modules.dep file, map files, exits if older then curr
-df  # print disc filesystem space usage
+df  # print [d]isk [f]ile system usage
+df -T -h | (sed -u 1q; sort)
 dig SRVR  # query mail server
 dmesg |-D  # print kernel ring buffer, [D]isable console logging
   -H -l err  # print kernel [l]evel log errors, [H]uman readable output
 dnf install|search PKG  # Fedora package manager
 dpkg -i|s PGK  # Debian [i]nstall, status PKG
 dpkg-reconfigure  # Debian reconfigure installed packages
-du  # print file space usage
+du  # print [d]isk [u]sage
+du -hsx $LOC/* | sort -rh | head -n 40
 dumpe2fs -b DEV  # print device bad blocks
 e2label DEV LABEL  # label device, e.g. e2label /dev/sdX WEB_SERVER
 echo -e  # accept special chars

@@ -92,6 +92,7 @@ alt+<.>  # cycle previous cli input
 # CLI commands
 CMD > /bin/kill  # send CMD output to kill container, test
 CMD > /dev/null 2>&1  # send CMD output to /dev/null, stdout, stderr 
+apropos TEXT  # search man[ual] for command text clues
 aptitude install PKG  # use aptitude package manager
 apt-get update  # Debian update package cache
 apt
@@ -133,6 +134,7 @@ dd if=DEV1 of=DEV2
   dd if=/dev/urandom of=/dev/sdb  # write random data to /dev/sdb
   dd if=/dev/zero of=/dev/sdc  # write zeros to /dev/sdc
 depmod -A  # gen modules.dep file, map files, exits if older then curr
+detox FILE | *  # remove troublesome chars in filename e.g. single-quote, replace space w/ underscore
 df  # print [d]isk [f]ile system usage
 df -T -h | (sed -u 1q; sort)
 dig SRVR  # query mail server
@@ -170,9 +172,9 @@ for i in {NUM1..NUM2}; do CMD; done  # loop specify number
   for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir '10' times, exec in background
 for f in *; do CMD; done  # loop 'f' entities, do cmd
   do echo "STR" >> $f; done  # append string to file contents
-  do mv "$f" `echo $f|tr ' ' '_'` ; done  # replace filename SPACE w/ UNDER_SCORE, single char, no recurse dir
-  do mv "f" "{f//$STR1/STR2}" ; done  # replace filename string1 w/ string2, no recurse dir
-  do mv "$f" "${f//STR/}" ; done  # replace filename string with NOTHING, no recurse dir
+  do mv "$f" `echo $f | tr ' ' '_'`; done  # replace filename SPACE w/ UNDER_SCORE, single char, no recurse dir
+  do mv "$f" "${f//STR1/STR2}"; done  # replace filename string1 w/ string2, no recurse dir
+  do mv "$f" "${f//STR/}"; done  # replace filename string with NOTHING, no recurse dir
 fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 grep OPT RGX
   -niR STR DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive, no asterisk!
@@ -393,9 +395,11 @@ popd  # pop stack
 pushd DIR  # push to stack
 
 ## SED
-  model1: sed OPT RGX FILE  # e.g. OPT=[e]xpression, edit file [i]n-place, [n]-quiet|silent
-  model2: find OPT -exec sed OPT RGX {} \;
-  model3: sed EXPR1 FILE|sed EXPR2|..
+  model_01: sed OPT RGX FILE  # e.g. OPT=[e]xpression, edit file [i]n-place, [n]-quiet|silent
+  model_02: find OPT -exec sed OPT RGX {} \;
+  model_03: sed EXPR1 FILE|sed EXPR2|..
+  sed -n l FILE  # print trailing whitespace
+  sed -i -e 's/[[:space:]]*$//g' FILE  # remove trailing white space
   sed
     '/^$/d'  # delete empty lines
     '/STR/d'  # delete lines containing string

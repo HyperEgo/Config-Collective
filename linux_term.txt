@@ -175,6 +175,7 @@ for f in *; do CMD; done  # loop 'f' entities, do cmd
   do mv "$f" `echo $f | tr ' ' '_'`; done  # replace filename SPACE w/ UNDER_SCORE, single char, no recurse dir
   do mv "$f" "${f//STR1/STR2}"; done  # replace filename string1 w/ string2, no recurse dir
   do mv "$f" "${f//STR/}"; done  # replace filename string with NOTHING, no recurse dir
+for f in *; do mv "$f" "STR_$f"; done  # prepend filename with STR
 fsck -R|r DEV  # filesystem check, skip [R]oot filesystem, [r]epair
 grep OPT RGX
   -niR STR DIR  # search contents, [n]line number, [i]gnore case, [R]ecursive, no asterisk!
@@ -290,6 +291,7 @@ ps -elf|grep -i "STR"  # print process for string
 readonly  # print shell read-only variables
 renice  # alter priority of running processes
 rename -- .old-ext .new-ext *.old-ext  # rename file extension, bulk multiple files
+rename -n 's/.{5}(.*)/$1/' *  # remove n-digits from beginning of filename e.g. '5'
 rmmod -f ARG  # [f]orce kernel mod ARG remove
 rsync -havz SRC DEST  # remote copy, sync files [h]uman readable, [a]rchive, [v]erbose, [z]compression
 runlevel  # print previous and current System V Init runlevel

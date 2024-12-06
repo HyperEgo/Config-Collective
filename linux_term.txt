@@ -167,6 +167,8 @@ find DIR OPT
   find . *.bin -exec mv {} /path/to/directory \;  # move bin files to dir
   find . *.svn -exec rm -rvf {} \;  # remove all svn files
   find . *.java -exec sed -i 's/STR1/STR2/g' {} \;  # replace [i]n-place file contents string1 w/ string2
+  find . -type f -iname "*.type" -exec sed -i "/^STR/s/$/ APPENDER" {} \;  # append str same line
+  find . -type f -iname "*.md" -exec sed -i "/^docker run -it --rm -v DEV_REPO/s/$/ \/bin\/bash/" {} \;
 firewall-cmd --list-all
 for i in {NUM1..NUM2}; do CMD; done  # loop specify number
   for i in {1..10}; do sudo cp -R /etc /backup/sys; done &  # copy dir '10' times, exec in background
